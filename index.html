@@ -1,0 +1,318 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Contract Review for Small Law Firms</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      font-family: system-ui, -apple-system, sans-serif;
+      background: #0a0a0a;
+      color: #f0f0f0;
+      line-height: 1.6;
+    }
+
+    nav {
+      padding: 20px 40px;
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      border-bottom: 1px solid #1e1e1e;
+    }
+
+    .logo {
+      font-size: 1.1rem;
+      font-weight: 600;
+      color: #fff;
+      letter-spacing: -0.02em;
+    }
+
+    .nav-cta {
+      background: #f97316;
+      color: #fff;
+      padding: 10px 22px;
+      border-radius: 6px;
+      text-decoration: none;
+      font-size: 0.9rem;
+      font-weight: 500;
+      transition: opacity 0.2s;
+    }
+
+    .nav-cta:hover { opacity: 0.88; }
+
+    .hero {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 100px 24px 80px;
+      text-align: center;
+    }
+
+    .badge {
+      display: inline-block;
+      background: #1a1a1a;
+      border: 1px solid #2a2a2a;
+      color: #f97316;
+      font-size: 0.8rem;
+      font-weight: 500;
+      padding: 6px 14px;
+      border-radius: 20px;
+      margin-bottom: 28px;
+      letter-spacing: 0.04em;
+      text-transform: uppercase;
+    }
+
+    h1 {
+      font-size: clamp(2rem, 5vw, 3.2rem);
+      font-weight: 700;
+      line-height: 1.15;
+      letter-spacing: -0.03em;
+      color: #ffffff;
+      margin-bottom: 24px;
+    }
+
+    h1 span { color: #f97316; }
+
+    .subheadline {
+      font-size: 1.15rem;
+      color: #888;
+      max-width: 560px;
+      margin: 0 auto 48px;
+      line-height: 1.7;
+    }
+
+    .cta-group {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 12px;
+      margin-bottom: 80px;
+    }
+
+    .cta-primary {
+      display: inline-block;
+      background: #f97316;
+      color: #fff;
+      font-size: 1.05rem;
+      font-weight: 600;
+      padding: 16px 44px;
+      border-radius: 8px;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+
+    .cta-primary:hover { opacity: 0.88; }
+
+    .cta-note {
+      font-size: 0.82rem;
+      color: #555;
+    }
+
+    .pain-section {
+      max-width: 760px;
+      margin: 0 auto;
+      padding: 0 24px 100px;
+    }
+
+    .pain-label {
+      text-align: center;
+      font-size: 0.8rem;
+      text-transform: uppercase;
+      letter-spacing: 0.08em;
+      color: #555;
+      margin-bottom: 32px;
+    }
+
+    .pain-grid {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 16px;
+    }
+
+    @media (max-width: 600px) {
+      .pain-grid { grid-template-columns: 1fr; }
+    }
+
+    .pain-card {
+      background: #111;
+      border: 1px solid #1e1e1e;
+      border-radius: 12px;
+      padding: 28px;
+    }
+
+    .pain-card::before {
+      content: "→";
+      display: block;
+      color: #f97316;
+      font-size: 1.1rem;
+      margin-bottom: 12px;
+    }
+
+    .pain-card p {
+      color: #ccc;
+      font-size: 0.95rem;
+      line-height: 1.6;
+    }
+
+    .how-section {
+      background: #0f0f0f;
+      border-top: 1px solid #1a1a1a;
+      border-bottom: 1px solid #1a1a1a;
+      padding: 80px 24px;
+      text-align: center;
+    }
+
+    .how-section h2 {
+      font-size: 1.8rem;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      margin-bottom: 48px;
+      color: #fff;
+    }
+
+    .steps {
+      display: flex;
+      justify-content: center;
+      gap: 40px;
+      flex-wrap: wrap;
+      max-width: 760px;
+      margin: 0 auto;
+    }
+
+    .step {
+      flex: 1;
+      min-width: 180px;
+      max-width: 220px;
+    }
+
+    .step-num {
+      width: 40px;
+      height: 40px;
+      background: #f97316;
+      color: #fff;
+      border-radius: 50%;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-weight: 700;
+      font-size: 0.9rem;
+      margin: 0 auto 16px;
+    }
+
+    .step h3 {
+      font-size: 1rem;
+      font-weight: 600;
+      color: #fff;
+      margin-bottom: 8px;
+    }
+
+    .step p {
+      font-size: 0.88rem;
+      color: #666;
+      line-height: 1.6;
+    }
+
+    .bottom-cta {
+      text-align: center;
+      padding: 100px 24px;
+    }
+
+    .bottom-cta h2 {
+      font-size: 2rem;
+      font-weight: 700;
+      letter-spacing: -0.02em;
+      color: #fff;
+      margin-bottom: 16px;
+    }
+
+    .bottom-cta p {
+      color: #666;
+      margin-bottom: 36px;
+      font-size: 0.95rem;
+    }
+
+    .price-note {
+      margin-top: 16px;
+      font-size: 0.85rem;
+      color: #444;
+    }
+
+    footer {
+      border-top: 1px solid #1a1a1a;
+      padding: 24px 40px;
+      text-align: center;
+      font-size: 0.8rem;
+      color: #333;
+    }
+  </style>
+</head>
+<body>
+
+  <nav>
+    <div class="logo">ClauseCheck</div>
+    <a href="https://buy.stripe.com/placeholder" class="nav-cta">Start Free Trial</a>
+  </nav>
+
+  <section class="hero">
+    <div class="badge">AI-Powered · Built for Small Firms</div>
+    <h1>Your associates spend <span>6 hours</span> reviewing contracts. Ours takes 4 minutes.</h1>
+    <p class="subheadline">AI contract review built for small law firms — upload any contract, get flagged clauses, risk summary, and key terms instantly.</p>
+    <div class="cta-group">
+      <a href="https://buy.stripe.com/placeholder" class="cta-primary">Start Your Free Trial</a>
+      <span class="cta-note">30 days free · No setup required · Cancel anytime</span>
+    </div>
+  </section>
+
+  <section class="pain-section">
+    <p class="pain-label">Sound familiar?</p>
+    <div class="pain-grid">
+      <div class="pain-card">
+        <p>Clients are asking why review takes so long — and some are quietly leaving for firms that move faster.</p>
+      </div>
+      <div class="pain-card">
+        <p>You're billing fewer hours than the work actually costs you. Contract review is eating your margin.</p>
+      </div>
+      <div class="pain-card">
+        <p>Junior associates miss clauses that come back as malpractice risk. A second pass costs more time you don't have.</p>
+      </div>
+      <div class="pain-card">
+        <p>Enterprise tools like Relativity cost more than your associate's salary — and they weren't built for firms your size.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="how-section">
+    <h2>How it works</h2>
+    <div class="steps">
+      <div class="step">
+        <div class="step-num">1</div>
+        <h3>Upload the contract</h3>
+        <p>PDF or Word doc. Any contract type — vendor, employment, lease, NDA.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">2</div>
+        <h3>AI reviews it</h3>
+        <p>Flags risky clauses, summarizes key terms, and scores overall risk in under 5 minutes.</p>
+      </div>
+      <div class="step">
+        <div class="step-num">3</div>
+        <h3>Export the report</h3>
+        <p>Clean, client-ready summary you can bill for or use internally.</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="bottom-cta">
+    <h2>Start reviewing smarter today.</h2>
+    <p>$1,000/month after trial. Built for firms with 2–50 attorneys.</p>
+    <a href="https://buy.stripe.com/placeholder" class="cta-primary">Start Your Free Trial</a>
+    <p class="price-note">No credit card required for trial · Setup takes under 10 minutes</p>
+  </section>
+
+  <footer>
+    &copy; 2026 ClauseCheck. Built for small law firms.
+  </footer>
+
+</body>
+</html>
