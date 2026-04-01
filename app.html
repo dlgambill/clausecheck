@@ -1,0 +1,149 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClauseCheck — AI Contract Review</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.6; min-height: 100vh; }
+    nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e1e1e; }
+    .logo { font-size: 1.1rem; font-weight: 600; color: #fff; letter-spacing: -0.02em; text-decoration: none; }
+    .nav-badge { font-size: 0.75rem; color: #555; letter-spacing: 0.04em; text-transform: uppercase; }
+    main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
+    .upload-zone { border: 1.5px dashed #1e1e1e; border-radius: 12px; padding: 56px 40px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; margin-bottom: 16px; }
+    .upload-zone:hover, .upload-zone.drag-over { border-color: #f97316; background: rgba(249,115,22,0.04); }
+    .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .upload-zone h2 { font-size: 1.3rem; font-weight: 600; color: #fff; margin-bottom: 8px; letter-spacing: -0.02em; }
+    .upload-zone p { font-size: 0.88rem; color: #555; }
+    .file-name { margin-top: 14px; font-size: 0.82rem; color: #f97316; display: none; font-family: monospace; }
+    .btn-analyze { width: 100%; background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 16px; font-family: system-ui, -apple-system, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-bottom: 8px; }
+    .btn-analyze:hover { opacity: 0.88; }
+    .btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-note { text-align: center; font-size: 0.8rem; color: #444; }
+    .error-msg { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); color: #ef4444; border-radius: 8px; padding: 14px 18px; font-size: 0.875rem; margin-top: 14px; display: none; }
+    .loading { display: none; text-align: center; padding: 80px 24px; }
+    .loading-spinner { width: 36px; height: 36px; border: 2px solid #1e1e1e; border-top-color: #f97316; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading h3 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 6px; }
+    .loading p { font-size: 0.85rem; color: #555; }
+    .results { display: none; }
+    .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #1a1a1a; }
+    .results-header h2 { font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; color: #fff; }
+    .risk-badge { font-size: 0.75rem; font-weight: 600; padding: 6px 14px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .risk-high   { background: rgba(239,68,68,0.12);  color: #ef4444; border: 1px solid rgba(239,68,68,0.25); }
+    .risk-medium { background: rgba(249,115,22,0.12); color: #f97316; border: 1px solid rgba(249,115,22,0.25); }
+    .risk-low    { background: rgba(34,197,94,0.12);  color: #22c55e; border: 1px solid rgba(34,197,94,0.25); }
+    .card { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 24px; margin-bottom: 12px; }
+    .card-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #555; margin-bottom: 12px; }
+    .summary-text { font-size: 0.95rem; color: #ccc; line-height: 1.7; }
+    .clause-item { border-left: 2px solid #1e1e1e; padding: 14px 16px; margin-bottom: 10px; border-radius: 0 8px 8px 0; background: rgba(255,255,255,0.02); }
+    .clause-item.high   { border-left-color: #ef4444; }
+    .clause-item.medium { border-left-color: #f97316; }
+    .clause-item.low    { border-left-color: #22c55e; }
+    .clause-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .clause-title { font-size: 0.9rem; font-weight: 600; color: #fff; }
+    .sev-tag { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; }
+    .sev-high   { background: rgba(239,68,68,0.12);  color: #ef4444; }
+    .sev-medium { background: rgba(249,115,22,0.12); color: #f97316; }
+    .sev-low    { background: rgba(34,197,94,0.12);  color: #22c55e; }
+    .clause-explanation { font-size: 0.85rem; color: #666; line-height: 1.6; }
+    .terms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+    .term-item { background: #0a0a0a; border: 1px solid #1e1e1e; border-radius: 8px; padding: 12px 14px; }
+    .term-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: #444; margin-bottom: 4px; }
+    .term-value { font-size: 0.88rem; color: #f0f0f0; font-weight: 500; }
+    .btn-reset { background: transparent; border: 1px solid #1e1e1e; color: #555; border-radius: 8px; padding: 10px 20px; font-family: system-ui, -apple-system, sans-serif; font-size: 0.85rem; cursor: pointer; margin-top: 20px; transition: border-color 0.2s, color 0.2s; }
+    .btn-reset:hover { border-color: #f97316; color: #f97316; }
+    footer { border-top: 1px solid #1a1a1a; padding: 20px 40px; text-align: center; font-size: 0.8rem; color: #333; }
+  </style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">ClauseCheck</a>
+  <span class="nav-badge">AI Contract Review</span>
+</nav>
+<main>
+  <div id="upload-form">
+    <div class="upload-zone" id="drop-zone">
+      <input type="file" id="file-input" accept=".txt,.doc,.docx,.pdf">
+      <h2>Drop your contract here</h2>
+      <p>PDF, Word, or plain text &mdash; any contract type</p>
+      <div class="file-name" id="file-name"></div>
+    </div>
+    <button class="btn-analyze" id="analyze-btn" onclick="analyzeContract()">Analyze Contract</button>
+    <p class="btn-note">Your contract is never stored. Analysis takes under 60 seconds.</p>
+    <div class="error-msg" id="error-msg"></div>
+  </div>
+  <div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+    <h3>Reviewing your contract...</h3>
+    <p>Flagging clauses, assessing risk, extracting key terms</p>
+  </div>
+  <div class="results" id="results">
+    <div class="results-header">
+      <h2>Review complete</h2>
+      <div class="risk-badge" id="risk-badge"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Executive summary</div>
+      <div class="summary-text" id="summary-text"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Flagged clauses</div>
+      <div id="clauses-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Key terms</div>
+      <div class="terms-grid" id="terms-grid"></div>
+    </div>
+    <button class="btn-reset" onclick="reset()">&larr; Review another contract</button>
+  </div>
+</main>
+<footer>&copy; 2026 ClauseCheck. Built for small law firms.</footer>
+<script>
+  const WORKER_URL = 'https://clausecheck.YOUR-SUBDOMAIN.workers.dev';
+  const dropZone = document.getElementById('drop-zone');
+  const fileInput = document.getElementById('file-input');
+  const fileNameEl = document.getElementById('file-name');
+  let fileContent = '';
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
+  fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
+  function handleFile(file) { fileNameEl.textContent = file.name; fileNameEl.style.display = 'block'; const reader = new FileReader(); reader.onload = e => { fileContent = e.target.result; }; reader.readAsText(file); }
+  function showError(msg) { const el = document.getElementById('error-msg'); el.textContent = msg; el.style.display = 'block'; }
+  async function analyzeContract() {
+    if (!fileContent) { showError('Please upload a contract file first.'); return; }
+    document.getElementById('upload-form').style.display = 'none';
+    document.getElementById('loading').style.display = 'block';
+    try {
+      const response = await fetch(WORKER_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contractText: fileContent }) });
+      const result = await response.json();
+      if (result.error) throw new Error(result.error);
+      renderResults(result);
+    } catch (err) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('upload-form').style.display = 'block';
+      showError('Something went wrong: ' + err.message);
+    }
+  }
+  function renderResults(data) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+    const badge = document.getElementById('risk-badge');
+    badge.textContent = data.overall_risk + ' Risk';
+    badge.className = 'risk-badge risk-' + data.overall_risk.toLowerCase();
+    document.getElementById('summary-text').textContent = data.summary;
+    document.getElementById('clauses-list').innerHTML = data.flagged_clauses.map(c => '<div class="clause-item ' + c.severity.toLowerCase() + '"><div class="clause-header"><span class="clause-title">' + c.title + '</span><span class="sev-tag sev-' + c.severity.toLowerCase() + '">' + c.severity + '</span></div><div class="clause-explanation">' + c.explanation + '</div></div>').join('');
+    document.getElementById('terms-grid').innerHTML = data.key_terms.map(t => '<div class="term-item"><div class="term-label">' + t.label + '</div><div class="term-value">' + t.value + '</div></div>').join('');
+  }
+  function reset() {
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('upload-form').style.display = 'block';
+    document.getElementById('error-msg').style.display = 'none';
+    document.getElementById('file-name').style.display = 'none';
+    fileContent = ''; fileInput.value = '';
+  }
+</script>
+</body>
+</html>
