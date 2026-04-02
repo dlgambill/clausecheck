@@ -11,6 +11,8 @@
     .logo { font-size: 1.1rem; font-weight: 600; color: #fff; letter-spacing: -0.02em; }
     .nav-cta { background: #f97316; color: #fff; padding: 10px 22px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: opacity 0.2s; }
     .nav-cta:hover { opacity: 0.88; }
+
+    /* Hero */
     .hero { max-width: 760px; margin: 0 auto; padding: 100px 24px 80px; text-align: center; }
     .badge { display: inline-block; background: #1a1a1a; border: 1px solid #2a2a2a; color: #f97316; font-size: 0.8rem; font-weight: 500; padding: 6px 14px; border-radius: 20px; margin-bottom: 28px; letter-spacing: 0.04em; text-transform: uppercase; }
     h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; color: #ffffff; margin-bottom: 24px; }
@@ -20,13 +22,17 @@
     .cta-primary { display: inline-block; background: #f97316; color: #fff; font-size: 1.05rem; font-weight: 600; padding: 16px 44px; border-radius: 8px; text-decoration: none; transition: opacity 0.2s; }
     .cta-primary:hover { opacity: 0.88; }
     .cta-note { font-size: 0.82rem; color: #555; }
+
+    /* Pain */
     .pain-section { max-width: 760px; margin: 0 auto; padding: 0 24px 100px; }
     .pain-label { text-align: center; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: #555; margin-bottom: 32px; }
     .pain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 600px) { .pain-grid { grid-template-columns: 1fr; } }
+    @media (max-width: 600px) { .pain-grid { grid-template-columns: 1fr; } .roi-grid { grid-template-columns: 1fr !important; } }
     .pain-card { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 28px; }
     .pain-card::before { content: "→"; display: block; color: #f97316; font-size: 1.1rem; margin-bottom: 12px; }
     .pain-card p { color: #ccc; font-size: 0.95rem; line-height: 1.6; }
+
+    /* How it works */
     .how-section { background: #0f0f0f; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; padding: 80px 24px; text-align: center; }
     .how-section h2 { font-size: 1.8rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 48px; color: #fff; }
     .steps { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; max-width: 760px; margin: 0 auto; }
@@ -34,10 +40,31 @@
     .step-num { width: 40px; height: 40px; background: #f97316; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; margin: 0 auto 16px; }
     .step h3 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 8px; }
     .step p { font-size: 0.88rem; color: #666; line-height: 1.6; }
-    .pricing-section { max-width: 760px; margin: 0 auto; padding: 80px 24px; text-align: center; }
+
+    /* Value prop */
+    .value-section { max-width: 760px; margin: 0 auto; padding: 80px 24px; }
+    .value-section h2 { font-size: 1.8rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 16px; color: #fff; }
+    .value-section .intro { font-size: 1rem; color: #888; line-height: 1.8; margin-bottom: 48px; max-width: 640px; }
+    .value-section .intro strong { color: #f0f0f0; font-weight: 500; }
+
+    /* ROI cards */
+    .roi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 48px; }
+    .roi-card { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 28px; }
+    .roi-card .roi-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #555; margin-bottom: 12px; }
+    .roi-card .roi-number { font-size: 2rem; font-weight: 700; color: #f97316; letter-spacing: -0.02em; margin-bottom: 6px; }
+    .roi-card .roi-desc { font-size: 0.85rem; color: #666; line-height: 1.6; }
+
+    /* Who it's for */
+    .who-block { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 32px; }
+    .who-block h3 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 12px; }
+    .who-block p { font-size: 0.92rem; color: #888; line-height: 1.8; }
+    .who-block p strong { color: #f0f0f0; font-weight: 500; }
+
+    /* Pricing */
+    .pricing-section { background: #0f0f0f; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; padding: 80px 24px; text-align: center; }
     .pricing-section h2 { font-size: 1.8rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 12px; color: #fff; }
     .pricing-section .sub { color: #666; font-size: 0.95rem; margin-bottom: 40px; }
-    .pricing-card { background: #111; border: 1px solid #1e1e1e; border-radius: 16px; padding: 40px; max-width: 400px; margin: 0 auto 40px; }
+    .pricing-card { background: #111; border: 1px solid #1e1e1e; border-radius: 16px; padding: 40px; max-width: 400px; margin: 0 auto 24px; }
     .price { font-size: 3rem; font-weight: 700; color: #fff; letter-spacing: -0.03em; }
     .price span { font-size: 1rem; font-weight: 400; color: #555; }
     .price-note { font-size: 0.82rem; color: #555; margin-top: 4px; margin-bottom: 28px; }
@@ -45,10 +72,15 @@
     .feature-list li { padding: 10px 0; border-bottom: 1px solid #1a1a1a; font-size: 0.9rem; color: #ccc; display: flex; align-items: center; gap: 10px; }
     .feature-list li::before { content: "✓"; color: #f97316; font-weight: 700; flex-shrink: 0; }
     .feature-list li:last-child { border-bottom: none; }
-    .bottom-cta { text-align: center; padding: 80px 24px; border-top: 1px solid #1a1a1a; }
+    .competitor-note { font-size: 0.82rem; color: #444; max-width: 400px; margin: 0 auto; line-height: 1.6; }
+    .competitor-note strong { color: #666; }
+
+    /* Bottom CTA */
+    .bottom-cta { text-align: center; padding: 80px 24px; }
     .bottom-cta h2 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; color: #fff; margin-bottom: 16px; }
     .bottom-cta p { color: #666; margin-bottom: 36px; font-size: 0.95rem; }
     .price-note-bottom { margin-top: 16px; font-size: 0.85rem; color: #444; }
+
     footer { border-top: 1px solid #1a1a1a; padding: 24px 40px; text-align: center; font-size: 0.8rem; color: #333; }
   </style>
 </head>
@@ -59,6 +91,7 @@
   <a href="app.html" class="nav-cta">Start Free Trial</a>
 </nav>
 
+<!-- Hero -->
 <section class="hero">
   <div class="badge">AI-Powered · Built for Small Firms</div>
   <h1>Your associates spend <span>6 hours</span> reviewing contracts. Ours takes 4 minutes.</h1>
@@ -69,6 +102,7 @@
   </div>
 </section>
 
+<!-- Pain points -->
 <section class="pain-section">
   <p class="pain-label">Sound familiar?</p>
   <div class="pain-grid">
@@ -82,11 +116,12 @@
       <p>Junior associates miss clauses that come back as malpractice risk. A second pass costs more time you don't have.</p>
     </div>
     <div class="pain-card">
-      <p>Enterprise tools like Relativity cost more than your associate's salary — and they weren't built for firms your size.</p>
+      <p>Enterprise tools like Relativity and Kira cost more than your associate's salary — and they weren't built for firms your size.</p>
     </div>
   </div>
 </section>
 
+<!-- How it works -->
 <section class="how-section">
   <h2>How it works</h2>
   <div class="steps">
@@ -98,7 +133,7 @@
     <div class="step">
       <div class="step-num">2</div>
       <h3>AI reviews it</h3>
-      <p>Flags risky clauses, summarizes key terms, and scores overall risk in under 5 minutes.</p>
+      <p>Flags risky clauses, summarizes key terms, and scores overall risk in under 60 seconds.</p>
     </div>
     <div class="step">
       <div class="step-num">3</div>
@@ -108,12 +143,58 @@
   </div>
 </section>
 
+<!-- Value prop + ROI -->
+<section class="value-section">
+  <h2>Built for firms that can't afford to slow down</h2>
+  <p class="intro">
+    ClauseCheck does in under 60 seconds what a junior associate takes 4&ndash;6 hours to do.
+    Upload any contract and get back a <strong>risk score</strong>, <strong>plain-English explanations of every flagged clause</strong>,
+    and a <strong>full key terms summary</strong> — no training required, no setup, works on any contract type.
+    Small firms with 2&ndash;50 attorneys are the sweet spot: you're competing against larger firms that have
+    dedicated legal ops teams and enterprise tools. ClauseCheck closes that gap for <strong>$20 a month</strong>.
+  </p>
+
+  <div class="roi-grid">
+    <div class="roi-card">
+      <div class="roi-label">Time recovered per week</div>
+      <div class="roi-number">12 hrs</div>
+      <div class="roi-desc">One attorney reviewing 4 contracts a week saves 3 hours per contract with ClauseCheck.</div>
+    </div>
+    <div class="roi-card">
+      <div class="roi-label">Recovered billing capacity</div>
+      <div class="roi-number">$2,400</div>
+      <div class="roi-desc">At $200/hour billing rate, that's $2,400/week in recovered capacity — for $20/month.</div>
+    </div>
+    <div class="roi-card">
+      <div class="roi-label">Your cost per review</div>
+      <div class="roi-number">&lt;$0.50</div>
+      <div class="roi-desc">At 50 reviews a month, ClauseCheck costs less than a cup of coffee per contract reviewed.</div>
+    </div>
+    <div class="roi-card">
+      <div class="roi-label">ROI in the first week</div>
+      <div class="roi-number">120x</div>
+      <div class="roi-desc">One saved review cycle pays for an entire year of ClauseCheck at $20/month.</div>
+    </div>
+  </div>
+
+  <div class="who-block">
+    <h3>Who it's for</h3>
+    <p>
+      Small firms with <strong>2&ndash;50 attorneys</strong> who don't have a dedicated legal ops team and can't justify
+      enterprise tools like Relativity or Kira — which cost more than a junior associate's salary.
+      ClauseCheck is <strong>the same AI capability, at a price that makes sense</strong> for the size of firm
+      that does the majority of legal work in America.
+    </p>
+  </div>
+</section>
+
+<!-- Pricing -->
 <section class="pricing-section">
   <h2>Simple, transparent pricing</h2>
   <p class="sub">One plan. Everything included. No per-seat fees.</p>
   <div class="pricing-card">
     <div class="price">$20<span>/month</span></div>
-    <p class="price-note">per firm · unlimited reviews</p>
+    <p class="price-note">per firm &middot; unlimited reviews &middot; all attorneys included</p>
     <ul class="feature-list">
       <li>Unlimited contract reviews</li>
       <li>Flagged clauses with risk ratings</li>
@@ -124,14 +205,19 @@
     </ul>
     <a href="app.html" class="cta-primary" style="display:block;text-align:center;">Start Your Free Trial</a>
   </div>
-  <p style="font-size:0.82rem;color:#444;">No credit card required for trial · Cancel anytime</p>
+  <p class="competitor-note">
+    <strong>For comparison:</strong> goHeather starts at $99/month. Spellbook mid-tier runs ~$179/user/month.
+    Harvey AI runs $100&ndash;$400/user/month. ClauseCheck is the only AI contract review tool built
+    for firms that just need it to work — without the enterprise price tag.
+  </p>
 </section>
 
+<!-- Bottom CTA -->
 <section class="bottom-cta">
   <h2>Start reviewing smarter today.</h2>
-  <p>$20/month after trial. Built for firms with 2–50 attorneys.</p>
+  <p>$20/month after trial. Built for firms with 2&ndash;50 attorneys.</p>
   <a href="app.html" class="cta-primary">Start Your Free Trial</a>
-  <p class="price-note-bottom">No credit card required for trial · Setup takes under 10 minutes</p>
+  <p class="price-note-bottom">No credit card required for trial &middot; Setup takes under 10 minutes</p>
 </section>
 
 <footer>
