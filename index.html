@@ -7,39 +7,39 @@
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.6; }
-    nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #1e1e1e; }
+    nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
     .logo { font-size: 1.1rem; font-weight: 600; color: #fff; letter-spacing: -0.02em; }
     .nav-cta { background: #f97316; color: #fff; padding: 10px 22px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: opacity 0.2s; }
     .nav-cta:hover { opacity: 0.88; }
 
     /* Hero */
     .hero { max-width: 760px; margin: 0 auto; padding: 100px 24px 80px; text-align: center; }
-    .badge { display: inline-block; background: #1a1a1a; border: 1px solid #2a2a2a; color: #f97316; font-size: 0.8rem; font-weight: 500; padding: 6px 14px; border-radius: 20px; margin-bottom: 28px; letter-spacing: 0.04em; text-transform: uppercase; }
+    .badge { display: inline-block; background: #141414; border: 1px solid #333; color: #f97316; font-size: 0.8rem; font-weight: 500; padding: 6px 14px; border-radius: 20px; margin-bottom: 28px; letter-spacing: 0.04em; text-transform: uppercase; }
     h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; color: #ffffff; margin-bottom: 24px; }
     h1 span { color: #f97316; }
     .subheadline { font-size: 1.15rem; color: #888; max-width: 560px; margin: 0 auto 48px; line-height: 1.7; }
     .cta-group { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 80px; }
     .cta-primary { display: inline-block; background: #f97316; color: #fff; font-size: 1.05rem; font-weight: 600; padding: 16px 44px; border-radius: 8px; text-decoration: none; transition: opacity 0.2s; }
     .cta-primary:hover { opacity: 0.88; }
-    .cta-note { font-size: 0.82rem; color: #555; }
+    .cta-note { font-size: 0.82rem; color: #777; }
 
     /* Pain */
     .pain-section { max-width: 760px; margin: 0 auto; padding: 0 24px 100px; }
-    .pain-label { text-align: center; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: #555; margin-bottom: 32px; }
+    .pain-label { text-align: center; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: #777; margin-bottom: 32px; }
     .pain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
     @media (max-width: 600px) { .pain-grid { grid-template-columns: 1fr; } .roi-grid { grid-template-columns: 1fr !important; } }
-    .pain-card { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 28px; }
+    .pain-card { background: #141414; border: 1px solid #333; border-radius: 12px; padding: 28px; }
     .pain-card::before { content: "→"; display: block; color: #f97316; font-size: 1.1rem; margin-bottom: 12px; }
     .pain-card p { color: #ccc; font-size: 0.95rem; line-height: 1.6; }
 
     /* How it works */
-    .how-section { background: #0f0f0f; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; padding: 80px 24px; text-align: center; }
+    .how-section { background: #0f0f0f; border-top: 1px solid #2a2a2a; border-bottom: 1px solid #2a2a2a; padding: 80px 24px; text-align: center; }
     .how-section h2 { font-size: 1.8rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 48px; color: #fff; }
     .steps { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; max-width: 760px; margin: 0 auto; }
     .step { flex: 1; min-width: 180px; max-width: 220px; }
     .step-num { width: 40px; height: 40px; background: #f97316; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; margin: 0 auto 16px; }
     .step h3 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 8px; }
-    .step p { font-size: 0.88rem; color: #666; line-height: 1.6; }
+    .step p { font-size: 0.88rem; color: #888; line-height: 1.6; }
 
     /* Value prop */
     .value-section { max-width: 760px; margin: 0 auto; padding: 80px 24px; }
@@ -49,39 +49,39 @@
 
     /* ROI cards */
     .roi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 48px; }
-    .roi-card { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 28px; }
-    .roi-card .roi-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #555; margin-bottom: 12px; }
+    .roi-card { background: #141414; border: 1px solid #333; border-radius: 12px; padding: 28px; }
+    .roi-card .roi-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #777; margin-bottom: 12px; }
     .roi-card .roi-number { font-size: 2rem; font-weight: 700; color: #f97316; letter-spacing: -0.02em; margin-bottom: 6px; }
-    .roi-card .roi-desc { font-size: 0.85rem; color: #666; line-height: 1.6; }
+    .roi-card .roi-desc { font-size: 0.85rem; color: #888; line-height: 1.6; }
 
     /* Who it's for */
-    .who-block { background: #111; border: 1px solid #1e1e1e; border-radius: 12px; padding: 32px; }
+    .who-block { background: #141414; border: 1px solid #333; border-radius: 12px; padding: 32px; }
     .who-block h3 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 12px; }
     .who-block p { font-size: 0.92rem; color: #888; line-height: 1.8; }
     .who-block p strong { color: #f0f0f0; font-weight: 500; }
 
     /* Pricing */
-    .pricing-section { background: #0f0f0f; border-top: 1px solid #1a1a1a; border-bottom: 1px solid #1a1a1a; padding: 80px 24px; text-align: center; }
+    .pricing-section { background: #0f0f0f; border-top: 1px solid #2a2a2a; border-bottom: 1px solid #2a2a2a; padding: 80px 24px; text-align: center; }
     .pricing-section h2 { font-size: 1.8rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 12px; color: #fff; }
-    .pricing-section .sub { color: #666; font-size: 0.95rem; margin-bottom: 40px; }
-    .pricing-card { background: #111; border: 1px solid #1e1e1e; border-radius: 16px; padding: 40px; max-width: 400px; margin: 0 auto 24px; }
+    .pricing-section .sub { color: #888; font-size: 0.95rem; margin-bottom: 40px; }
+    .pricing-card { background: #141414; border: 1px solid #333; border-radius: 16px; padding: 40px; max-width: 400px; margin: 0 auto 24px; }
     .price { font-size: 3rem; font-weight: 700; color: #fff; letter-spacing: -0.03em; }
-    .price span { font-size: 1rem; font-weight: 400; color: #555; }
-    .price-note { font-size: 0.82rem; color: #555; margin-top: 4px; margin-bottom: 28px; }
+    .price span { font-size: 1rem; font-weight: 400; color: #777; }
+    .price-note { font-size: 0.82rem; color: #777; margin-top: 4px; margin-bottom: 28px; }
     .feature-list { list-style: none; text-align: left; margin-bottom: 32px; }
-    .feature-list li { padding: 10px 0; border-bottom: 1px solid #1a1a1a; font-size: 0.9rem; color: #ccc; display: flex; align-items: center; gap: 10px; }
+    .feature-list li { padding: 10px 0; border-bottom: 1px solid #2a2a2a; font-size: 0.9rem; color: #ccc; display: flex; align-items: center; gap: 10px; }
     .feature-list li::before { content: "✓"; color: #f97316; font-weight: 700; flex-shrink: 0; }
     .feature-list li:last-child { border-bottom: none; }
-    .competitor-note { font-size: 0.82rem; color: #444; max-width: 400px; margin: 0 auto; line-height: 1.6; }
-    .competitor-note strong { color: #666; }
+    .competitor-note { font-size: 0.82rem; color: #777; max-width: 400px; margin: 0 auto; line-height: 1.6; }
+    .competitor-note strong { color: #888; }
 
     /* Bottom CTA */
     .bottom-cta { text-align: center; padding: 80px 24px; }
     .bottom-cta h2 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; color: #fff; margin-bottom: 16px; }
-    .bottom-cta p { color: #666; margin-bottom: 36px; font-size: 0.95rem; }
-    .price-note-bottom { margin-top: 16px; font-size: 0.85rem; color: #444; }
+    .bottom-cta p { color: #888; margin-bottom: 36px; font-size: 0.95rem; }
+    .price-note-bottom { margin-top: 16px; font-size: 0.85rem; color: #777; }
 
-    footer { border-top: 1px solid #1a1a1a; padding: 24px 40px; text-align: center; font-size: 0.8rem; color: #333; }
+    footer { border-top: 1px solid #2a2a2a; padding: 24px 40px; text-align: center; font-size: 0.8rem; color: #888; }
   </style>
 </head>
 <body>
