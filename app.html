@@ -26,6 +26,7 @@
     .upload-zone .limit-note { font-size: 0.78rem; color: #555; margin-top: 8px; }
     .file-name { margin-top: 14px; font-size: 0.82rem; color: #f97316; display: none; font-family: monospace; }
     .file-warning { margin-top: 10px; font-size: 0.8rem; color: #fb923c; display: none; background: rgba(249,115,22,0.08); border: 1px solid rgba(249,115,22,0.2); border-radius: 6px; padding: 8px 12px; }
+    .processing-note { margin-top: 10px; font-size: 0.8rem; color: #777; display: none; }
     .btn-analyze { width: 100%; background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 16px; font-family: system-ui, -apple-system, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-bottom: 8px; }
     .btn-analyze:hover { opacity: 0.88; }
     .btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; }
@@ -79,10 +80,7 @@
 </nav>
 
 <main>
-
   <div id="upload-form">
-
-    <!-- Plan banner -->
     <div class="plan-banner">
       <div>
         <div class="plan-info"><strong>Standard Plan</strong> &mdash; Up to 50 pages per contract</div>
@@ -98,6 +96,7 @@
       <p class="limit-note">Standard plan supports contracts up to 50 pages</p>
       <div class="file-name" id="file-name"></div>
       <div class="file-warning" id="file-warning">This contract exceeds 50 pages. Only the first 50 pages will be analyzed. Upgrade to Pro for unlimited length.</div>
+      <div class="processing-note" id="processing-note">Extracting text from file...</div>
     </div>
 
     <button class="btn-analyze" id="analyze-btn" onclick="analyzeContract()">Analyze Contract</button>
@@ -128,29 +127,31 @@
       <div class="card-label">Key terms</div>
       <div class="terms-grid" id="terms-grid"></div>
     </div>
-
-    <!-- Pro upsell after results -->
     <div class="upsell-banner">
       <p><strong>Need more?</strong> Upgrade to Pro for unlimited contract length, deeper analysis with Claude Sonnet, and priority support.</p>
       <a href="#" class="upsell-btn">Upgrade to Pro</a>
     </div>
-
     <button class="btn-reset" onclick="reset()">&larr; Review another contract</button>
   </div>
-
 </main>
 
 <footer>&copy; 2026 ClauseCheck. Built for small law firms.</footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
   const WORKER_URL = 'https://clausecheck.dgambill1975.workers.dev';
-  const CHAR_LIMIT = 100000; // ~50 pages of legal text
+  const CHAR_LIMIT = 100000;
+
+  // Set PDF.js worker path
+  pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
   const dropZone = document.getElementById('drop-zone');
   const fileInput = document.getElementById('file-input');
   const fileNameEl = document.getElementById('file-name');
   const fileWarningEl = document.getElementById('file-warning');
+  const processingNoteEl = document.getElementById('processing-note');
+  const analyzeBtn = document.getElementById('analyze-btn');
   let fileContent = '';
 
   dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
@@ -167,25 +168,49 @@
   async function handleFile(file) {
     fileNameEl.textContent = file.name;
     fileNameEl.style.display = 'block';
+    fileWarningEl.style.display = 'none';
+    processingNoteEl.style.display = 'block';
+    analyzeBtn.disabled = true;
+    fileContent = '';
+
     const ext = file.name.split('.').pop().toLowerCase();
 
-    if (ext === 'docx') {
-      const arrayBuffer = await file.arrayBuffer();
-      const result = await mammoth.extractRawText({ arrayBuffer });
-      fileContent = result.value;
-    } else {
-      const reader = new FileReader();
-      reader.onload = e => { fileContent = e.target.result; };
-      reader.readAsText(file);
-      await new Promise(resolve => { reader.onloadend = resolve; });
+    try {
+      if (ext === 'docx') {
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        fileContent = result.value;
+
+      } else if (ext === 'pdf') {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        let fullText = '';
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          const pageText = textContent.items.map(item => item.str).join(' ');
+          fullText += pageText + '\n';
+        }
+        fileContent = fullText;
+
+      } else {
+        // Plain text
+        fileContent = await file.text();
+      }
+
+      if (fileContent.length > CHAR_LIMIT) {
+        fileWarningEl.style.display = 'block';
+        fileContent = fileContent.slice(0, CHAR_LIMIT);
+      }
+
+    } catch (err) {
+      fileContent = '';
+      document.getElementById('error-msg').textContent = 'Could not read file: ' + err.message;
+      document.getElementById('error-msg').style.display = 'block';
     }
 
-    // Warn if over limit
-    if (fileContent.length > CHAR_LIMIT) {
-      fileWarningEl.style.display = 'block';
-    } else {
-      fileWarningEl.style.display = 'none';
-    }
+    processingNoteEl.style.display = 'none';
+    analyzeBtn.disabled = false;
   }
 
   function showError(msg) {
@@ -239,8 +264,10 @@
     document.getElementById('error-msg').style.display = 'none';
     document.getElementById('file-name').style.display = 'none';
     fileWarningEl.style.display = 'none';
+    processingNoteEl.style.display = 'none';
     fileContent = '';
     fileInput.value = '';
+    analyzeBtn.disabled = false;
   }
 </script>
 
