@@ -58,11 +58,14 @@
   </style>
 </head>
 <body>
+
 <nav>
   <a href="index.html" class="logo">ClauseCheck</a>
   <span class="nav-badge">AI Contract Review</span>
 </nav>
+
 <main>
+
   <div id="upload-form">
     <div class="upload-zone" id="drop-zone">
       <input type="file" id="file-input" accept=".txt,.doc,.docx,.pdf">
@@ -74,11 +77,13 @@
     <p class="btn-note">Your contract is never stored. Analysis takes under 60 seconds.</p>
     <div class="error-msg" id="error-msg"></div>
   </div>
+
   <div class="loading" id="loading">
     <div class="loading-spinner"></div>
     <h3>Reviewing your contract...</h3>
     <p>Flagging clauses, assessing risk, extracting key terms</p>
   </div>
+
   <div class="results" id="results">
     <div class="results-header">
       <h2>Review complete</h2>
@@ -98,26 +103,54 @@
     </div>
     <button class="btn-reset" onclick="reset()">&larr; Review another contract</button>
   </div>
+
 </main>
+
 <footer>&copy; 2026 ClauseCheck. Built for small law firms.</footer>
+
 <script>
   const WORKER_URL = 'https://clausecheck.dgambill1975.workers.dev';
+
   const dropZone = document.getElementById('drop-zone');
   const fileInput = document.getElementById('file-input');
   const fileNameEl = document.getElementById('file-name');
   let fileContent = '';
+
   dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
   dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
-  dropZone.addEventListener('drop', e => { e.preventDefault(); dropZone.classList.remove('drag-over'); if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]); });
-  fileInput.addEventListener('change', e => { if (e.target.files[0]) handleFile(e.target.files[0]); });
-  function handleFile(file) { fileNameEl.textContent = file.name; fileNameEl.style.display = 'block'; const reader = new FileReader(); reader.onload = e => { fileContent = e.target.result; }; reader.readAsText(file); }
-  function showError(msg) { const el = document.getElementById('error-msg'); el.textContent = msg; el.style.display = 'block'; }
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', e => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+  });
+
+  function handleFile(file) {
+    fileNameEl.textContent = file.name;
+    fileNameEl.style.display = 'block';
+    const reader = new FileReader();
+    reader.onload = e => { fileContent = e.target.result; };
+    reader.readAsText(file);
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
   async function analyzeContract() {
     if (!fileContent) { showError('Please upload a contract file first.'); return; }
     document.getElementById('upload-form').style.display = 'none';
     document.getElementById('loading').style.display = 'block';
     try {
-      const response = await fetch(WORKER_URL, { method: 'POST', headers: { 'Content-Type': 'application/json' }, body: JSON.stringify({ contractText: fileContent }) });
+      const response = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ contractText: fileContent })
+      });
       const result = await response.json();
       if (result.error) throw new Error(result.error);
       renderResults(result);
@@ -127,6 +160,7 @@
       showError('Something went wrong: ' + err.message);
     }
   }
+
   function renderResults(data) {
     document.getElementById('loading').style.display = 'none';
     document.getElementById('results').style.display = 'block';
@@ -134,16 +168,27 @@
     badge.textContent = data.overall_risk + ' Risk';
     badge.className = 'risk-badge risk-' + data.overall_risk.toLowerCase();
     document.getElementById('summary-text').textContent = data.summary;
-    document.getElementById('clauses-list').innerHTML = data.flagged_clauses.map(c => '<div class="clause-item ' + c.severity.toLowerCase() + '"><div class="clause-header"><span class="clause-title">' + c.title + '</span><span class="sev-tag sev-' + c.severity.toLowerCase() + '">' + c.severity + '</span></div><div class="clause-explanation">' + c.explanation + '</div></div>').join('');
-    document.getElementById('terms-grid').innerHTML = data.key_terms.map(t => '<div class="term-item"><div class="term-label">' + t.label + '</div><div class="term-value">' + t.value + '</div></div>').join('');
+    document.getElementById('clauses-list').innerHTML = data.flagged_clauses.map(c =>
+      '<div class="clause-item ' + c.severity.toLowerCase() + '">' +
+      '<div class="clause-header"><span class="clause-title">' + c.title + '</span>' +
+      '<span class="sev-tag sev-' + c.severity.toLowerCase() + '">' + c.severity + '</span></div>' +
+      '<div class="clause-explanation">' + c.explanation + '</div></div>'
+    ).join('');
+    document.getElementById('terms-grid').innerHTML = data.key_terms.map(t =>
+      '<div class="term-item"><div class="term-label">' + t.label + '</div>' +
+      '<div class="term-value">' + t.value + '</div></div>'
+    ).join('');
   }
+
   function reset() {
     document.getElementById('results').style.display = 'none';
     document.getElementById('upload-form').style.display = 'block';
     document.getElementById('error-msg').style.display = 'none';
     document.getElementById('file-name').style.display = 'none';
-    fileContent = ''; fileInput.value = '';
+    fileContent = '';
+    fileInput.value = '';
   }
 </script>
+
 </body>
 </html>
