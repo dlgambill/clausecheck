@@ -3,226 +3,388 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>ClauseCheck — AI Contract Review for Small Law Firms</title>
+  <title>ClauseCheck — AI Contract Review</title>
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.6; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.6; min-height: 100vh; }
     nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
-    .logo { font-size: 1.1rem; font-weight: 600; color: #fff; letter-spacing: -0.02em; }
-    .nav-cta { background: #f97316; color: #fff; padding: 10px 22px; border-radius: 6px; text-decoration: none; font-size: 0.9rem; font-weight: 500; transition: opacity 0.2s; }
-    .nav-cta:hover { opacity: 0.88; }
-
-    /* Hero */
-    .hero { max-width: 760px; margin: 0 auto; padding: 100px 24px 80px; text-align: center; }
-    .badge { display: inline-block; background: #141414; border: 1px solid #333; color: #f97316; font-size: 0.8rem; font-weight: 500; padding: 6px 14px; border-radius: 20px; margin-bottom: 28px; letter-spacing: 0.04em; text-transform: uppercase; }
-    h1 { font-size: clamp(2rem, 5vw, 3.2rem); font-weight: 700; line-height: 1.15; letter-spacing: -0.03em; color: #ffffff; margin-bottom: 24px; }
-    h1 span { color: #f97316; }
-    .subheadline { font-size: 1.15rem; color: #888; max-width: 560px; margin: 0 auto 48px; line-height: 1.7; }
-    .cta-group { display: flex; flex-direction: column; align-items: center; gap: 12px; margin-bottom: 80px; }
-    .cta-primary { display: inline-block; background: #f97316; color: #fff; font-size: 1.05rem; font-weight: 600; padding: 16px 44px; border-radius: 8px; text-decoration: none; transition: opacity 0.2s; }
-    .cta-primary:hover { opacity: 0.88; }
-    .cta-note { font-size: 0.82rem; color: #777; }
-
-    /* Pain */
-    .pain-section { max-width: 760px; margin: 0 auto; padding: 0 24px 100px; }
-    .pain-label { text-align: center; font-size: 0.8rem; text-transform: uppercase; letter-spacing: 0.08em; color: #777; margin-bottom: 32px; }
-    .pain-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; }
-    @media (max-width: 600px) { .pain-grid { grid-template-columns: 1fr; } .roi-grid { grid-template-columns: 1fr !important; } }
-    .pain-card { background: #141414; border: 1px solid #333; border-radius: 12px; padding: 28px; }
-    .pain-card::before { content: "→"; display: block; color: #f97316; font-size: 1.1rem; margin-bottom: 12px; }
-    .pain-card p { color: #ccc; font-size: 0.95rem; line-height: 1.6; }
-
-    /* How it works */
-    .how-section { background: #0f0f0f; border-top: 1px solid #2a2a2a; border-bottom: 1px solid #2a2a2a; padding: 80px 24px; text-align: center; }
-    .how-section h2 { font-size: 1.8rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 48px; color: #fff; }
-    .steps { display: flex; justify-content: center; gap: 40px; flex-wrap: wrap; max-width: 760px; margin: 0 auto; }
-    .step { flex: 1; min-width: 180px; max-width: 220px; }
-    .step-num { width: 40px; height: 40px; background: #f97316; color: #fff; border-radius: 50%; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 0.9rem; margin: 0 auto 16px; }
-    .step h3 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 8px; }
-    .step p { font-size: 0.88rem; color: #888; line-height: 1.6; }
-
-    /* Value prop */
-    .value-section { max-width: 760px; margin: 0 auto; padding: 80px 24px; }
-    .value-section h2 { font-size: 1.8rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 16px; color: #fff; }
-    .value-section .intro { font-size: 1rem; color: #888; line-height: 1.8; margin-bottom: 48px; max-width: 640px; }
-    .value-section .intro strong { color: #f0f0f0; font-weight: 500; }
-
-    /* ROI cards */
-    .roi-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 16px; margin-bottom: 48px; }
-    .roi-card { background: #141414; border: 1px solid #333; border-radius: 12px; padding: 28px; }
-    .roi-card .roi-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #777; margin-bottom: 12px; }
-    .roi-card .roi-number { font-size: 2rem; font-weight: 700; color: #f97316; letter-spacing: -0.02em; margin-bottom: 6px; }
-    .roi-card .roi-desc { font-size: 0.85rem; color: #888; line-height: 1.6; }
-
-    /* Who it's for */
-    .who-block { background: #141414; border: 1px solid #333; border-radius: 12px; padding: 32px; }
-    .who-block h3 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 12px; }
-    .who-block p { font-size: 0.92rem; color: #888; line-height: 1.8; }
-    .who-block p strong { color: #f0f0f0; font-weight: 500; }
-
-    /* Pricing */
-    .pricing-section { background: #0f0f0f; border-top: 1px solid #2a2a2a; border-bottom: 1px solid #2a2a2a; padding: 80px 24px; text-align: center; }
-    .pricing-section h2 { font-size: 1.8rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 12px; color: #fff; }
-    .pricing-section .sub { color: #888; font-size: 0.95rem; margin-bottom: 40px; }
-    .pricing-card { background: #141414; border: 1px solid #333; border-radius: 16px; padding: 40px; max-width: 400px; margin: 0 auto 24px; }
-    .price { font-size: 3rem; font-weight: 700; color: #fff; letter-spacing: -0.03em; }
-    .price span { font-size: 1rem; font-weight: 400; color: #777; }
-    .price-note { font-size: 0.82rem; color: #777; margin-top: 4px; margin-bottom: 28px; }
-    .feature-list { list-style: none; text-align: left; margin-bottom: 32px; }
-    .feature-list li { padding: 10px 0; border-bottom: 1px solid #2a2a2a; font-size: 0.9rem; color: #ccc; display: flex; align-items: center; gap: 10px; }
-    .feature-list li::before { content: "✓"; color: #f97316; font-weight: 700; flex-shrink: 0; }
-    .feature-list li:last-child { border-bottom: none; }
-    .competitor-note { font-size: 0.82rem; color: #777; max-width: 400px; margin: 0 auto; line-height: 1.6; }
-    .competitor-note strong { color: #888; }
-
-    /* Bottom CTA */
-    .bottom-cta { text-align: center; padding: 80px 24px; }
-    .bottom-cta h2 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; color: #fff; margin-bottom: 16px; }
-    .bottom-cta p { color: #888; margin-bottom: 36px; font-size: 0.95rem; }
-    .price-note-bottom { margin-top: 16px; font-size: 0.85rem; color: #777; }
-
-    footer { border-top: 1px solid #2a2a2a; padding: 24px 40px; text-align: center; font-size: 0.8rem; color: #888; }
+    .logo { font-size: 1.1rem; font-weight: 600; color: #fff; letter-spacing: -0.02em; text-decoration: none; }
+    .nav-badge { font-size: 0.75rem; color: #777; letter-spacing: 0.04em; text-transform: uppercase; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-user { font-size: 0.8rem; color: #666; }
+    .nav-signout { font-size: 0.8rem; color: #555; background: none; border: none; cursor: pointer; padding: 0; transition: color 0.2s; }
+    .nav-signout:hover { color: #f97316; }
+    main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
+    .plan-banner { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .plan-info { font-size: 0.85rem; color: #aaa; }
+    .plan-info strong { color: #f0f0f0; }
+    .plan-badge { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(249,115,22,0.12); color: #fb923c; border: 1px solid rgba(249,115,22,0.25); padding: 4px 10px; border-radius: 20px; }
+    .plan-upgrade { font-size: 0.78rem; color: #777; }
+    .plan-upgrade a { color: #f97316; text-decoration: none; }
+    .plan-upgrade a:hover { text-decoration: underline; }
+    .upload-zone { border: 1.5px dashed #2a2a2a; border-radius: 12px; padding: 56px 40px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; margin-bottom: 16px; }
+    .upload-zone:hover, .upload-zone.drag-over { border-color: #f97316; background: rgba(249,115,22,0.04); }
+    .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .upload-zone h2 { font-size: 1.3rem; font-weight: 600; color: #fff; margin-bottom: 8px; letter-spacing: -0.02em; }
+    .upload-zone p { font-size: 0.88rem; color: #777; }
+    .upload-zone .limit-note { font-size: 0.78rem; color: #555; margin-top: 8px; }
+    .file-name { margin-top: 14px; font-size: 0.82rem; color: #f97316; display: none; font-family: monospace; }
+    .file-warning { margin-top: 10px; font-size: 0.8rem; color: #fb923c; display: none; background: rgba(249,115,22,0.08); border: 1px solid rgba(249,115,22,0.2); border-radius: 6px; padding: 8px 12px; }
+    .processing-note { margin-top: 10px; font-size: 0.8rem; color: #777; display: none; }
+    .btn-analyze { width: 100%; background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 16px; font-family: system-ui, -apple-system, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-bottom: 8px; }
+    .btn-analyze:hover { opacity: 0.88; }
+    .btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-note { text-align: center; font-size: 0.8rem; color: #666; }
+    .error-msg { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #f87171; border-radius: 8px; padding: 14px 18px; font-size: 0.875rem; margin-top: 14px; display: none; }
+    .loading { display: none; text-align: center; padding: 80px 24px; }
+    .loading-spinner { width: 36px; height: 36px; border: 2px solid #2a2a2a; border-top-color: #f97316; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading h3 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 6px; }
+    .loading p { font-size: 0.85rem; color: #777; }
+    .results { display: none; }
+    .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #2a2a2a; }
+    .results-header h2 { font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; color: #fff; }
+    .risk-badge { font-size: 0.75rem; font-weight: 600; padding: 6px 14px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .risk-high   { background: rgba(239,68,68,0.15);  color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .risk-medium { background: rgba(249,115,22,0.15); color: #fb923c; border: 1px solid rgba(249,115,22,0.3); }
+    .risk-low    { background: rgba(34,197,94,0.15);  color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    .card { background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; padding: 24px; margin-bottom: 12px; }
+    .card-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #777; margin-bottom: 12px; }
+    .summary-text { font-size: 0.95rem; color: #d4d4d4; line-height: 1.7; }
+    .clause-item { border-left: 2px solid #2a2a2a; padding: 14px 16px; margin-bottom: 10px; border-radius: 0 8px 8px 0; background: rgba(255,255,255,0.03); }
+    .clause-item.high   { border-left-color: #ef4444; }
+    .clause-item.medium { border-left-color: #f97316; }
+    .clause-item.low    { border-left-color: #22c55e; }
+    .clause-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .clause-title { font-size: 0.9rem; font-weight: 600; color: #f0f0f0; }
+    .sev-tag { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; }
+    .sev-high   { background: rgba(239,68,68,0.15);  color: #f87171; }
+    .sev-medium { background: rgba(249,115,22,0.15); color: #fb923c; }
+    .sev-low    { background: rgba(34,197,94,0.15);  color: #4ade80; }
+    .clause-explanation { font-size: 0.85rem; color: #aaa; line-height: 1.6; }
+    .terms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+    .term-item { background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px 14px; }
+    .term-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: #666; margin-bottom: 4px; }
+    .term-value { font-size: 0.88rem; color: #f0f0f0; font-weight: 500; }
+    .btn-reset { background: transparent; border: 1px solid #2a2a2a; color: #888; border-radius: 8px; padding: 10px 20px; font-family: system-ui, -apple-system, sans-serif; font-size: 0.85rem; cursor: pointer; margin-top: 20px; transition: border-color 0.2s, color 0.2s; }
+    .btn-reset:hover { border-color: #f97316; color: #f97316; }
+    .upsell-banner { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px 20px; margin-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .upsell-banner p { font-size: 0.85rem; color: #aaa; }
+    .upsell-banner p strong { color: #f0f0f0; }
+    .upsell-btn { background: transparent; border: 1px solid #f97316; color: #f97316; border-radius: 6px; padding: 8px 16px; font-size: 0.82rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: background 0.2s, color 0.2s; white-space: nowrap; }
+    .upsell-btn:hover { background: #f97316; color: #fff; }
+    footer { border-top: 1px solid #2a2a2a; padding: 20px 40px; text-align: center; font-size: 0.8rem; color: #666; }
+    /* Auth gate overlay */
+    #auth-gate { display: none; position: fixed; inset: 0; background: #0a0a0a; z-index: 100; align-items: center; justify-content: center; flex-direction: column; gap: 12px; text-align: center; }
+    #auth-gate p { color: #777; font-size: 0.9rem; }
+    #auth-gate .spinner { width: 28px; height: 28px; border: 2px solid #2a2a2a; border-top-color: #f97316; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
   </style>
 </head>
 <body>
 
+<!-- Auth gate shown while session is being verified -->
+<div id="auth-gate" style="display:flex;">
+  <div class="spinner"></div>
+  <p>Verifying session...</p>
+</div>
+
 <nav>
-  <div class="logo">ClauseCheck</div>
-  <a href="app.html" class="nav-cta">Start Free Trial</a>
+  <a href="index.html" class="logo">ClauseCheck</a>
+  <div class="nav-right">
+    <span class="nav-badge">AI Contract Review</span>
+    <span class="nav-user" id="nav-user"></span>
+    <button class="nav-signout" id="signout-btn" onclick="signOut()">Sign out</button>
+  </div>
 </nav>
 
-<!-- Hero -->
-<section class="hero">
-  <div class="badge">AI-Powered · Built for Small Firms</div>
-  <h1>Your associates spend <span>6 hours</span> reviewing contracts. Ours takes 4 minutes.</h1>
-  <p class="subheadline">AI contract review built for small law firms — upload any contract, get flagged clauses, risk summary, and key terms instantly.</p>
-  <div class="cta-group">
-    <a href="app.html" class="cta-primary">Start Your Free Trial</a>
-    <span class="cta-note">30 days free · No setup required · Cancel anytime</span>
-  </div>
-</section>
+<main>
+  <div id="upload-form">
+    <div class="plan-banner">
+      <div>
+        <div class="plan-info" id="plan-info"><strong>Standard Plan</strong> &mdash; Up to 50 pages per contract</div>
+        <div class="plan-upgrade">Need to analyze longer contracts? <a href="#">Upgrade to Pro &rarr;</a></div>
+      </div>
+      <div class="plan-badge" id="plan-badge">Active</div>
+    </div>
 
-<!-- Pain points -->
-<section class="pain-section">
-  <p class="pain-label">Sound familiar?</p>
-  <div class="pain-grid">
-    <div class="pain-card">
-      <p>Clients are asking why review takes so long — and some are quietly leaving for firms that move faster.</p>
+    <div class="upload-zone" id="drop-zone">
+      <input type="file" id="file-input" accept=".txt,.doc,.docx,.pdf">
+      <h2>Drop your contract here</h2>
+      <p>PDF, Word (.docx), or plain text &mdash; any contract type</p>
+      <p class="limit-note" id="limit-note">Standard plan supports contracts up to 50 pages</p>
+      <div class="file-name" id="file-name"></div>
+      <div class="file-warning" id="file-warning">This contract exceeds the page limit. Only the first portion will be analyzed. Upgrade to Pro for unlimited length.</div>
+      <div class="processing-note" id="processing-note">Extracting text from file...</div>
     </div>
-    <div class="pain-card">
-      <p>You're billing fewer hours than the work actually costs you. Contract review is eating your margin.</p>
-    </div>
-    <div class="pain-card">
-      <p>Junior associates miss clauses that come back as malpractice risk. A second pass costs more time you don't have.</p>
-    </div>
-    <div class="pain-card">
-      <p>Enterprise tools like Relativity and Kira cost more than your associate's salary — and they weren't built for firms your size.</p>
-    </div>
-  </div>
-</section>
 
-<!-- How it works -->
-<section class="how-section">
-  <h2>How it works</h2>
-  <div class="steps">
-    <div class="step">
-      <div class="step-num">1</div>
-      <h3>Upload the contract</h3>
-      <p>PDF or Word doc. Any contract type — vendor, employment, lease, NDA.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">2</div>
-      <h3>AI reviews it</h3>
-      <p>Flags risky clauses, summarizes key terms, and scores overall risk in under 60 seconds.</p>
-    </div>
-    <div class="step">
-      <div class="step-num">3</div>
-      <h3>Export the report</h3>
-      <p>Clean, client-ready summary you can bill for or use internally.</p>
-    </div>
-  </div>
-</section>
-
-<!-- Value prop + ROI -->
-<section class="value-section">
-  <h2>Built for firms that can't afford to slow down</h2>
-  <p class="intro">
-    ClauseCheck does in under 60 seconds what a junior associate takes 4&ndash;6 hours to do.
-    Upload any contract and get back a <strong>risk score</strong>, <strong>plain-English explanations of every flagged clause</strong>,
-    and a <strong>full key terms summary</strong> — no training required, no setup, works on any contract type.
-    Small firms with 2&ndash;50 attorneys are the sweet spot: you're competing against larger firms that have
-    dedicated legal ops teams and enterprise tools. ClauseCheck closes that gap for <strong>$20 a month</strong>.
-  </p>
-
-  <div class="roi-grid">
-    <div class="roi-card">
-      <div class="roi-label">Time recovered per week</div>
-      <div class="roi-number">12 hrs</div>
-      <div class="roi-desc">One attorney reviewing 4 contracts a week saves 3 hours per contract with ClauseCheck.</div>
-    </div>
-    <div class="roi-card">
-      <div class="roi-label">Recovered billing capacity</div>
-      <div class="roi-number">$2,400</div>
-      <div class="roi-desc">At $200/hour billing rate, that's $2,400/week in recovered capacity — for $20/month.</div>
-    </div>
-    <div class="roi-card">
-      <div class="roi-label">Your cost per review</div>
-      <div class="roi-number">&lt;$0.50</div>
-      <div class="roi-desc">At 50 reviews a month, ClauseCheck costs less than a cup of coffee per contract reviewed.</div>
-    </div>
-    <div class="roi-card">
-      <div class="roi-label">ROI in the first week</div>
-      <div class="roi-number">120x</div>
-      <div class="roi-desc">One saved review cycle pays for an entire year of ClauseCheck at $20/month.</div>
-    </div>
+    <button class="btn-analyze" id="analyze-btn" onclick="analyzeContract()">Analyze Contract</button>
+    <p class="btn-note">Your contract is never stored. Analysis takes under 60 seconds.</p>
+    <div class="error-msg" id="error-msg"></div>
   </div>
 
-  <div class="who-block">
-    <h3>Who it's for</h3>
-    <p>
-      Small firms with <strong>2&ndash;50 attorneys</strong> who don't have a dedicated legal ops team and can't justify
-      enterprise tools like Relativity or Kira — which cost more than a junior associate's salary.
-      ClauseCheck is <strong>the same AI capability, at a price that makes sense</strong> for the size of firm
-      that does the majority of legal work in America.
-    </p>
+  <div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+    <h3>Reviewing your contract...</h3>
+    <p>Flagging clauses, assessing risk, extracting key terms</p>
   </div>
-</section>
 
-<!-- Pricing -->
-<section class="pricing-section">
-  <h2>Simple, transparent pricing</h2>
-  <p class="sub">One plan. Everything included. No per-seat fees.</p>
-  <div class="pricing-card">
-    <div class="price">$20<span>/month</span></div>
-    <p class="price-note">per firm &middot; unlimited reviews &middot; all attorneys included</p>
-    <ul class="feature-list">
-      <li>Unlimited contract reviews</li>
-      <li>Flagged clauses with risk ratings</li>
-      <li>Key terms extraction</li>
-      <li>Executive summary report</li>
-      <li>Any contract type supported</li>
-      <li>30-day free trial included</li>
-    </ul>
-    <a href="app.html" class="cta-primary" style="display:block;text-align:center;">Start Your Free Trial</a>
+  <div class="results" id="results">
+    <div class="results-header">
+      <h2>Review complete</h2>
+      <div class="risk-badge" id="risk-badge"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Executive summary</div>
+      <div class="summary-text" id="summary-text"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Flagged clauses</div>
+      <div id="clauses-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Key terms</div>
+      <div class="terms-grid" id="terms-grid"></div>
+    </div>
+    <div class="upsell-banner" id="upsell-banner">
+      <p><strong>Need more?</strong> Upgrade to Pro for unlimited contract length, deeper analysis with Claude Sonnet, and priority support.</p>
+      <a href="#" class="upsell-btn">Upgrade to Pro</a>
+    </div>
+    <button class="btn-reset" onclick="reset()">&larr; Review another contract</button>
   </div>
-  <p class="competitor-note">
-    <strong>For comparison:</strong> goHeather starts at $99/month. Spellbook mid-tier runs ~$179/user/month.
-    Harvey AI runs $100&ndash;$400/user/month. ClauseCheck is the only AI contract review tool built
-    for firms that just need it to work — without the enterprise price tag.
-  </p>
-</section>
+</main>
 
-<!-- Bottom CTA -->
-<section class="bottom-cta">
-  <h2>Start reviewing smarter today.</h2>
-  <p>$20/month after trial. Built for firms with 2&ndash;50 attorneys.</p>
-  <a href="app.html" class="cta-primary">Start Your Free Trial</a>
-  <p class="price-note-bottom">No credit card required for trial &middot; Setup takes under 10 minutes</p>
-</section>
+<footer>&copy; 2026 ClauseCheck. Built for small law firms.</footer>
 
-<footer>
-  &copy; 2026 ClauseCheck. Built for small law firms.
-</footer>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  // ── Config ────────────────────────────────────────────────────────────────
+  const WORKER_URL    = 'https://clausecheck.dgambill1975.workers.dev';
+  const SUPABASE_URL  = 'https://gmzawvbidpjrqixkdiyh.supabase.co';
+  const SUPABASE_ANON = 'YOUR_SUPABASE_ANON_KEY'; // replace with your anon/public key
+
+  // ── Supabase client ───────────────────────────────────────────────────────
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  // ── Session state ─────────────────────────────────────────────────────────
+  let currentSession = null;
+  let userTier = 'trial';
+
+  // PDF.js worker
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  // ── Auth init ─────────────────────────────────────────────────────────────
+  async function initAuth() {
+    const { data: { session }, error } = await sb.auth.getSession();
+
+    if (!session) {
+      // No session — redirect to login
+      window.location.href = 'index.html';
+      return;
+    }
+
+    currentSession = session;
+    document.getElementById('auth-gate').style.display = 'none';
+    document.getElementById('nav-user').textContent = session.user.email;
+    applyTierUI('standard'); // default; real tier comes back from Worker response
+  }
+
+  function applyTierUI(tier) {
+    userTier = tier;
+    const isPro = tier === 'pro';
+    document.getElementById('plan-info').innerHTML = isPro
+      ? '<strong>Pro Plan</strong> &mdash; Unlimited contract length'
+      : '<strong>Standard Plan</strong> &mdash; Up to 50 pages per contract';
+    document.getElementById('plan-badge').textContent = isPro ? 'Pro' : 'Active';
+    document.getElementById('limit-note').textContent = isPro
+      ? 'Pro plan supports contracts of any length'
+      : 'Standard plan supports contracts up to 50 pages';
+    if (isPro) {
+      document.getElementById('upsell-banner').style.display = 'none';
+    }
+    CHAR_LIMIT = isPro ? 500000 : 100000;
+  }
+
+  async function signOut() {
+    await sb.auth.signOut();
+    window.location.href = 'index.html';
+  }
+
+  // ── File handling ─────────────────────────────────────────────────────────
+  let CHAR_LIMIT = 100000;
+
+  const dropZone       = document.getElementById('drop-zone');
+  const fileInput      = document.getElementById('file-input');
+  const fileNameEl     = document.getElementById('file-name');
+  const fileWarningEl  = document.getElementById('file-warning');
+  const processingNote = document.getElementById('processing-note');
+  const analyzeBtn     = document.getElementById('analyze-btn');
+  let fileContent = '';
+
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', e => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+  });
+
+  async function handleFile(file) {
+    fileNameEl.textContent = file.name;
+    fileNameEl.style.display = 'block';
+    fileWarningEl.style.display = 'none';
+    processingNote.style.display = 'block';
+    analyzeBtn.disabled = true;
+    fileContent = '';
+
+    const ext = file.name.split('.').pop().toLowerCase();
+
+    try {
+      if (ext === 'docx') {
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        fileContent = result.value;
+
+      } else if (ext === 'pdf') {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        let fullText = '';
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          fullText += textContent.items.map(item => item.str).join(' ') + '\n';
+        }
+        fileContent = fullText;
+
+      } else {
+        fileContent = await file.text();
+      }
+
+      if (fileContent.length > CHAR_LIMIT) {
+        fileWarningEl.style.display = 'block';
+        fileContent = fileContent.slice(0, CHAR_LIMIT);
+      }
+
+    } catch (err) {
+      fileContent = '';
+      showError('Could not read file: ' + err.message);
+    }
+
+    processingNote.style.display = 'none';
+    analyzeBtn.disabled = false;
+  }
+
+  // ── Analysis ──────────────────────────────────────────────────────────────
+  async function analyzeContract() {
+    if (!fileContent) { showError('Please upload a contract file first.'); return; }
+    if (!currentSession) { showError('Session expired. Please sign in again.'); window.location.href = 'index.html'; return; }
+
+    // Refresh session token in case it expired
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    currentSession = session;
+
+    document.getElementById('upload-form').style.display = 'none';
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('error-msg').style.display = 'none';
+
+    try {
+      const response = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentSession.access_token}`   // ← the fix
+        },
+        body: JSON.stringify({ contractText: fileContent })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || result.error) {
+        // Handle trial expiry specially
+        if (result.trialExpired) {
+          throw new Error('Your trial has expired. Please upgrade to continue.');
+        }
+        throw new Error(result.error || `Server error (${response.status})`);
+      }
+
+      // Update tier UI based on what the Worker reports
+      if (result.tier) applyTierUI(result.tier);
+
+      renderResults(result);
+
+    } catch (err) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('upload-form').style.display = 'block';
+      showError('Something went wrong: ' + err.message);
+    }
+  }
+
+  // ── Render ────────────────────────────────────────────────────────────────
+  function renderResults(data) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+
+    const badge = document.getElementById('risk-badge');
+    badge.textContent = data.overall_risk + ' Risk';
+    badge.className = 'risk-badge risk-' + data.overall_risk.toLowerCase();
+
+    document.getElementById('summary-text').textContent = data.summary;
+
+    document.getElementById('clauses-list').innerHTML = data.flagged_clauses.map(c =>
+      `<div class="clause-item ${c.severity.toLowerCase()}">
+        <div class="clause-header">
+          <span class="clause-title">${escapeHtml(c.title)}</span>
+          <span class="sev-tag sev-${c.severity.toLowerCase()}">${c.severity}</span>
+        </div>
+        <div class="clause-explanation">${escapeHtml(c.explanation)}</div>
+      </div>`
+    ).join('');
+
+    document.getElementById('terms-grid').innerHTML = data.key_terms.map(t =>
+      `<div class="term-item">
+        <div class="term-label">${escapeHtml(t.label)}</div>
+        <div class="term-value">${escapeHtml(t.value)}</div>
+      </div>`
+    ).join('');
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────────────────
+  function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function reset() {
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('upload-form').style.display = 'block';
+    document.getElementById('error-msg').style.display = 'none';
+    document.getElementById('file-name').style.display = 'none';
+    fileWarningEl.style.display = 'none';
+    processingNote.style.display = 'none';
+    fileContent = '';
+    fileInput.value = '';
+    analyzeBtn.disabled = false;
+  }
+
+  // ── Boot ──────────────────────────────────────────────────────────────────
+  initAuth();
+</script>
 
 </body>
 </html>
