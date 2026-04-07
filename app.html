@@ -170,6 +170,32 @@
   pdfjsLib.GlobalWorkerOptions.workerSrc =
     'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
+  // Keep session token in DB in sync whenever Supabase refreshes it
+  async function syncSessionToken(session) {
+    if (!session) return;
+    await fetch(`${SUPABASE_URL}/rest/v1/sessions?user_id=eq.${session.user.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${session.access_token}`,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({ session_token: session.access_token })
+    });
+  }
+
+  // Listen for token refreshes and sync to DB automatically
+  sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'TOKEN_REFRESHED' && session) {
+      currentSession = session;
+      syncSessionToken(session);
+    }
+    if (event === 'SIGNED_OUT') {
+      window.location.href = 'index.html';
+    }
+  });
+
   async function initAuth() {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) {
@@ -177,6 +203,8 @@
       return;
     }
     currentSession = session;
+    // Sync token on load in case it refreshed since last login
+    await syncSessionToken(session);
     document.getElementById('auth-gate').style.display = 'none';
     document.getElementById('nav-user').textContent = session.user.email;
   }
