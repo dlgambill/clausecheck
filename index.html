@@ -314,18 +314,13 @@
     .cta-section > p { font-size: 0.95rem; color: var(--muted); margin-bottom: 36px; font-weight: 300; }
 
     /* FOOTER */
-    footer {
-      border-top: 1px solid var(--border2);
-      padding: 28px 48px;
-      display: flex; justify-content: space-between; align-items: center;
-      flex-wrap: wrap; gap: 14px;
-    }
-    .footer-logo { font-family: 'DM Serif Display', serif; font-size: 0.95rem; color: #fff; }
-    .footer-logo span { color: var(--orange); }
-    .footer-links { display: flex; gap: 22px; }
-    .footer-links a { font-size: 0.76rem; color: var(--dim); text-decoration: none; transition: color 0.2s; }
-    .footer-links a:hover { color: var(--muted); }
-    .footer-copy { font-size: 0.72rem; color: var(--dim); }
+footer {
+  border-top: 1px solid var(--border2);
+  padding: 28px 48px;
+  text-align: center;
+  font-size: 0.76rem;
+  color: var(--dim);
+}
 
     /* ANIMATIONS */
     @keyframes fadeUp {
@@ -338,8 +333,6 @@
     @media (max-width: 640px) {
       nav { padding: 14px 20px; }
       .nav-links a:not(.btn-nav) { display: none; }
-      footer { padding: 22px 20px; flex-direction: column; text-align: center; }
-      .footer-links { justify-content: center; }
     }
   </style>
 </head>
@@ -509,10 +502,7 @@
 
 <!-- FOOTER -->
 <footer>
-  &copy; 2026 ClauseCheck &nbsp;·&nbsp;
-  Built for small law firms &nbsp;·&nbsp;
-  <a href="terms.html" style="color:#666;text-decoration:none;">Terms</a> &nbsp;·&nbsp;
-  <a href="privacy.html" style="color:#666;text-decoration:none;">Privacy</a>
+  &copy; 2026 ClauseCheck &nbsp;·&nbsp; Built for small law firms &nbsp;·&nbsp; <a href="terms.html" style="color:#666;text-decoration:none;">Terms</a> &nbsp;·&nbsp; <a href="privacy.html" style="color:#666;text-decoration:none;">Privacy</a>
 </footer>
 
 <script>
