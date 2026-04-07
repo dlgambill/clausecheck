@@ -1,0 +1,179 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>ClauseCheck — Privacy Policy</title>
+<style>
+*, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.7; }
+nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
+.logo { font-size: 1.1rem; font-weight: 600; color: #fff; letter-spacing: -0.02em; text-decoration: none; }
+main { max-width: 720px; margin: 0 auto; padding: 60px 24px 100px; }
+h1 { font-size: 2rem; font-weight: 700; letter-spacing: -0.02em; color: #fff; margin-bottom: 8px; }
+.meta { font-size: 0.85rem; color: #555; margin-bottom: 48px; }
+h2 { font-size: 1.1rem; font-weight: 600; color: #fff; margin: 36px 0 12px; }
+p { font-size: 0.95rem; color: #aaa; margin-bottom: 14px; }
+ul { padding-left: 20px; margin-bottom: 14px; }
+li { font-size: 0.95rem; color: #aaa; margin-bottom: 6px; line-height: 1.7; }
+a { color: #f97316; text-decoration: none; }
+a:hover { text-decoration: underline; }
+table { width: 100%; border-collapse: collapse; margin-bottom: 24px; }
+th { text-align: left; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 0.06em; color: #555; padding: 8px 12px; border-bottom: 1px solid #2a2a2a; }
+td { font-size: 0.88rem; color: #aaa; padding: 10px 12px; border-bottom: 1px solid #1a1a1a; vertical-align: top; }
+footer { border-top: 1px solid #2a2a2a; padding: 24px 40px; text-align: center; font-size: 0.8rem; color: #666; }
+</style>
+</head>
+<body>
+<nav>
+  <a href="index.html" class="logo">ClauseCheck</a>
+</nav>
+
+<main>
+  <h1>Privacy Policy</h1>
+  <p class="meta">Effective date: April 7, 2026 &nbsp;·&nbsp; Conduit Lab LLC</p>
+
+  <p>This Privacy Policy describes how Conduit Lab LLC ("Company," "we," "us") collects, uses, and protects information when you use ClauseCheck ("the Service"). We take the privacy of your legal documents seriously and have designed the Service with that in mind.</p>
+
+  <h2>1. Information we collect</h2>
+
+  <table>
+    <tr>
+      <th>Category</th>
+      <th>What we collect</th>
+      <th>Why</th>
+    </tr>
+    <tr>
+      <td>Account information</td>
+      <td>Name, email address, firm name, password (hashed)</td>
+      <td>To create and manage your account</td>
+    </tr>
+    <tr>
+      <td>Billing information</td>
+      <td>Payment method details (processed by Stripe — we never see your full card number)</td>
+      <td>To process subscription payments</td>
+    </tr>
+    <tr>
+      <td>Contract documents</td>
+      <td>Text content of contracts you upload for analysis</td>
+      <td>To generate AI analysis</td>
+    </tr>
+    <tr>
+      <td>Analysis results</td>
+      <td>Summaries, flagged clauses, key terms, risk scores</td>
+      <td>To display results and maintain your history</td>
+    </tr>
+    <tr>
+      <td>Session data</td>
+      <td>Access token, device user agent, login timestamps</td>
+      <td>To enforce single-device sessions and account security</td>
+    </tr>
+    <tr>
+      <td>Usage data</td>
+      <td>Number of analyses run, feature usage, error logs</td>
+      <td>To improve the Service and diagnose issues</td>
+    </tr>
+  </table>
+
+  <h2>2. How we handle your contract documents</h2>
+  <p>We understand that the contracts you upload may contain sensitive business and legal information. Here is exactly how we handle them:</p>
+  <ul>
+    <li><strong style="color:#f0f0f0">Standard tier:</strong> Contract text is transmitted securely to our Cloudflare Worker, passed to the Anthropic API for analysis, and not persistently stored. The text exists in memory only during processing.</li>
+    <li><strong style="color:#f0f0f0">Pro tier (The Vault):</strong> Documents you explicitly choose to save are stored encrypted at rest using AES-256 encryption in Supabase Storage. Only your account can access them. You can delete them at any time.</li>
+    <li><strong style="color:#f0f0f0">We do not use your documents to train AI models.</strong> Contract text is passed to the Anthropic API for inference only, under Anthropic's API terms which prohibit training on API inputs.</li>
+    <li>We do not sell, rent, or share your contract documents with any third party except as necessary to provide the Service (Anthropic API for analysis).</li>
+  </ul>
+
+  <h2>3. How we use your information</h2>
+  <ul>
+    <li>To provide, operate, and improve the Service</li>
+    <li>To authenticate your identity and enforce account security</li>
+    <li>To process payments and manage your subscription</li>
+    <li>To send transactional emails (signup confirmation, trial expiry notice, payment receipts)</li>
+    <li>To respond to support requests</li>
+    <li>To detect and prevent fraud and abuse</li>
+    <li>To comply with legal obligations</li>
+  </ul>
+  <p>We do not use your information for advertising, and we do not sell your personal data to any third party.</p>
+
+  <h2>4. Third-party services</h2>
+  <table>
+    <tr>
+      <th>Service</th>
+      <th>Purpose</th>
+      <th>Data shared</th>
+    </tr>
+    <tr>
+      <td>Supabase</td>
+      <td>Authentication and database</td>
+      <td>Email, name, session data, analysis results</td>
+    </tr>
+    <tr>
+      <td>Anthropic</td>
+      <td>AI contract analysis</td>
+      <td>Contract text (for inference only, not training)</td>
+    </tr>
+    <tr>
+      <td>Stripe</td>
+      <td>Payment processing</td>
+      <td>Email, billing details</td>
+    </tr>
+    <tr>
+      <td>Cloudflare</td>
+      <td>Worker hosting, DNS, DDoS protection</td>
+      <td>Request metadata (IP, headers)</td>
+    </tr>
+  </table>
+
+  <h2>5. Data retention</h2>
+  <ul>
+    <li><strong style="color:#f0f0f0">Account data:</strong> Retained while your account is active and for 30 days after deletion.</li>
+    <li><strong style="color:#f0f0f0">Contract text (Standard tier):</strong> Not retained after analysis is complete.</li>
+    <li><strong style="color:#f0f0f0">Vault documents (Pro tier):</strong> Retained until you delete them or close your account.</li>
+    <li><strong style="color:#f0f0f0">Analysis history:</strong> Retained while your account is active. Deleted when you close your account.</li>
+    <li><strong style="color:#f0f0f0">Billing records:</strong> Retained for 7 years as required by applicable tax laws.</li>
+  </ul>
+
+  <h2>6. Security</h2>
+  <p>We implement industry-standard security measures including:</p>
+  <ul>
+    <li>HTTPS/TLS encryption for all data in transit</li>
+    <li>AES-256 encryption for documents stored in The Vault</li>
+    <li>Row-level security in our database ensuring each user can only access their own data</li>
+    <li>Single-device session enforcement to prevent unauthorized account access</li>
+    <li>API keys stored as encrypted secrets, never exposed in client-side code</li>
+  </ul>
+  <p>No system is perfectly secure. If you discover a security vulnerability, please report it to <a href="mailto:security@conduitlab.ai">security@conduitlab.ai</a>.</p>
+
+  <h2>7. Attorney-client privilege</h2>
+  <p>We are aware that legal professionals using ClauseCheck may be reviewing documents subject to attorney-client privilege. By using the Service, you acknowledge that transmitting documents to a third-party AI service may have implications for privilege, and you accept responsibility for making that determination under the applicable rules of professional conduct in your jurisdiction. We recommend reviewing your state bar's guidance on cloud services and AI tools before uploading privileged materials.</p>
+
+  <h2>8. Your rights</h2>
+  <p>You have the right to:</p>
+  <ul>
+    <li>Access the personal data we hold about you</li>
+    <li>Correct inaccurate personal data</li>
+    <li>Delete your account and associated data</li>
+    <li>Export your analysis history</li>
+    <li>Opt out of non-essential communications</li>
+  </ul>
+  <p>To exercise any of these rights, contact us at <a href="mailto:privacy@conduitlab.ai">privacy@conduitlab.ai</a>.</p>
+
+  <h2>9. Children's privacy</h2>
+  <p>The Service is not directed at children under 18. We do not knowingly collect personal information from anyone under 18. If you believe we have inadvertently collected such information, please contact us and we will delete it promptly.</p>
+
+  <h2>10. Changes to this policy</h2>
+  <p>We may update this Privacy Policy from time to time. We will notify you of material changes by email at least 14 days before they take effect. The effective date at the top of this page will always reflect the most current version.</p>
+
+  <h2>11. Contact</h2>
+  <p>Privacy questions or requests: <a href="mailto:privacy@conduitlab.ai">privacy@conduitlab.ai</a><br>
+  Conduit Lab LLC &nbsp;·&nbsp; Kansas City, Missouri</p>
+</main>
+
+<footer>
+  &copy; 2026 Conduit Lab LLC &nbsp;·&nbsp;
+  <a href="privacy.html">Privacy Policy</a> &nbsp;·&nbsp;
+  <a href="terms.html">Terms of Service</a>
+</footer>
+</body>
+</html>
