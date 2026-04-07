@@ -1,0 +1,359 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClauseCheck — AI Contract Review</title>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.6; min-height: 100vh; }
+    nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
+    .logo { font-size: 1.1rem; font-weight: 600; color: #fff; letter-spacing: -0.02em; text-decoration: none; }
+    .nav-badge { font-size: 0.75rem; color: #777; letter-spacing: 0.04em; text-transform: uppercase; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-user { font-size: 0.8rem; color: #666; }
+    .nav-signout { font-size: 0.8rem; color: #555; background: none; border: none; cursor: pointer; padding: 0; transition: color 0.2s; }
+    .nav-signout:hover { color: #f97316; }
+    main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
+    .plan-banner { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .plan-info { font-size: 0.85rem; color: #aaa; }
+    .plan-info strong { color: #f0f0f0; }
+    .plan-badge { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; background: rgba(249,115,22,0.12); color: #fb923c; border: 1px solid rgba(249,115,22,0.25); padding: 4px 10px; border-radius: 20px; }
+    .plan-upgrade { font-size: 0.78rem; color: #777; }
+    .plan-upgrade a { color: #f97316; text-decoration: none; }
+    .plan-upgrade a:hover { text-decoration: underline; }
+    .upload-zone { border: 1.5px dashed #2a2a2a; border-radius: 12px; padding: 56px 40px; text-align: center; cursor: pointer; transition: border-color 0.2s, background 0.2s; position: relative; margin-bottom: 16px; }
+    .upload-zone:hover, .upload-zone.drag-over { border-color: #f97316; background: rgba(249,115,22,0.04); }
+    .upload-zone input[type="file"] { position: absolute; inset: 0; opacity: 0; cursor: pointer; width: 100%; height: 100%; }
+    .upload-zone h2 { font-size: 1.3rem; font-weight: 600; color: #fff; margin-bottom: 8px; letter-spacing: -0.02em; }
+    .upload-zone p { font-size: 0.88rem; color: #777; }
+    .upload-zone .limit-note { font-size: 0.78rem; color: #555; margin-top: 8px; }
+    .file-name { margin-top: 14px; font-size: 0.82rem; color: #f97316; display: none; font-family: monospace; }
+    .file-warning { margin-top: 10px; font-size: 0.8rem; color: #fb923c; display: none; background: rgba(249,115,22,0.08); border: 1px solid rgba(249,115,22,0.2); border-radius: 6px; padding: 8px 12px; }
+    .processing-note { margin-top: 10px; font-size: 0.8rem; color: #777; display: none; }
+    .btn-analyze { width: 100%; background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 16px; font-family: system-ui, -apple-system, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-bottom: 8px; }
+    .btn-analyze:hover { opacity: 0.88; }
+    .btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-note { text-align: center; font-size: 0.8rem; color: #666; }
+    .error-msg { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #f87171; border-radius: 8px; padding: 14px 18px; font-size: 0.875rem; margin-top: 14px; display: none; }
+    .loading { display: none; text-align: center; padding: 80px 24px; }
+    .loading-spinner { width: 36px; height: 36px; border: 2px solid #2a2a2a; border-top-color: #f97316; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+    .loading h3 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 6px; }
+    .loading p { font-size: 0.85rem; color: #777; }
+    .results { display: none; }
+    .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #2a2a2a; }
+    .results-header h2 { font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; color: #fff; }
+    .risk-badge { font-size: 0.75rem; font-weight: 600; padding: 6px 14px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
+    .risk-high   { background: rgba(239,68,68,0.15);  color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+    .risk-medium { background: rgba(249,115,22,0.15); color: #fb923c; border: 1px solid rgba(249,115,22,0.3); }
+    .risk-low    { background: rgba(34,197,94,0.15);  color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+    .card { background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; padding: 24px; margin-bottom: 12px; }
+    .card-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #777; margin-bottom: 12px; }
+    .summary-text { font-size: 0.95rem; color: #d4d4d4; line-height: 1.7; }
+    .clause-item { border-left: 2px solid #2a2a2a; padding: 14px 16px; margin-bottom: 10px; border-radius: 0 8px 8px 0; background: rgba(255,255,255,0.03); }
+    .clause-item.high   { border-left-color: #ef4444; }
+    .clause-item.medium { border-left-color: #f97316; }
+    .clause-item.low    { border-left-color: #22c55e; }
+    .clause-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
+    .clause-title { font-size: 0.9rem; font-weight: 600; color: #f0f0f0; }
+    .sev-tag { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; }
+    .sev-high   { background: rgba(239,68,68,0.15);  color: #f87171; }
+    .sev-medium { background: rgba(249,115,22,0.15); color: #fb923c; }
+    .sev-low    { background: rgba(34,197,94,0.15);  color: #4ade80; }
+    .clause-explanation { font-size: 0.85rem; color: #aaa; line-height: 1.6; }
+    .terms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
+    .term-item { background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px 14px; }
+    .term-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: #666; margin-bottom: 4px; }
+    .term-value { font-size: 0.88rem; color: #f0f0f0; font-weight: 500; }
+    .btn-reset { background: transparent; border: 1px solid #2a2a2a; color: #888; border-radius: 8px; padding: 10px 20px; font-family: system-ui, -apple-system, sans-serif; font-size: 0.85rem; cursor: pointer; margin-top: 20px; transition: border-color 0.2s, color 0.2s; }
+    .btn-reset:hover { border-color: #f97316; color: #f97316; }
+    .upsell-banner { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px 20px; margin-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .upsell-banner p { font-size: 0.85rem; color: #aaa; }
+    .upsell-banner p strong { color: #f0f0f0; }
+    .upsell-btn { background: transparent; border: 1px solid #f97316; color: #f97316; border-radius: 6px; padding: 8px 16px; font-size: 0.82rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: background 0.2s, color 0.2s; white-space: nowrap; }
+    .upsell-btn:hover { background: #f97316; color: #fff; }
+    footer { border-top: 1px solid #2a2a2a; padding: 20px 40px; text-align: center; font-size: 0.8rem; color: #666; }
+    #auth-gate { position: fixed; inset: 0; background: #0a0a0a; z-index: 100; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; text-align: center; }
+    #auth-gate p { color: #777; font-size: 0.9rem; }
+    #auth-gate .spinner { width: 28px; height: 28px; border: 2px solid #2a2a2a; border-top-color: #f97316; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
+  </style>
+</head>
+<body>
+
+<div id="auth-gate">
+  <div class="spinner"></div>
+  <p>Verifying session...</p>
+</div>
+
+<nav>
+  <a href="index.html" class="logo">ClauseCheck</a>
+  <div class="nav-right">
+    <span class="nav-badge">AI Contract Review</span>
+    <span class="nav-user" id="nav-user"></span>
+    <button class="nav-signout" onclick="signOut()">Sign out</button>
+  </div>
+</nav>
+
+<main>
+  <div id="upload-form">
+    <div class="plan-banner">
+      <div>
+        <div class="plan-info" id="plan-info"><strong>Standard Plan</strong> &mdash; Up to 50 pages per contract</div>
+        <div class="plan-upgrade">Need to analyze longer contracts? <a href="#">Upgrade to Pro &rarr;</a></div>
+      </div>
+      <div class="plan-badge" id="plan-badge">Active</div>
+    </div>
+
+    <div class="upload-zone" id="drop-zone">
+      <input type="file" id="file-input" accept=".txt,.doc,.docx,.pdf">
+      <h2>Drop your contract here</h2>
+      <p>PDF, Word (.docx), or plain text &mdash; any contract type</p>
+      <p class="limit-note" id="limit-note">Standard plan supports contracts up to 50 pages</p>
+      <div class="file-name" id="file-name"></div>
+      <div class="file-warning" id="file-warning">This contract exceeds the page limit. Only the first portion will be analyzed. Upgrade to Pro for unlimited length.</div>
+      <div class="processing-note" id="processing-note">Extracting text from file...</div>
+    </div>
+
+    <button class="btn-analyze" id="analyze-btn" onclick="analyzeContract()">Analyze Contract</button>
+    <p class="btn-note">Your contract is never stored. Analysis takes under 60 seconds.</p>
+    <div class="error-msg" id="error-msg"></div>
+  </div>
+
+  <div class="loading" id="loading">
+    <div class="loading-spinner"></div>
+    <h3>Reviewing your contract...</h3>
+    <p>Flagging clauses, assessing risk, extracting key terms</p>
+  </div>
+
+  <div class="results" id="results">
+    <div class="results-header">
+      <h2>Review complete</h2>
+      <div class="risk-badge" id="risk-badge"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Executive summary</div>
+      <div class="summary-text" id="summary-text"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Flagged clauses</div>
+      <div id="clauses-list"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Key terms</div>
+      <div class="terms-grid" id="terms-grid"></div>
+    </div>
+    <div class="upsell-banner" id="upsell-banner">
+      <p><strong>Need more?</strong> Upgrade to Pro for unlimited contract length, deeper analysis with Claude Sonnet, and priority support.</p>
+      <a href="#" class="upsell-btn">Upgrade to Pro</a>
+    </div>
+    <button class="btn-reset" onclick="reset()">&larr; Review another contract</button>
+  </div>
+</main>
+
+<footer>&copy; 2026 ClauseCheck. Built for small law firms.</footer>
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const WORKER_URL    = 'https://clausecheck.dgambill1975.workers.dev';
+  const SUPABASE_URL  = 'https://gmzawvbidpjrqixkdiyh.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtemF3dmJpZHBqcnFpeGtkaXloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NDEzMjQsImV4cCI6MjA5MTAxNzMyNH0._RctCMV0iF-gBSlv8M9e67cVII2gcy_f2yIDGcSqFo4';
+
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  let currentSession = null;
+  let CHAR_LIMIT = 100000;
+
+  pdfjsLib.GlobalWorkerOptions.workerSrc =
+    'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+
+  async function initAuth() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) {
+      window.location.href = 'index.html';
+      return;
+    }
+    currentSession = session;
+    document.getElementById('auth-gate').style.display = 'none';
+    document.getElementById('nav-user').textContent = session.user.email;
+  }
+
+  function applyTierUI(tier) {
+    const isPro = tier === 'pro';
+    document.getElementById('plan-info').innerHTML = isPro
+      ? '<strong>Pro Plan</strong> &mdash; Unlimited contract length'
+      : '<strong>Standard Plan</strong> &mdash; Up to 50 pages per contract';
+    document.getElementById('plan-badge').textContent = isPro ? 'Pro' : 'Active';
+    document.getElementById('limit-note').textContent = isPro
+      ? 'Pro plan supports contracts of any length'
+      : 'Standard plan supports contracts up to 50 pages';
+    if (isPro) document.getElementById('upsell-banner').style.display = 'none';
+    CHAR_LIMIT = isPro ? 500000 : 100000;
+  }
+
+  async function signOut() {
+    await sb.auth.signOut();
+    window.location.href = 'index.html';
+  }
+
+  const dropZone       = document.getElementById('drop-zone');
+  const fileInput      = document.getElementById('file-input');
+  const fileNameEl     = document.getElementById('file-name');
+  const fileWarningEl  = document.getElementById('file-warning');
+  const processingNote = document.getElementById('processing-note');
+  const analyzeBtn     = document.getElementById('analyze-btn');
+  let fileContent = '';
+
+  dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
+  dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
+  dropZone.addEventListener('drop', e => {
+    e.preventDefault();
+    dropZone.classList.remove('drag-over');
+    if (e.dataTransfer.files[0]) handleFile(e.dataTransfer.files[0]);
+  });
+  fileInput.addEventListener('change', e => {
+    if (e.target.files[0]) handleFile(e.target.files[0]);
+  });
+
+  async function handleFile(file) {
+    fileNameEl.textContent = file.name;
+    fileNameEl.style.display = 'block';
+    fileWarningEl.style.display = 'none';
+    processingNote.style.display = 'block';
+    analyzeBtn.disabled = true;
+    fileContent = '';
+
+    const ext = file.name.split('.').pop().toLowerCase();
+
+    try {
+      if (ext === 'docx') {
+        const arrayBuffer = await file.arrayBuffer();
+        const result = await mammoth.extractRawText({ arrayBuffer });
+        fileContent = result.value;
+      } else if (ext === 'pdf') {
+        const arrayBuffer = await file.arrayBuffer();
+        const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
+        let fullText = '';
+        for (let i = 1; i <= pdf.numPages; i++) {
+          const page = await pdf.getPage(i);
+          const textContent = await page.getTextContent();
+          fullText += textContent.items.map(item => item.str).join(' ') + '\n';
+        }
+        fileContent = fullText;
+      } else {
+        fileContent = await file.text();
+      }
+
+      if (fileContent.length > CHAR_LIMIT) {
+        fileWarningEl.style.display = 'block';
+        fileContent = fileContent.slice(0, CHAR_LIMIT);
+      }
+    } catch (err) {
+      fileContent = '';
+      showError('Could not read file: ' + err.message);
+    }
+
+    processingNote.style.display = 'none';
+    analyzeBtn.disabled = false;
+  }
+
+  async function analyzeContract() {
+    if (!fileContent) { showError('Please upload a contract file first.'); return; }
+
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    currentSession = session;
+
+    document.getElementById('upload-form').style.display = 'none';
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('error-msg').style.display = 'none';
+
+    try {
+      const response = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentSession.access_token}`
+        },
+        body: JSON.stringify({ contractText: fileContent })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || result.error) {
+        if (result.trialExpired) throw new Error('Your trial has expired. Please upgrade to continue.');
+        throw new Error(result.error || `Server error (${response.status})`);
+      }
+
+      if (result.tier) applyTierUI(result.tier);
+      renderResults(result);
+
+    } catch (err) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('upload-form').style.display = 'block';
+      showError('Something went wrong: ' + err.message);
+    }
+  }
+
+  function renderResults(data) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('results').style.display = 'block';
+
+    const badge = document.getElementById('risk-badge');
+    badge.textContent = data.overall_risk + ' Risk';
+    badge.className = 'risk-badge risk-' + data.overall_risk.toLowerCase();
+
+    document.getElementById('summary-text').textContent = data.summary;
+
+    document.getElementById('clauses-list').innerHTML = data.flagged_clauses.map(c =>
+      `<div class="clause-item ${c.severity.toLowerCase()}">
+        <div class="clause-header">
+          <span class="clause-title">${escapeHtml(c.title)}</span>
+          <span class="sev-tag sev-${c.severity.toLowerCase()}">${c.severity}</span>
+        </div>
+        <div class="clause-explanation">${escapeHtml(c.explanation)}</div>
+      </div>`
+    ).join('');
+
+    document.getElementById('terms-grid').innerHTML = data.key_terms.map(t =>
+      `<div class="term-item">
+        <div class="term-label">${escapeHtml(t.label)}</div>
+        <div class="term-value">${escapeHtml(t.value)}</div>
+      </div>`
+    ).join('');
+  }
+
+  function showError(msg) {
+    const el = document.getElementById('error-msg');
+    el.textContent = msg;
+    el.style.display = 'block';
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  function reset() {
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('upload-form').style.display = 'block';
+    document.getElementById('error-msg').style.display = 'none';
+    document.getElementById('file-name').style.display = 'none';
+    fileWarningEl.style.display = 'none';
+    processingNote.style.display = 'none';
+    fileContent = '';
+    fileInput.value = '';
+    analyzeBtn.disabled = false;
+  }
+
+  initAuth();
+</script>
+
+</body>
+</html>
