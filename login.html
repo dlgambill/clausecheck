@@ -190,6 +190,38 @@
     document.getElementById('tab-signup').classList.remove('active');
   }
 
+  // Write session row to Supabase so the Worker can validate single-device enforcement
+  async function registerSession(session) {
+    const userId = session.user.id;
+    const token  = session.access_token;
+    const device = navigator.userAgent;
+
+    // Delete any existing sessions for this user (single-device enforcement)
+    await fetch(`${SUPABASE_URL}/rest/v1/sessions?user_id=eq.${userId}`, {
+      method: 'DELETE',
+      headers: {
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${token}`,
+      }
+    });
+
+    // Insert new session row
+    await fetch(`${SUPABASE_URL}/rest/v1/sessions`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${token}`,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({
+        user_id: userId,
+        session_token: token,
+        device_info: device,
+      })
+    });
+  }
+
   async function signIn() {
     const email    = document.getElementById('signin-email').value.trim();
     const password = document.getElementById('signin-password').value;
@@ -197,8 +229,9 @@
     errorEl.style.display = 'none';
     if (!email || !password) { showErr(errorEl, 'Please enter your email and password.'); return; }
     document.getElementById('signin-btn').disabled = true;
-    const { error } = await sb.auth.signInWithPassword({ email, password });
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
     if (error) { showErr(errorEl, error.message); document.getElementById('signin-btn').disabled = false; return; }
+    await registerSession(data.session);
     document.getElementById('loading-overlay').style.display = 'flex';
     window.location.href = 'app.html';
   }
@@ -216,12 +249,15 @@
     document.getElementById('signup-btn').disabled = true;
     const { data, error } = await sb.auth.signUp({ email, password });
     if (error) { showErr(errorEl, error.message); document.getElementById('signup-btn').disabled = false; return; }
+    // Email confirmation required — can't write session yet
     if (data.user && !data.session) {
       successEl.textContent = 'Account created! Check your email to confirm your address, then sign in.';
       successEl.style.display = 'block';
       document.getElementById('signup-btn').disabled = false;
       return;
     }
+    // Auto-confirmed — write session and go
+    await registerSession(data.session);
     document.getElementById('loading-overlay').style.display = 'flex';
     window.location.href = 'app.html';
   }
