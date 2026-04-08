@@ -8,12 +8,11 @@
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.6; min-height: 100vh; }
     nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
-    .logo { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: #fff; letter-spacing: -0.01em; text-decoration: none; }
-    .logo span { color: #f97316; }
+    .logo { font-size: 1.1rem; font-weight: 600; color: #fff; letter-spacing: -0.02em; text-decoration: none; }
     .nav-badge { font-size: 0.75rem; color: #777; letter-spacing: 0.04em; text-transform: uppercase; }
     .nav-right { display: flex; align-items: center; gap: 16px; }
-    .nav-user { font-size: 0.8rem; color: #888; }
-    .nav-signout { font-size: 0.8rem; color: #888; background: none; border: none; cursor: pointer; padding: 0; transition: color 0.2s; }
+    .nav-user { font-size: 0.8rem; color: #666; }
+    .nav-signout { font-size: 0.8rem; color: #555; background: none; border: none; cursor: pointer; padding: 0; transition: color 0.2s; }
     .nav-signout:hover { color: #f97316; }
     main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
     .plan-banner { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
@@ -74,9 +73,7 @@
     .upsell-banner p strong { color: #f0f0f0; }
     .upsell-btn { background: transparent; border: 1px solid #f97316; color: #f97316; border-radius: 6px; padding: 8px 16px; font-size: 0.82rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: background 0.2s, color 0.2s; white-space: nowrap; }
     .upsell-btn:hover { background: #f97316; color: #fff; }
-    footer { border-top: 1px solid #2a2a2a; padding: 20px 40px; text-align: center; font-size: 0.8rem; color: #888; }
-footer a { color: #fff; text-decoration: none; transition: color 0.2s; }
-footer a:hover { color: #f97316; }
+    footer { border-top: 1px solid #2a2a2a; padding: 20px 40px; text-align: center; font-size: 0.8rem; color: #666; }
     #auth-gate { position: fixed; inset: 0; background: #0a0a0a; z-index: 100; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; text-align: center; }
     #auth-gate p { color: #777; font-size: 0.9rem; }
     #auth-gate .spinner { width: 28px; height: 28px; border: 2px solid #2a2a2a; border-top-color: #f97316; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
@@ -90,7 +87,7 @@ footer a:hover { color: #f97316; }
 </div>
 
 <nav>
-  <a href="index.html" class="logo">Clause<span>Check</span></a>
+  <a href="index.html" class="logo">ClauseCheck</a>
   <div class="nav-right">
     <span class="nav-badge">AI Contract Review</span>
     <span class="nav-user" id="nav-user"></span>
@@ -154,13 +151,13 @@ footer a:hover { color: #f97316; }
   </div>
 </main>
 
-<footer>&copy; 2026 ClauseCheck &nbsp;·&nbsp; Built for small law firms &nbsp;·&nbsp; <a href="terms.html">Terms</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy</a></footer>
+<footer>&copy; 2026 ClauseCheck &nbsp;·&nbsp; Built for small law firms &nbsp;·&nbsp; <a href="terms.html" style="color:#666;text-decoration:none;">Terms</a> &nbsp;·&nbsp; <a href="privacy.html" style="color:#666;text-decoration:none;">Privacy</a></footer>
 
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-  const WORKER_URL    = 'https://clausecheck.dgambill1975.workers.dev';
+  const WORKER_URL    = 'https://api.clausecheck.conduitlab.ai';
   const SUPABASE_URL  = 'https://gmzawvbidpjrqixkdiyh.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtemF3dmJpZHBqcnFpeGtkaXloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NDEzMjQsImV4cCI6MjA5MTAxNzMyNH0._RctCMV0iF-gBSlv8M9e67cVII2gcy_f2yIDGcSqFo4';
 
