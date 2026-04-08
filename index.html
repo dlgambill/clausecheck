@@ -19,7 +19,7 @@
       --border2: #2a2a2a;
       --text: #f0f0f0;
       --muted: #888;
-      --dim: #444;
+      --dim: #888;
     }
 
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -57,7 +57,7 @@
       text-decoration: none; font-weight: 500;
       transition: color 0.2s;
     }
-    .nav-links a:hover { color: var(--text); }
+    .nav-links a:hover { color: var(--orange); }
     .btn-nav {
       background: transparent;
       color: var(--text);
@@ -321,6 +321,8 @@ footer {
   font-size: 0.76rem;
   color: var(--dim);
 }
+footer a { color: #fff; text-decoration: none; transition: color 0.2s; }
+footer a:hover { color: var(--orange); }
 
     /* ANIMATIONS */
     @keyframes fadeUp {
@@ -502,7 +504,7 @@ footer {
 
 <!-- FOOTER -->
 <footer>
-  &copy; 2026 ClauseCheck &nbsp;·&nbsp; Built for small law firms &nbsp;·&nbsp; <a href="terms.html" style="color:#666;text-decoration:none;">Terms</a> &nbsp;·&nbsp; <a href="privacy.html" style="color:#666;text-decoration:none;">Privacy</a>
+  &copy; 2026 ClauseCheck &nbsp;·&nbsp; Built for small law firms &nbsp;·&nbsp; <a href="terms.html">Terms</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy</a>
 </footer>
 
 <script>
