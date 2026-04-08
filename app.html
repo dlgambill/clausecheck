@@ -4,11 +4,15 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ClauseCheck — AI Contract Review</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
   <style>
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-    body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.6; min-height: 100vh; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.6; min-height: 100vh; }
     nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
-    .logo { font-size: 1.1rem; font-weight: 600; color: #fff; letter-spacing: -0.02em; text-decoration: none; }
+    .logo { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: #fff; letter-spacing: -0.01em; text-decoration: none; }
+    .logo span { color: #f97316; }
     .nav-badge { font-size: 0.75rem; color: #777; letter-spacing: 0.04em; text-transform: uppercase; }
     .nav-right { display: flex; align-items: center; gap: 16px; }
     .nav-user { font-size: 0.8rem; color: #666; }
@@ -31,7 +35,7 @@
     .file-name { margin-top: 14px; font-size: 0.82rem; color: #f97316; display: none; font-family: monospace; }
     .file-warning { margin-top: 10px; font-size: 0.8rem; color: #fb923c; display: none; background: rgba(249,115,22,0.08); border: 1px solid rgba(249,115,22,0.2); border-radius: 6px; padding: 8px 12px; }
     .processing-note { margin-top: 10px; font-size: 0.8rem; color: #777; display: none; }
-    .btn-analyze { width: 100%; background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 16px; font-family: system-ui, -apple-system, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-bottom: 8px; }
+    .btn-analyze { width: 100%; background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 16px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-bottom: 8px; }
     .btn-analyze:hover { opacity: 0.88; }
     .btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; }
     .btn-note { text-align: center; font-size: 0.8rem; color: #666; }
@@ -66,7 +70,7 @@
     .term-item { background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px 14px; }
     .term-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: #666; margin-bottom: 4px; }
     .term-value { font-size: 0.88rem; color: #f0f0f0; font-weight: 500; }
-    .btn-reset { background: transparent; border: 1px solid #2a2a2a; color: #888; border-radius: 8px; padding: 10px 20px; font-family: system-ui, -apple-system, sans-serif; font-size: 0.85rem; cursor: pointer; margin-top: 20px; transition: border-color 0.2s, color 0.2s; }
+    .btn-reset { background: transparent; border: 1px solid #2a2a2a; color: #888; border-radius: 8px; padding: 10px 20px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.85rem; cursor: pointer; margin-top: 20px; transition: border-color 0.2s, color 0.2s; }
     .btn-reset:hover { border-color: #f97316; color: #f97316; }
     .upsell-banner { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px 20px; margin-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
     .upsell-banner p { font-size: 0.85rem; color: #aaa; }
@@ -87,7 +91,7 @@
 </div>
 
 <nav>
-  <a href="index.html" class="logo">ClauseCheck</a>
+  <a href="index.html" class="logo">Clause<span>Check</span></a>
   <div class="nav-right">
     <span class="nav-badge">AI Contract Review</span>
     <span class="nav-user" id="nav-user"></span>
