@@ -1,9 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
- <link rel="icon" type="image/svg+xml" href="favicon.svg">
-<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
-<link rel="shortcut icon" href="favicon.ico">
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>ClauseCheck — AI Contract Review</title>
@@ -75,6 +72,38 @@
     .term-value { font-size: 0.88rem; color: #f0f0f0; font-weight: 500; }
     .btn-reset { background: transparent; border: 1px solid #2a2a2a; color: #888; border-radius: 8px; padding: 10px 20px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.85rem; cursor: pointer; margin-top: 20px; transition: border-color 0.2s, color 0.2s; }
     .btn-reset:hover { border-color: #f97316; color: #f97316; }
+    .btn-print { background: transparent; border: 1px solid #2a2a2a; color: #888; border-radius: 8px; padding: 10px 20px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.85rem; cursor: pointer; margin-top: 20px; margin-left: 10px; transition: border-color 0.2s, color 0.2s; }
+    .btn-print:hover { border-color: #f97316; color: #f97316; }
+    .btn-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0; }
+
+    @media print {
+      * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+      body { background: #fff !important; color: #000 !important; }
+      nav, footer, .plan-banner, .upsell-banner, .btn-reset, .btn-print, .btn-actions, #auth-gate { display: none !important; }
+      main { max-width: 100%; padding: 0; }
+      .results { display: block !important; }
+      .results-header { border-bottom: 2px solid #000; margin-bottom: 20px; padding-bottom: 12px; }
+      .results-header h2 { color: #000 !important; font-size: 1.4rem; }
+      .risk-badge { border: 2px solid #000 !important; color: #000 !important; background: transparent !important; }
+      .card { background: #fff !important; border: 1px solid #ccc !important; border-radius: 6px; padding: 16px; margin-bottom: 12px; break-inside: avoid; }
+      .card-label { color: #555 !important; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+      .summary-text { color: #000 !important; font-size: 0.95rem; line-height: 1.7; }
+      .clause-item { border-left: 3px solid #000 !important; background: #f9f9f9 !important; break-inside: avoid; }
+      .clause-item.high { border-left-color: #dc2626 !important; }
+      .clause-item.medium { border-left-color: #ea580c !important; }
+      .clause-item.low { border-left-color: #16a34a !important; }
+      .clause-title { color: #000 !important; }
+      .clause-explanation { color: #333 !important; }
+      .sev-tag { border: 1px solid #000 !important; color: #000 !important; background: transparent !important; }
+      .sev-high { border-color: #dc2626 !important; color: #dc2626 !important; }
+      .sev-medium { border-color: #ea580c !important; color: #ea580c !important; }
+      .sev-low { border-color: #16a34a !important; color: #16a34a !important; }
+      .term-item { background: #f5f5f5 !important; border: 1px solid #ddd !important; break-inside: avoid; }
+      .term-label { color: #555 !important; }
+      .term-value { color: #000 !important; }
+      .print-header { display: block !important; }
+    }
+    .print-header { display: none; }
     .upsell-banner { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px 20px; margin-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
     .upsell-banner p { font-size: 0.85rem; color: #aaa; }
     .upsell-banner p strong { color: #f0f0f0; }
@@ -156,7 +185,17 @@
       <p><strong>Need more?</strong> Upgrade to Pro for unlimited contract length, deeper analysis with Claude Sonnet, and priority support.</p>
       <a href="#" class="upsell-btn">Upgrade to Pro</a>
     </div>
-    <button class="btn-reset" onclick="reset()">&larr; Review another contract</button>
+    <div class="print-header">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <span style="font-family: Georgia, serif; font-size: 20px; color: #000;">Clause<span style="color:#f97316;">Check</span></span>
+        <span style="font-size: 12px; color: #555;" id="print-date"></span>
+      </div>
+      <div style="font-size: 11px; color: #777; margin-bottom: 16px;">AI-powered contract review &nbsp;·&nbsp; clausecheck.conduitlab.ai &nbsp;·&nbsp; Not legal advice</div>
+    </div>
+    <div class="btn-actions">
+      <button class="btn-reset" onclick="reset()">&larr; Review another contract</button>
+      <button class="btn-print" onclick="printReport()">&#128438; Print / Save PDF</button>
+    </div>
   </div>
 </main>
 
@@ -387,6 +426,11 @@
     fileContent = '';
     fileInput.value = '';
     analyzeBtn.disabled = false;
+  }
+
+  function printReport() {
+    document.getElementById('print-date').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+    window.print();
   }
 
   initAuth();
