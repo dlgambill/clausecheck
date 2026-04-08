@@ -316,6 +316,9 @@
     }
     .cta-section > p { font-size: 0.95rem; color: var(--muted); margin-bottom: 36px; font-weight: 300; }
 
+    .pricing-card.coming-soon { opacity: 0.6; position: relative; }
+    .coming-soon-badge { position: absolute; top: -12px; left: 50%; transform: translateX(-50%); background: #444; color: #aaa; font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; padding: 4px 12px; border-radius: 20px; white-space: nowrap; border: 1px solid #555; }
+    .btn-plan.disabled { opacity: 0.4; cursor: not-allowed; pointer-events: none; }
     /* FOOTER */
 footer {
   border-top: 1px solid var(--border2);
@@ -485,8 +488,8 @@ footer a:hover { color: var(--orange); }
       </ul>
       <a href="login.html" class="btn-plan btn-outline">Start Free Trial</a>
     </div>
-    <div class="pricing-card featured reveal">
-      <div class="pricing-tag">Most Popular</div>
+    <div class="pricing-card featured coming-soon reveal">
+      <div class="coming-soon-badge">Coming Soon</div>
       <div class="pricing-tier">Pro</div>
       <div class="pricing-price"><sup>$</sup>49</div>
       <div class="pricing-period">per month</div>
@@ -500,7 +503,7 @@ footer a:hover { color: var(--orange); }
         <li>The Vault — document storage</li>
         <li>Priority support</li>
       </ul>
-      <a href="login.html" class="btn-plan btn-solid">Start Free Trial</a>
+      <a href="#" class="btn-plan btn-solid disabled">Coming Soon</a>
     </div>
   </div>
   <p class="trial-note reveal">Both plans include a 5-day free trial. No credit card required to start.</p>
