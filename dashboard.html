@@ -1,0 +1,436 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>ClauseCheck — Dashboard</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
+  <!-- PostHog Analytics -->
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
+      api_host: 'https://us.i.posthog.com',
+      person_profiles: 'identified_only',
+    });
+  </script>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.6; min-height: 100vh; }
+
+    /* NAV */
+    nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
+    .logo { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: #fff; letter-spacing: -0.01em; text-decoration: none; }
+    .logo span { color: #f97316; }
+    .nav-right { display: flex; align-items: center; gap: 16px; }
+    .nav-user { font-size: 0.8rem; color: #888; }
+    .nav-link { font-size: 0.8rem; color: #888; text-decoration: none; transition: color 0.2s; }
+    .nav-link:hover { color: #f97316; }
+    .nav-signout { font-size: 0.8rem; color: #888; background: none; border: none; cursor: pointer; padding: 0; font-family: 'DM Sans', system-ui, sans-serif; transition: color 0.2s; }
+    .nav-signout:hover { color: #f97316; }
+
+    /* LAYOUT */
+    main { max-width: 800px; margin: 0 auto; padding: 48px 24px 80px; }
+    .page-title { font-family: 'DM Serif Display', serif; font-size: 1.8rem; color: #fff; letter-spacing: -0.02em; margin-bottom: 32px; }
+
+    /* CARDS */
+    .card { background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; padding: 24px; margin-bottom: 16px; }
+    .card-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #555; margin-bottom: 16px; font-weight: 600; }
+
+    /* PLAN CARD */
+    .plan-card { background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; padding: 24px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 16px; }
+    .plan-left { display: flex; flex-direction: column; gap: 6px; }
+    .plan-name { font-size: 1.1rem; font-weight: 600; color: #fff; }
+    .plan-detail { font-size: 0.85rem; color: #888; }
+    .plan-badge { font-size: 0.72rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.05em; padding: 4px 12px; border-radius: 20px; }
+    .plan-badge.trial { background: rgba(249,115,22,0.12); color: #fb923c; border: 1px solid rgba(249,115,22,0.25); }
+    .plan-badge.standard { background: rgba(99,102,241,0.12); color: #a5b4fc; border: 1px solid rgba(99,102,241,0.25); }
+    .plan-badge.pro { background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
+    .plan-actions { display: flex; gap: 10px; flex-wrap: wrap; }
+
+    /* TRIAL BANNER */
+    .trial-banner { background: rgba(249,115,22,0.06); border: 1px solid rgba(249,115,22,0.2); border-radius: 10px; padding: 14px 20px; margin-bottom: 16px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
+    .trial-banner p { font-size: 0.88rem; color: #fb923c; }
+    .trial-banner p strong { color: #f97316; }
+
+    /* STATS GRID */
+    .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
+    .stat-card { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 20px; text-align: center; }
+    .stat-num { font-family: 'DM Serif Display', serif; font-size: 2rem; color: #fff; line-height: 1; margin-bottom: 6px; }
+    .stat-label { font-size: 0.75rem; color: #555; text-transform: uppercase; letter-spacing: 0.06em; }
+
+    /* HISTORY TABLE */
+    .history-table { width: 100%; border-collapse: collapse; }
+    .history-table th { text-align: left; font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.06em; color: #555; padding: 8px 12px; border-bottom: 1px solid #2a2a2a; font-weight: 600; }
+    .history-table td { font-size: 0.85rem; color: #aaa; padding: 12px 12px; border-bottom: 1px solid #1a1a1a; vertical-align: middle; }
+    .history-table tr:last-child td { border-bottom: none; }
+    .history-table tr:hover td { background: rgba(255,255,255,0.02); }
+    .risk-dot { display: inline-block; width: 8px; height: 8px; border-radius: 50%; margin-right: 6px; }
+    .risk-dot.high { background: #ef4444; }
+    .risk-dot.medium { background: #f97316; }
+    .risk-dot.low { background: #22c55e; }
+    .empty-state { text-align: center; padding: 40px; color: #555; font-size: 0.88rem; }
+
+    /* PROFILE FORM */
+    .form-group { margin-bottom: 14px; }
+    .form-label { display: block; font-size: 0.72rem; font-weight: 600; color: #777; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+    .form-input { width: 100%; background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 11px 14px; font-size: 0.92rem; color: #f0f0f0; font-family: 'DM Sans', system-ui, sans-serif; transition: border-color 0.2s; outline: none; }
+    .form-input:focus { border-color: #f97316; }
+
+    /* BUTTONS */
+    .btn-primary { background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 11px 20px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; text-decoration: none; display: inline-block; }
+    .btn-primary:hover { opacity: 0.88; }
+    .btn-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+    .btn-secondary { background: transparent; border: 1px solid #2a2a2a; color: #888; border-radius: 8px; padding: 10px 18px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.88rem; cursor: pointer; transition: border-color 0.2s, color 0.2s; text-decoration: none; display: inline-block; }
+    .btn-secondary:hover { border-color: #f97316; color: #f97316; }
+    .btn-danger { background: transparent; border: 1px solid rgba(239,68,68,0.3); color: #f87171; border-radius: 8px; padding: 10px 18px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.88rem; cursor: pointer; transition: border-color 0.2s, background 0.2s; }
+    .btn-danger:hover { background: rgba(239,68,68,0.08); border-color: rgba(239,68,68,0.5); }
+
+    /* SUCCESS/ERROR */
+    .success-msg { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); color: #4ade80; border-radius: 8px; padding: 11px 14px; font-size: 0.83rem; margin-top: 12px; display: none; }
+    .error-msg { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #f87171; border-radius: 8px; padding: 11px 14px; font-size: 0.83rem; margin-top: 12px; display: none; }
+
+    /* AUTH GATE */
+    #auth-gate { position: fixed; inset: 0; background: #0a0a0a; z-index: 100; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; }
+    #auth-gate p { color: #777; font-size: 0.9rem; }
+    .spinner { width: 28px; height: 28px; border: 2px solid #2a2a2a; border-top-color: #f97316; border-radius: 50%; animation: spin 0.8s linear infinite; }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* FOOTER */
+    footer { border-top: 1px solid #2a2a2a; padding: 20px 40px; text-align: center; font-size: 0.8rem; color: #888; }
+    footer a { color: #fff; text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: #f97316; }
+
+    @media (max-width: 600px) {
+      nav { padding: 14px 20px; }
+      main { padding: 32px 16px 60px; }
+      .stats-grid { grid-template-columns: repeat(2, 1fr); }
+      .plan-card { flex-direction: column; align-items: flex-start; }
+    }
+  </style>
+</head>
+<body>
+
+<div id="auth-gate">
+  <div class="spinner"></div>
+  <p>Loading your account...</p>
+</div>
+
+<nav>
+  <a href="index.html" class="logo">Clause<span>Check</span></a>
+  <div class="nav-right">
+    <a href="app.html" class="nav-link">← Back to app</a>
+    <span class="nav-user" id="nav-user"></span>
+    <button class="nav-signout" onclick="signOut()">Sign out</button>
+  </div>
+</nav>
+
+<main>
+  <h1 class="page-title">Account</h1>
+
+  <!-- Trial Banner (shown only during trial) -->
+  <div class="trial-banner" id="trial-banner" style="display:none;">
+    <p id="trial-message">Your trial ends in <strong id="trial-days"></strong>.</p>
+    <button class="btn-primary" onclick="upgradePlan()">Upgrade now</button>
+  </div>
+
+  <!-- Plan Card -->
+  <div class="plan-card" id="plan-card">
+    <div class="plan-left">
+      <div class="plan-name" id="plan-name">Loading...</div>
+      <div class="plan-detail" id="plan-detail"></div>
+    </div>
+    <div style="display:flex; align-items:center; gap:12px; flex-wrap:wrap;">
+      <span class="plan-badge" id="plan-badge"></span>
+      <div class="plan-actions" id="plan-actions"></div>
+    </div>
+  </div>
+
+  <!-- Stats -->
+  <div class="stats-grid">
+    <div class="stat-card">
+      <div class="stat-num" id="stat-analyses">—</div>
+      <div class="stat-label">Analyses run</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-member">—</div>
+      <div class="stat-label">Member since</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-num" id="stat-plan">—</div>
+      <div class="stat-label">Current plan</div>
+    </div>
+  </div>
+
+  <!-- Analysis History -->
+  <div class="card">
+    <div class="card-label">Recent analyses</div>
+    <div id="history-container">
+      <div class="empty-state">Loading history...</div>
+    </div>
+  </div>
+
+  <!-- Profile -->
+  <div class="card">
+    <div class="card-label">Profile</div>
+    <div class="form-group">
+      <label class="form-label">Full name</label>
+      <input type="text" class="form-input" id="profile-name" placeholder="Your name">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Firm name</label>
+      <input type="text" class="form-input" id="profile-firm" placeholder="Your law firm">
+    </div>
+    <div class="form-group">
+      <label class="form-label">Email</label>
+      <input type="text" class="form-input" id="profile-email" disabled style="opacity:0.5;">
+    </div>
+    <button class="btn-primary" id="save-profile-btn" onclick="saveProfile()">Save changes</button>
+    <div class="success-msg" id="profile-success">Profile updated successfully.</div>
+    <div class="error-msg" id="profile-error"></div>
+  </div>
+
+  <!-- Danger Zone -->
+  <div class="card">
+    <div class="card-label">Account</div>
+    <p style="font-size:0.85rem; color:#666; margin-bottom:16px;">Need to cancel your subscription or delete your account? Contact us and we'll take care of it.</p>
+    <a href="mailto:legal@conduitlab.ai" class="btn-secondary" style="margin-right:10px;">Contact support</a>
+    <button class="btn-danger" onclick="signOut()">Sign out</button>
+  </div>
+
+</main>
+
+<footer>&copy; 2026 ClauseCheck &nbsp;·&nbsp; Built for small law firms &nbsp;·&nbsp; <a href="terms.html">Terms</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy</a></footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+  const WORKER_URL    = 'https://api.clausecheck.conduitlab.ai';
+  const SUPABASE_URL  = 'https://gmzawvbidpjrqixkdiyh.supabase.co';
+  const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtemF3dmJpZHBqcnFpeGtkaXloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NDEzMjQsImV4cCI6MjA5MTAxNzMyNH0._RctCMV0iF-gBSlv8M9e67cVII2gcy_f2yIDGcSqFo4';
+
+  const { createClient } = supabase;
+  const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
+
+  let currentSession = null;
+  let currentProfile = null;
+
+  sb.auth.onAuthStateChange((event, session) => {
+    if (event === 'SIGNED_OUT') window.location.href = 'index.html';
+  });
+
+  async function initDashboard() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'login.html'; return; }
+    currentSession = session;
+
+    if (window.posthog) posthog.identify(session.user.id, { email: session.user.email });
+
+    document.getElementById('nav-user').textContent = session.user.email;
+    document.getElementById('profile-email').value = session.user.email;
+    document.getElementById('auth-gate').style.display = 'none';
+
+    await Promise.all([loadProfile(session), loadHistory(session)]);
+  }
+
+  async function loadProfile(session) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${session.user.id}`, {
+      headers: {
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${session.access_token}`,
+      }
+    });
+    const profiles = await res.json();
+    if (!profiles || profiles.length === 0) return;
+
+    currentProfile = profiles[0];
+    const p = currentProfile;
+
+    document.getElementById('profile-name').value = p.full_name || '';
+    document.getElementById('profile-firm').value = p.firm_name || '';
+
+    // Plan info
+    const tier = p.tier || 'trial';
+    const planNames = { trial: 'Free Trial', standard: 'Standard', pro: 'Pro' };
+    const planName = planNames[tier] || tier;
+
+    document.getElementById('plan-name').textContent = 'ClauseCheck ' + planName;
+    document.getElementById('stat-plan').textContent = planName;
+
+    const badge = document.getElementById('plan-badge');
+    badge.textContent = planName;
+    badge.className = 'plan-badge ' + tier;
+
+    // Member since
+    const joined = new Date(p.created_at);
+    document.getElementById('stat-member').textContent = joined.toLocaleDateString('en-US', { month: 'short', year: 'numeric' });
+
+    // Trial countdown
+    if (tier === 'trial' && p.trial_ends_at) {
+      const trialEnd = new Date(p.trial_ends_at);
+      const now = new Date();
+      const daysLeft = Math.ceil((trialEnd - now) / (1000 * 60 * 60 * 24));
+
+      if (daysLeft > 0) {
+        document.getElementById('trial-banner').style.display = 'flex';
+        document.getElementById('trial-days').textContent = daysLeft + (daysLeft === 1 ? ' day' : ' days');
+        document.getElementById('plan-detail').textContent = `Trial ends ${trialEnd.toLocaleDateString('en-US', { month: 'long', day: 'numeric' })}`;
+      } else {
+        document.getElementById('plan-detail').textContent = 'Trial expired — upgrade to continue';
+      }
+
+      document.getElementById('plan-actions').innerHTML = `
+        <button class="btn-primary" onclick="upgradePlan()">Upgrade to Standard — $20/mo</button>`;
+    } else if (tier === 'standard') {
+      document.getElementById('plan-detail').textContent = 'Up to 50 pages per contract · Claude Haiku';
+      document.getElementById('plan-actions').innerHTML = `
+        <button class="btn-secondary" onclick="openBillingPortal()">Manage billing</button>`;
+    } else if (tier === 'pro') {
+      document.getElementById('plan-detail').textContent = 'Unlimited contract length · Claude Sonnet';
+      document.getElementById('plan-actions').innerHTML = `
+        <button class="btn-secondary" onclick="openBillingPortal()">Manage billing</button>`;
+    }
+  }
+
+  async function loadHistory(session) {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/analyses?user_id=eq.${session.user.id}&order=created_at.desc&limit=10`, {
+      headers: {
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${session.access_token}`,
+      }
+    });
+    const analyses = await res.json();
+
+    document.getElementById('stat-analyses').textContent = analyses.length;
+
+    const container = document.getElementById('history-container');
+
+    if (!analyses || analyses.length === 0) {
+      container.innerHTML = '<div class="empty-state">No analyses yet. <a href="app.html" style="color:#f97316;">Review your first contract →</a></div>';
+      return;
+    }
+
+    const rows = analyses.map(a => {
+      const date = new Date(a.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const score = a.risk_score || 0;
+      const riskLevel = score >= 7 ? 'high' : score >= 4 ? 'medium' : 'low';
+      const riskLabel = score >= 7 ? 'High' : score >= 4 ? 'Medium' : 'Low';
+      const summary = a.summary ? a.summary.slice(0, 80) + (a.summary.length > 80 ? '...' : '') : '—';
+      return `<tr>
+        <td>${date}</td>
+        <td style="color:#f0f0f0;">${escapeHtml(a.file_name || 'Contract')}</td>
+        <td><span class="risk-dot ${riskLevel}"></span>${riskLabel}</td>
+        <td style="max-width:260px;">${escapeHtml(summary)}</td>
+      </tr>`;
+    }).join('');
+
+    container.innerHTML = `<table class="history-table">
+      <thead>
+        <tr>
+          <th>Date</th>
+          <th>File</th>
+          <th>Risk</th>
+          <th>Summary</th>
+        </tr>
+      </thead>
+      <tbody>${rows}</tbody>
+    </table>`;
+  }
+
+  async function saveProfile() {
+    const name = document.getElementById('profile-name').value.trim();
+    const firm = document.getElementById('profile-firm').value.trim();
+    const btn = document.getElementById('save-profile-btn');
+    const successEl = document.getElementById('profile-success');
+    const errorEl = document.getElementById('profile-error');
+
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    const { data: { session } } = await sb.auth.getSession();
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${session.user.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${session.access_token}`,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({ full_name: name, firm_name: firm, updated_at: new Date().toISOString() })
+    });
+
+    btn.disabled = false;
+    btn.textContent = 'Save changes';
+
+    if (res.ok) {
+      successEl.style.display = 'block';
+      if (window.posthog) posthog.capture('profile_updated');
+    } else {
+      errorEl.textContent = 'Failed to save. Please try again.';
+      errorEl.style.display = 'block';
+    }
+  }
+
+  async function upgradePlan() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+
+    const STANDARD_PRICE_ID = 'price_1TK9oQ6hMZoGqmhSnu5PxBma';
+
+    const res = await fetch(`${WORKER_URL}/api/create-checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({ priceId: STANDARD_PRICE_ID })
+    });
+
+    const data = await res.json();
+    if (data.url) {
+      if (window.posthog) posthog.capture('upgrade_initiated', { from: 'dashboard' });
+      window.location.href = data.url;
+    }
+  }
+
+  async function openBillingPortal() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+
+    const res = await fetch(`${WORKER_URL}/api/billing-portal`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`
+      }
+    });
+
+    const data = await res.json();
+    if (data.url) {
+      if (window.posthog) posthog.capture('billing_portal_opened');
+      window.location.href = data.url;
+    }
+  }
+
+  async function signOut() {
+    if (window.posthog) posthog.capture('signed_out');
+    await sb.auth.signOut();
+    window.location.href = 'index.html';
+  }
+
+  function escapeHtml(str) {
+    return String(str)
+      .replace(/&/g, '&amp;')
+      .replace(/</g, '&lt;')
+      .replace(/>/g, '&gt;')
+      .replace(/"/g, '&quot;');
+  }
+
+  initDashboard();
+</script>
+
+</body>
+</html>
