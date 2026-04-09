@@ -255,6 +255,26 @@
       <button class="btn-print" onclick="printReport()">&#128438; Print / Save PDF</button>
     </div>
   </div>
+
+  <!-- Playbook Results -->
+  <div class="playbook-results" id="playbook-results">
+    <div class="playbook-header">
+      <h2 id="playbook-title">Playbook Review</h2>
+      <div class="risk-badge" id="playbook-risk-badge"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Overall Assessment</div>
+      <div class="summary-text" id="playbook-summary"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Provision Analysis</div>
+      <div class="provision-list" id="provision-list"></div>
+    </div>
+    <div class="btn-actions">
+      <button class="btn-reset" onclick="reset()">&larr; Review another contract</button>
+      <button class="btn-print" onclick="printReport()">&#128438; Print / Save PDF</button>
+    </div>
+  </div>
 </main>
 
 <footer>&copy; 2026 ClauseCheck &nbsp;·&nbsp; Built for small law firms &nbsp;·&nbsp; <a href="terms.html">Terms</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy</a></footer>
