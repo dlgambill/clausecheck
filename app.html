@@ -79,6 +79,36 @@
     .btn-print:hover { border-color: #f97316; color: #f97316; }
     .btn-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0; }
 
+
+    .mode-toggle { display: flex; background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 4px; margin-bottom: 20px; gap: 4px; }
+    .mode-btn { flex: 1; padding: 10px; text-align: center; font-size: 0.85rem; font-weight: 500; color: #555; cursor: pointer; border-radius: 7px; border: none; background: none; font-family: 'DM Sans', system-ui, sans-serif; transition: all 0.2s; }
+    .mode-btn.active { background: #1e1e1e; color: #f0f0f0; border: 1px solid #2a2a2a; }
+    .mode-btn:hover:not(.active) { color: #aaa; }
+    .contract-type-select { width: 100%; background: #141414; border: 1px solid #2a2a2a; border-radius: 8px; padding: 11px 14px; font-size: 0.92rem; color: #f0f0f0; font-family: 'DM Sans', system-ui, sans-serif; margin-bottom: 16px; outline: none; cursor: pointer; transition: border-color 0.2s; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+    .contract-type-select:focus { border-color: #f97316; }
+    .playbook-results { display: none; }
+    .playbook-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #2a2a2a; }
+    .playbook-header h2 { font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; color: #fff; }
+    .provision-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+    .provision-item { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px 18px; }
+    .provision-item.risk-high { border-left: 3px solid #ef4444; }
+    .provision-item.risk-medium { border-left: 3px solid #f97316; }
+    .provision-item.risk-low { border-left: 3px solid #22c55e; }
+    .provision-item.risk-none { border-left: 3px solid #2a2a2a; }
+    .provision-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+    .provision-name { font-size: 0.9rem; font-weight: 600; color: #f0f0f0; flex: 1; }
+    .provision-badges { display: flex; gap: 6px; align-items: center; }
+    .badge-present { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; }
+    .badge-present.yes { background: rgba(34,197,94,0.15); color: #4ade80; }
+    .badge-present.no { background: rgba(239,68,68,0.15); color: #f87171; }
+    .badge-status { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: #aaa; }
+    .badge-status.favorable { background: rgba(34,197,94,0.12); color: #4ade80; }
+    .badge-status.unfavorable { background: rgba(239,68,68,0.12); color: #f87171; }
+    .badge-status.missing { background: rgba(239,68,68,0.12); color: #f87171; }
+    .badge-status.neutral { background: rgba(255,255,255,0.06); color: #aaa; }
+    .provision-finding { font-size: 0.84rem; color: #d4d4d4; line-height: 1.6; margin-bottom: 6px; }
+    .provision-consequence { font-size: 0.82rem; color: #888; line-height: 1.6; margin-bottom: 8px; }
+    .provision-quote { font-size: 0.78rem; color: #666; font-style: italic; border-left: 2px solid #333; padding-left: 10px; margin-top: 8px; line-height: 1.6; }
     @media print {
       * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
       body { background: #fff !important; color: #000 !important; }
@@ -146,6 +176,20 @@
 
 <main>
   <div id="upload-form">
+      <div class="mode-toggle">
+        <button class="mode-btn active" id="mode-standard" onclick="switchMode('standard')">Standard Review</button>
+        <button class="mode-btn" id="mode-playbook" onclick="switchMode('playbook')">Playbook Review</button>
+      </div>
+      <div id="playbook-selector" style="display:none;">
+        <select class="contract-type-select" id="contract-type">
+          <option value="">— Select contract type —</option>
+          <option value="Non-Disclosure Agreement">Non-Disclosure Agreement (NDA)</option>
+          <option value="Employment Agreement">Employment Agreement</option>
+          <option value="Vendor/Services Agreement">Vendor / Services Agreement</option>
+          <option value="Commercial Lease">Commercial Lease</option>
+          <option value="Independent Contractor Agreement">Independent Contractor Agreement</option>
+        </select>
+      </div>
     <div class="plan-banner">
       <div>
         <div class="plan-info" id="plan-info"><strong>Standard Plan</strong> &mdash; Up to 50 pages per contract</div>
@@ -164,7 +208,7 @@
       <div class="processing-note" id="processing-note">Extracting text from file...</div>
     </div>
 
-    <button class="btn-analyze" id="analyze-btn" onclick="analyzeContract()">Analyze Contract</button>
+    <button class="btn-analyze" id="analyze-btn" onclick="currentMode === 'playbook' ? analyzePlaybook() : analyzeContract()">Analyze Contract</button>
     <p class="btn-note">Your contract is never stored. Analysis takes under 60 seconds.</p>
     <div class="error-msg" id="error-msg"></div>
   </div>
@@ -437,6 +481,7 @@
 
   function reset() {
     document.getElementById('results').style.display = 'none';
+    document.getElementById('playbook-results').style.display = 'none';
     document.getElementById('upload-form').style.display = 'block';
     document.getElementById('error-msg').style.display = 'none';
     document.getElementById('file-name').style.display = 'none';
@@ -445,6 +490,88 @@
     fileContent = '';
     fileInput.value = '';
     analyzeBtn.disabled = false;
+  }
+
+
+  let currentMode = 'standard';
+
+  function switchMode(mode) {
+    currentMode = mode;
+    document.getElementById('mode-standard').classList.toggle('active', mode === 'standard');
+    document.getElementById('mode-playbook').classList.toggle('active', mode === 'playbook');
+    document.getElementById('playbook-selector').style.display = mode === 'playbook' ? 'block' : 'none';
+  }
+
+  async function analyzePlaybook() {
+    const contractType = document.getElementById('contract-type').value;
+    if (!contractType) { showError('Please select a contract type.'); return; }
+    if (!fileContent) { showError('Please upload a contract file first.'); return; }
+
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    currentSession = session;
+
+    document.getElementById('upload-form').style.display = 'none';
+    document.getElementById('loading').style.display = 'block';
+    document.getElementById('error-msg').style.display = 'none';
+    if (window.posthog) posthog.capture('playbook_analysis_started', { contract_type: contractType });
+
+    try {
+      const response = await fetch(WORKER_URL + '/api/analyze-playbook', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+          'Authorization': `Bearer ${currentSession.access_token}`
+        },
+        body: JSON.stringify({ contractText: fileContent, contractType })
+      });
+
+      const result = await response.json();
+
+      if (!response.ok || result.error) {
+        if (result.trialExpired) throw new Error('Your trial has expired. Please upgrade to continue.');
+        throw new Error(result.error || `Server error (${response.status})`);
+      }
+
+      if (window.posthog) posthog.capture('playbook_analysis_completed', { contract_type: contractType, risk: result.overall_risk });
+      renderPlaybookResults(result);
+
+    } catch (err) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('upload-form').style.display = 'block';
+      showError('Something went wrong: ' + err.message);
+    }
+  }
+
+  function renderPlaybookResults(data) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('playbook-results').style.display = 'block';
+
+    document.getElementById('playbook-title').textContent = data.contract_type + ' — Playbook Review';
+    document.getElementById('playbook-summary').textContent = data.summary;
+
+    const badge = document.getElementById('playbook-risk-badge');
+    badge.textContent = data.overall_risk + ' Risk';
+    badge.className = 'risk-badge risk-' + data.overall_risk.toLowerCase();
+
+    document.getElementById('provision-list').innerHTML = data.provisions.map(p => {
+      const riskClass = p.risk_level === 'none' ? 'risk-none' : 'risk-' + p.risk_level;
+      const presentClass = p.present ? 'yes' : 'no';
+      const presentLabel = p.present ? 'Present' : 'Missing';
+      const quoteHtml = p.quote ? `<div class="provision-quote">"${escapeHtml(p.quote)}"</div>` : '';
+      return `<div class="provision-item ${riskClass}">
+        <div class="provision-top">
+          <span class="provision-name">${escapeHtml(p.name)}</span>
+          <div class="provision-badges">
+            <span class="badge-present ${presentClass}">${presentLabel}</span>
+            <span class="badge-status ${p.status}">${p.status}</span>
+          </div>
+        </div>
+        <div class="provision-finding">${escapeHtml(p.finding)}</div>
+        <div class="provision-consequence">⚠ ${escapeHtml(p.consequence)}</div>
+        ${quoteHtml}
+      </div>`;
+    }).join('');
   }
 
   function printReport() {
