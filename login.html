@@ -286,7 +286,7 @@
     if (!email) { showErr(errorEl, 'Please enter your email address.'); return; }
     document.getElementById('forgot-btn').disabled = true;
     const { error } = await sb.auth.resetPasswordForEmail(email, {
-      redirectTo: 'https://dlgambill.github.io/clausecheck/app.html'
+      redirectTo: 'https://clausecheck.conduitlab.ai/app.html'
     });
     document.getElementById('forgot-btn').disabled = false;
     if (error) { showErr(errorEl, error.message); return; }
