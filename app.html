@@ -496,6 +496,7 @@
         document.getElementById('loading-heading').textContent = 'Reviewing your contract...';
         document.getElementById('loading-subtext').textContent = 'Flagging clauses, assessing risk, extracting key terms';
         const ocrText = await extractTextFromBase64PDF(result.ocr_pdf_base64);
+        console.log('[OCR] extracted text length:', ocrText ? ocrText.length : 0);
         if (!ocrText || ocrText.trim().length < 50) {
           throw new Error('This document appears to be a scanned PDF. We were unable to extract readable text automatically. Please convert it manually at https://smallpdf.com/ocr-pdf and re-upload.');
         }
@@ -505,7 +506,9 @@
           body: JSON.stringify({ contractText: ocrText })
         });
         const result2 = await response2.json();
+        console.log('[OCR] resubmit result:', JSON.stringify(result2).slice(0, 200));
         if (!response2.ok || result2.error) throw new Error(result2.error || `Server error (${response2.status})`);
+        if (!result2.overall_risk) throw new Error('Analysis returned an incomplete result. Please try again.');
         if (result2.tier) applyTierUI(result2.tier);
         renderResults(result2);
         if (window.posthog) posthog.capture('analysis_completed', { risk: result2.overall_risk, tier: result2.tier, ocr: true });
@@ -573,6 +576,7 @@
         document.getElementById('loading-heading').textContent = 'Running playbook review...';
         document.getElementById('loading-subtext').textContent = 'Analyzing provisions against the playbook';
         const ocrText = await extractTextFromBase64PDF(result.ocr_pdf_base64);
+        console.log('[OCR playbook] extracted text length:', ocrText ? ocrText.length : 0);
         if (!ocrText || ocrText.trim().length < 50) {
           throw new Error('This document appears to be a scanned PDF. We were unable to extract readable text automatically. Please convert it manually at https://smallpdf.com/ocr-pdf and re-upload.');
         }
@@ -582,7 +586,9 @@
           body: JSON.stringify({ contractText: ocrText, contractType })
         });
         const result2 = await response2.json();
+        console.log('[OCR playbook] resubmit result:', JSON.stringify(result2).slice(0, 200));
         if (!response2.ok || result2.error) throw new Error(result2.error || `Server error (${response2.status})`);
+        if (!result2.overall_risk) throw new Error('Analysis returned an incomplete result. Please try again.');
         if (window.posthog) posthog.capture('playbook_analysis_completed', { contract_type: contractType, risk: result2.overall_risk, ocr: true });
         renderPlaybookResults(result2);
         return;
