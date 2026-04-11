@@ -213,7 +213,7 @@
     <!-- OCR status banner: shown automatically when a scanned PDF is detected -->
     <div class="ocr-status" id="ocr-status">
       <div class="ocr-spinner"></div>
-      <p><strong>Scanned document detected.</strong> Converting to readable text &mdash; this may take an additional 10&#8211;20 seconds before analysis begins.</p>
+      <p><strong>Scanned PDF detected.</strong> This document will be converted to text before analysis. Expect 10&#8211;20 additional seconds.</p>
     </div>
 
     <button class="btn-analyze" id="analyze-btn" onclick="currentMode === 'playbook' ? analyzePlaybook() : analyzeContract()">Analyze Contract</button>
@@ -284,9 +284,9 @@
   </div>
 </main>
 
-<footer>&copy; 2026 ClauseCheck &nbsp;&middot;&nbsp; Built for small law firms &nbsp;&middot;&nbsp; <a href="terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="mailto:legal@conduitlab.ai?subject=ClauseCheck%20Feedback">Feedback</a></footer>
+<footer>&copy; 2026 ClauseCheck &nbsp;&middot;&nbsp; Built for small law firms &nbsp;&middot;&nbsp; <a href="terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="/cdn-cgi/l/email-protection#c6aaa3a1a7aa86a5a9a8a2b3afb2aaa7a4e8a7aff9b5b3a4aca3a5b2fb85aaa7b3b5a385aea3a5ade3f4f680a3a3a2a4a7a5ad">Feedback</a></footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script><script>
   const WORKER_URL    = 'https://api.clausecheck.conduitlab.ai';
@@ -491,6 +491,27 @@
         throw new Error(result.error || `Server error (${response.status})`);
       }
 
+      // OCR round-trip: Worker returned a searchable PDF — extract text with pdf.js and resubmit
+      if (result.ocr_pdf_base64) {
+        document.getElementById('loading-heading').textContent = 'Reviewing your contract...';
+        document.getElementById('loading-subtext').textContent = 'Flagging clauses, assessing risk, extracting key terms';
+        const ocrText = await extractTextFromBase64PDF(result.ocr_pdf_base64);
+        if (!ocrText || ocrText.trim().length < 50) {
+          throw new Error('This document appears to be a scanned PDF. We were unable to extract readable text automatically. Please convert it manually at https://smallpdf.com/ocr-pdf and re-upload.');
+        }
+        const response2 = await fetch(WORKER_URL, {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentSession.access_token}` },
+          body: JSON.stringify({ contractText: ocrText })
+        });
+        const result2 = await response2.json();
+        if (!response2.ok || result2.error) throw new Error(result2.error || `Server error (${response2.status})`);
+        if (result2.tier) applyTierUI(result2.tier);
+        renderResults(result2);
+        if (window.posthog) posthog.capture('analysis_completed', { risk: result2.overall_risk, tier: result2.tier, ocr: true });
+        return;
+      }
+
       if (result.tier) applyTierUI(result.tier);
       renderResults(result);
       if (window.posthog) posthog.capture('analysis_completed', { risk: result.overall_risk, tier: result.tier, ocr: isScanned });
@@ -545,6 +566,26 @@
       if (!response.ok || result.error) {
         if (result.trialExpired) throw new Error('Your trial has expired. Please upgrade to continue.');
         throw new Error(result.error || `Server error (${response.status})`);
+      }
+
+      // OCR round-trip: extract text from OCR'd PDF and resubmit to playbook endpoint
+      if (result.ocr_pdf_base64) {
+        document.getElementById('loading-heading').textContent = 'Running playbook review...';
+        document.getElementById('loading-subtext').textContent = 'Analyzing provisions against the playbook';
+        const ocrText = await extractTextFromBase64PDF(result.ocr_pdf_base64);
+        if (!ocrText || ocrText.trim().length < 50) {
+          throw new Error('This document appears to be a scanned PDF. We were unable to extract readable text automatically. Please convert it manually at https://smallpdf.com/ocr-pdf and re-upload.');
+        }
+        const response2 = await fetch(WORKER_URL + '/api/analyze-playbook', {
+          method: 'POST',
+          headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentSession.access_token}` },
+          body: JSON.stringify({ contractText: ocrText, contractType })
+        });
+        const result2 = await response2.json();
+        if (!response2.ok || result2.error) throw new Error(result2.error || `Server error (${response2.status})`);
+        if (window.posthog) posthog.capture('playbook_analysis_completed', { contract_type: contractType, risk: result2.overall_risk, ocr: true });
+        renderPlaybookResults(result2);
+        return;
       }
 
       if (window.posthog) posthog.capture('playbook_analysis_completed', { contract_type: contractType, risk: result.overall_risk, ocr: isScanned });
@@ -649,6 +690,21 @@
     document.getElementById('print-date').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
     if (window.posthog) posthog.capture('report_printed');
     window.print();
+  }
+
+  // Extract text from a base64-encoded PDF using pdf.js (used after server-side OCR)
+  async function extractTextFromBase64PDF(base64) {
+    const binaryStr = atob(base64);
+    const bytes = new Uint8Array(binaryStr.length);
+    for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
+    const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+    let fullText = '';
+    for (let i = 1; i <= pdf.numPages; i++) {
+      const page = await pdf.getPage(i);
+      const textContent = await page.getTextContent();
+      fullText += textContent.items.map(item => item.str).join(' ') + '\n';
+    }
+    return fullText.trim();
   }
 
   initAuth();
