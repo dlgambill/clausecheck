@@ -13,43 +13,26 @@
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ClauseCheck — AI Contract Review">
 <meta name="twitter:description" content="AI contract review for small law firms. Upload any contract and get flagged clauses, risk summary, key terms, and breach penalty analysis in under 60 seconds.">
+<link rel="icon" type="image/svg+xml" href="favicon.svg">
+<link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+<link rel="shortcut icon" href="favicon.ico">
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display&family=DM+Sans:opsz,wght@9..40,400;9..40,500;9..40,600&display=swap" rel="stylesheet">
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
-body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.6; min-height: 100vh; }
-
-/* ── Nav ── */
-nav { padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
-.logo { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.02em; text-decoration: none; }
-.logo-clause { color: #fff; }
-.logo-check  { color: #f97316; }
+body { font-family: 'DM Sans', system-ui, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.6; min-height: 100vh; }
+nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
+.logo { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: #fff; letter-spacing: -0.01em; text-decoration: none; }
+.logo span { color: #f97316; }
 .nav-right { display: flex; align-items: center; gap: 16px; }
 .nav-version { font-size: 0.72rem; color: #444; font-family: monospace; }
-.nav-user { font-size: 0.82rem; color: #aaa; }
-.nav-user strong { color: #f0f0f0; }
-.nav-signout { font-size: 0.82rem; color: #666; background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; transition: color 0.2s; }
+.nav-user { font-size: 0.8rem; color: #888; }
+.nav-link { font-size: 0.8rem; color: #fff; text-decoration: none; transition: color 0.2s; }
+.nav-link:hover { color: #f97316; }
+.nav-signout { font-size: 0.8rem; color: #fff; background: none; border: none; cursor: pointer; padding: 0; font-family: 'DM Sans', system-ui, sans-serif; transition: color 0.2s; }
 .nav-signout:hover { color: #f97316; }
-.nav-signin { font-size: 0.85rem; font-weight: 500; color: #fff; background: #f97316; border: none; border-radius: 6px; padding: 8px 18px; cursor: pointer; font-family: inherit; text-decoration: none; transition: opacity 0.2s; }
-.nav-signin:hover { opacity: 0.88; }
-
-/* ── Auth gate ── */
-#auth-gate { max-width: 400px; margin: 100px auto; padding: 0 24px; }
-#auth-gate h2 { font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
-#auth-gate p { font-size: 0.88rem; color: #777; margin-bottom: 28px; }
-.auth-form { display: flex; flex-direction: column; gap: 12px; }
-.auth-form input { background: #141414; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px 14px; color: #f0f0f0; font-size: 0.9rem; font-family: inherit; outline: none; transition: border-color 0.2s; }
-.auth-form input:focus { border-color: #f97316; }
-.auth-form input::placeholder { color: #555; }
-.btn-auth { background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 13px; font-size: 0.95rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
-.btn-auth:hover { opacity: 0.88; }
-.btn-auth:disabled { opacity: 0.4; cursor: not-allowed; }
-.auth-toggle { font-size: 0.82rem; color: #666; text-align: center; margin-top: 4px; }
-.auth-toggle a { color: #f97316; text-decoration: none; cursor: pointer; }
-.auth-toggle a:hover { text-decoration: underline; }
-.auth-error { font-size: 0.82rem; color: #f87171; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); border-radius: 6px; padding: 10px 14px; display: none; }
-.auth-success { font-size: 0.82rem; color: #4ade80; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); border-radius: 6px; padding: 10px 14px; display: none; }
-
-/* ── Main app ── */
-main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; display: none; }
+main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
 .plan-banner { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 .plan-info { font-size: 0.85rem; color: #aaa; }
 .plan-info strong { color: #f0f0f0; }
@@ -66,7 +49,7 @@ main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; display: none;
 .file-name { margin-top: 14px; font-size: 0.82rem; color: #f97316; display: none; font-family: monospace; }
 .file-warning { margin-top: 10px; font-size: 0.8rem; color: #fb923c; display: none; background: rgba(249,115,22,0.08); border: 1px solid rgba(249,115,22,0.2); border-radius: 6px; padding: 8px 12px; }
 .processing-note { margin-top: 10px; font-size: 0.8rem; color: #777; display: none; }
-.btn-analyze { width: 100%; background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 16px; font-family: system-ui, -apple-system, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-bottom: 8px; }
+.btn-analyze { width: 100%; background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 16px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 1rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; margin-bottom: 8px; }
 .btn-analyze:hover { opacity: 0.88; }
 .btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; }
 .btn-note { text-align: center; font-size: 0.8rem; color: #666; }
@@ -76,6 +59,10 @@ main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; display: none;
 @keyframes spin { to { transform: rotate(360deg); } }
 .loading h3 { font-size: 1rem; font-weight: 600; color: #fff; margin-bottom: 6px; }
 .loading p { font-size: 0.85rem; color: #777; }
+.ocr-status { display: none; align-items: center; gap: 12px; background: #141414; border: 1px solid rgba(249,115,22,0.3); border-radius: 8px; padding: 14px 18px; margin-bottom: 16px; }
+.ocr-spinner { width: 16px; height: 16px; border: 2px solid #333; border-top-color: #f97316; border-radius: 50%; animation: spin 0.8s linear infinite; flex-shrink: 0; }
+.ocr-status p { font-size: 0.85rem; color: #aaa; line-height: 1.5; }
+.ocr-status p strong { color: #f0f0f0; }
 .results { display: none; }
 .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #2a2a2a; }
 .results-header h2 { font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; color: #fff; }
@@ -112,99 +99,173 @@ main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; display: none;
 .breach-table td:last-child { padding-right: 0; }
 .breach-table td:first-child { color: #f0f0f0; font-weight: 500; }
 .not-specified { color: #555; font-style: italic; }
-.btn-reset { background: transparent; border: 1px solid #2a2a2a; color: #888; border-radius: 8px; padding: 10px 20px; font-family: system-ui, -apple-system, sans-serif; font-size: 0.85rem; cursor: pointer; margin-top: 20px; transition: border-color 0.2s, color 0.2s; }
+.btn-reset { background: transparent; border: 1px solid #2a2a2a; color: #888; border-radius: 8px; padding: 10px 20px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.85rem; cursor: pointer; margin-top: 20px; transition: border-color 0.2s, color 0.2s; }
 .btn-reset:hover { border-color: #f97316; color: #f97316; }
+.btn-print { background: transparent; border: 1px solid #2a2a2a; color: #888; border-radius: 8px; padding: 10px 20px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.85rem; cursor: pointer; margin-top: 20px; margin-left: 10px; transition: border-color 0.2s, color 0.2s; }
+.btn-print:hover { border-color: #f97316; color: #f97316; }
+.btn-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0; }
+.mode-toggle { display: flex; background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 4px; margin-bottom: 20px; gap: 4px; }
+.mode-btn { flex: 1; padding: 10px; text-align: center; font-size: 0.85rem; font-weight: 500; color: #555; cursor: pointer; border-radius: 7px; border: none; background: none; font-family: 'DM Sans', system-ui, sans-serif; transition: all 0.2s; }
+.mode-btn.active { background: #1e1e1e; color: #f0f0f0; border: 1px solid #2a2a2a; }
+.mode-btn:hover:not(.active) { color: #aaa; }
+.contract-type-select { width: 100%; background: #141414; border: 1px solid #2a2a2a; border-radius: 8px; padding: 11px 14px; font-size: 0.92rem; color: #f0f0f0; font-family: 'DM Sans', system-ui, sans-serif; margin-bottom: 16px; outline: none; cursor: pointer; transition: border-color 0.2s; appearance: none; background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='12' height='12' viewBox='0 0 12 12'%3E%3Cpath fill='%23666' d='M6 8L1 3h10z'/%3E%3C/svg%3E"); background-repeat: no-repeat; background-position: right 14px center; }
+.contract-type-select:focus { border-color: #f97316; }
+.playbook-results { display: none; }
+.playbook-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #2a2a2a; }
+.playbook-header h2 { font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; color: #fff; }
+.provision-list { display: flex; flex-direction: column; gap: 8px; margin-bottom: 12px; }
+.provision-item { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px 18px; }
+.provision-item.risk-high { border-left: 3px solid #ef4444; }
+.provision-item.risk-medium { border-left: 3px solid #f97316; }
+.provision-item.risk-low { border-left: 3px solid #22c55e; }
+.provision-item.risk-none { border-left: 3px solid #2a2a2a; }
+.provision-top { display: flex; align-items: center; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.provision-name { font-size: 0.9rem; font-weight: 600; color: #f0f0f0; flex: 1; }
+.provision-badges { display: flex; gap: 6px; align-items: center; }
+.badge-present { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; }
+.badge-present.yes { background: rgba(34,197,94,0.15); color: #4ade80; }
+.badge-present.no { background: rgba(239,68,68,0.15); color: #f87171; }
+.badge-status { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; background: rgba(255,255,255,0.06); color: #aaa; }
+.badge-status.favorable { background: rgba(34,197,94,0.12); color: #4ade80; }
+.badge-status.unfavorable { background: rgba(239,68,68,0.12); color: #f87171; }
+.badge-status.missing { background: rgba(239,68,68,0.12); color: #f87171; }
+.badge-status.neutral { background: rgba(255,255,255,0.06); color: #aaa; }
+.provision-finding { font-size: 0.84rem; color: #d4d4d4; line-height: 1.6; margin-bottom: 6px; }
+.provision-consequence { font-size: 0.82rem; color: #888; line-height: 1.6; margin-bottom: 8px; }
+.provision-quote { font-size: 0.78rem; color: #666; font-style: italic; border-left: 2px solid #333; padding-left: 10px; margin-top: 8px; line-height: 1.6; }
+@media print {
+* { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
+body { background: #fff !important; color: #000 !important; }
+nav, footer, .plan-banner, .upsell-banner, .btn-reset, .btn-print, .btn-actions, #auth-gate { display: none !important; }
+main { max-width: 100%; padding: 0; }
+.results { display: block !important; }
+.results-header { border-bottom: 2px solid #000; margin-bottom: 20px; padding-bottom: 12px; }
+.results-header h2 { color: #000 !important; font-size: 1.4rem; }
+.risk-badge { border: 2px solid #000 !important; color: #000 !important; background: transparent !important; }
+.card { background: #fff !important; border: 1px solid #ccc !important; border-radius: 6px; padding: 16px; margin-bottom: 12px; break-inside: avoid; }
+.card-label { color: #555 !important; font-size: 0.7rem; text-transform: uppercase; letter-spacing: 0.08em; margin-bottom: 10px; }
+.summary-text { color: #000 !important; font-size: 0.95rem; line-height: 1.7; }
+.clause-item { border-left: 3px solid #000 !important; background: #f9f9f9 !important; break-inside: avoid; }
+.clause-item.high { border-left-color: #dc2626 !important; }
+.clause-item.medium { border-left-color: #ea580c !important; }
+.clause-item.low { border-left-color: #16a34a !important; }
+.clause-title { color: #000 !important; }
+.clause-explanation { color: #333 !important; }
+.sev-tag { border: 1px solid #000 !important; color: #000 !important; background: transparent !important; }
+.sev-high { border-color: #dc2626 !important; color: #dc2626 !important; }
+.sev-medium { border-color: #ea580c !important; color: #ea580c !important; }
+.sev-low { border-color: #16a34a !important; color: #16a34a !important; }
+.term-item { background: #f5f5f5 !important; border: 1px solid #ddd !important; break-inside: avoid; }
+.term-label { color: #555 !important; }
+.term-value { color: #000 !important; }
+.breach-table th, .breach-table td { color: #000 !important; border-color: #ccc !important; }
+.print-header { display: block !important; }
+}
+.print-header { display: none; }
 .upsell-banner { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px 20px; margin-top: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 .upsell-banner p { font-size: 0.85rem; color: #aaa; }
 .upsell-banner p strong { color: #f0f0f0; }
 .upsell-btn { background: transparent; border: 1px solid #f97316; color: #f97316; border-radius: 6px; padding: 8px 16px; font-size: 0.82rem; font-weight: 500; cursor: pointer; text-decoration: none; transition: background 0.2s, color 0.2s; white-space: nowrap; }
 .upsell-btn:hover { background: #f97316; color: #fff; }
-footer { border-top: 1px solid #2a2a2a; padding: 20px 40px; text-align: center; font-size: 0.8rem; color: #666; }
+footer { border-top: 1px solid #2a2a2a; padding: 20px 40px; text-align: center; font-size: 0.8rem; color: #888; }
+footer a { color: #fff; text-decoration: none; transition: color 0.2s; }
+footer a:hover { color: #f97316; }
+#auth-gate { position: fixed; inset: 0; background: #0a0a0a; z-index: 100; display: flex; align-items: center; justify-content: center; flex-direction: column; gap: 12px; text-align: center; }
+#auth-gate p { color: #777; font-size: 0.9rem; }
+#auth-gate .spinner { width: 28px; height: 28px; border: 2px solid #2a2a2a; border-top-color: #f97316; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto; }
 </style>
+<script>
+!function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
+  api_host: 'https://us.i.posthog.com',
+  person_profiles: 'identified_only',
+});
+</script>
 </head>
 <body>
 
+<div id="auth-gate">
+  <div class="spinner"></div>
+  <p>Verifying session...</p>
+</div>
+
 <nav>
-  <a href="index.html" class="logo"><span class="logo-clause">Clause</span><span class="logo-check">Check</span></a>
+  <a href="index.html" class="logo">Clause<span>Check</span></a>
   <div class="nav-right">
     <span class="nav-version">v4.2</span>
-    <span class="nav-user" id="nav-user" style="display:none;"></span>
-    <button class="nav-signout" id="nav-signout" style="display:none;" onclick="signOut()">Sign out</button>
-    <a href="#" class="nav-signin" id="nav-signin" style="display:none;" onclick="showAuth()">Sign in</a>
+    <a href="dashboard.html" class="nav-link">Account</a>
+    <span class="nav-user" id="nav-user"></span>
+    <button class="nav-signout" onclick="signOut()">Sign out</button>
   </div>
 </nav>
 
-<!-- Auth gate -->
-<div id="auth-gate" style="display:none;">
-  <h2 id="auth-title">Sign in to ClauseCheck</h2>
-  <p id="auth-subtitle">Enter your email and password to continue.</p>
-  <div class="auth-form">
-    <input type="email" id="auth-email" placeholder="Email address" autocomplete="email">
-    <input type="password" id="auth-password" placeholder="Password" autocomplete="current-password">
-    <input type="password" id="auth-password2" placeholder="Confirm password" autocomplete="new-password" style="display:none;">
-    <div class="auth-error" id="auth-error"></div>
-    <div class="auth-success" id="auth-success"></div>
-    <button class="btn-auth" id="auth-btn" onclick="handleAuth()">Sign in</button>
-    <div class="auth-toggle">
-      <span id="auth-toggle-text">Don't have an account?</span>
-      <a onclick="toggleAuthMode()"> <span id="auth-toggle-link">Sign up</span></a>
-    </div>
-  </div>
-</div>
-
-<!-- Main app -->
-<main id="app-main">
+<main>
   <div id="upload-form">
-    <div class="plan-banner" id="plan-banner">
+    <div class="mode-toggle">
+      <button class="mode-btn active" id="mode-standard" onclick="switchMode('standard')">Standard Review</button>
+      <button class="mode-btn" id="mode-playbook" onclick="switchMode('playbook')">Playbook Review</button>
+    </div>
+    <div id="playbook-selector" style="display:none;">
+      <select class="contract-type-select" id="contract-type">
+        <option value="">&#8212; Select contract type &#8212;</option>
+        <option value="Non-Disclosure Agreement">Non-Disclosure Agreement (NDA)</option>
+        <option value="Employment Agreement">Employment Agreement</option>
+        <option value="Vendor/Services Agreement">Vendor / Services Agreement</option>
+        <option value="Commercial Lease">Commercial Lease</option>
+        <option value="Independent Contractor Agreement">Independent Contractor Agreement</option>
+      </select>
+    </div>
+    <div class="plan-banner">
       <div>
-        <div class="plan-info" id="plan-info"><strong>Loading...</strong></div>
-        <div class="plan-upgrade" id="plan-upgrade" style="display:none;">Need to analyze longer contracts? <a href="#" onclick="handleUpgrade()">Upgrade to Pro &rarr;</a></div>
+        <div class="plan-info" id="plan-info"><strong>Standard Plan</strong> &mdash; Up to 50 pages per contract</div>
+        <div class="plan-upgrade">Want more? <a href="dashboard.html">Manage your plan &#8594;</a></div>
       </div>
       <div class="plan-badge" id="plan-badge">Active</div>
     </div>
-
     <div class="upload-zone" id="drop-zone">
       <input type="file" id="file-input" accept=".txt,.doc,.docx,.pdf">
       <h2>Drop your contract here</h2>
       <p>PDF, Word (.docx), or plain text &mdash; any contract type</p>
       <p class="limit-note" id="limit-note">Standard plan supports contracts up to 50 pages</p>
       <div class="file-name" id="file-name"></div>
-      <div class="file-warning" id="file-warning">This contract exceeds the page limit. Only the first portion will be analyzed.</div>
+      <div class="file-warning" id="file-warning">This contract exceeds the page limit. Only the first portion will be analyzed. Upgrade to Pro for unlimited length.</div>
       <div class="processing-note" id="processing-note">Extracting text from file...</div>
     </div>
-
-    <button class="btn-analyze" id="analyze-btn" onclick="analyzeContract()">Analyze Contract</button>
+    <div class="ocr-status" id="ocr-status">
+      <div class="ocr-spinner"></div>
+      <p><strong>Scanned PDF detected.</strong> This document will be converted to text before analysis. Expect 10&#8211;20 additional seconds.</p>
+    </div>
+    <button class="btn-analyze" id="analyze-btn" onclick="currentMode === 'playbook' ? analyzePlaybook() : analyzeContract()">Analyze Contract</button>
     <p class="btn-note">Your contract is never stored. Analysis takes under 60 seconds.</p>
     <div class="error-msg" id="error-msg"></div>
   </div>
 
   <div class="loading" id="loading">
     <div class="loading-spinner"></div>
-    <h3>Reviewing your contract...</h3>
-    <p>Flagging clauses, assessing risk, extracting key terms</p>
+    <h3 id="loading-heading">Reviewing your contract...</h3>
+    <p id="loading-subtext">Flagging clauses, assessing risk, extracting key terms</p>
   </div>
 
   <div class="results" id="results">
     <div class="results-header">
-      <h2>Review complete</h2>
-      <div class="risk-badge" id="risk-badge"></div>
+      <h2>Review Complete</h2>
+      <div style="display:flex; align-items:center; gap:10px;">
+        <div class="risk-badge" id="risk-badge"></div>
+        <button class="btn-print" onclick="printReport()" style="margin-top:0;">&#128438; Print / Save PDF</button>
+      </div>
     </div>
-
     <div class="card">
       <div class="card-label">Executive summary</div>
       <div class="summary-text" id="summary-text"></div>
     </div>
-
     <div class="card">
       <div class="card-label">Flagged clauses</div>
       <div id="clauses-list"></div>
     </div>
-
     <div class="card">
       <div class="card-label">Key terms</div>
       <div class="terms-grid" id="terms-grid"></div>
     </div>
-
     <div class="card" id="breach-card" style="display:none;">
       <div class="card-label">Potential breach penalties</div>
       <table class="breach-table">
@@ -219,207 +280,144 @@ footer { border-top: 1px solid #2a2a2a; padding: 20px 40px; text-align: center; 
         <tbody id="breach-tbody"></tbody>
       </table>
     </div>
-
-    <div class="upsell-banner" id="upsell-banner" style="display:none;">
-      <p><strong>Need more?</strong> Upgrade to Pro for unlimited contract length, deeper analysis with Claude Sonnet, and priority support.</p>
-      <a href="#" class="upsell-btn" onclick="handleUpgrade()">Upgrade to Pro</a>
+    <div class="upsell-banner" id="upsell-banner">
+      <p><strong>Pro coming soon.</strong> Unlimited contract length, deeper analysis with Claude Sonnet, and priority support.</p>
+      <a href="dashboard.html" class="upsell-btn">Upgrade &#8594;</a>
     </div>
+    <div class="print-header">
+      <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:8px;">
+        <span style="font-family: Georgia, serif; font-size: 20px; color: #000;">Clause<span style="color:#f97316;">Check</span></span>
+        <span style="font-size: 12px; color: #555;" id="print-date"></span>
+      </div>
+      <div style="font-size: 11px; color: #777; margin-bottom: 16px;">AI-powered contract review &nbsp;&middot;&nbsp; clausecheck.conduitlab.ai &nbsp;&middot;&nbsp; Not legal advice</div>
+    </div>
+    <div class="btn-actions">
+      <button class="btn-reset" onclick="reset()">&larr; Review another contract</button>
+      <button class="btn-print" onclick="printReport()">&#128438; Print / Save PDF</button>
+    </div>
+  </div>
 
-    <button class="btn-reset" onclick="resetApp()">&larr; Review another contract</button>
+  <div class="playbook-results" id="playbook-results">
+    <div class="playbook-header">
+      <h2 id="playbook-title">Playbook Review</h2>
+      <div class="risk-badge" id="playbook-risk-badge"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Overall Assessment</div>
+      <div class="summary-text" id="playbook-summary"></div>
+    </div>
+    <div class="card">
+      <div class="card-label">Provision Analysis</div>
+      <div class="provision-list" id="provision-list"></div>
+    </div>
+    <div class="card" id="playbook-breach-card" style="display:none;">
+      <div class="card-label">Potential breach penalties</div>
+      <table class="breach-table">
+        <thead>
+          <tr>
+            <th>Clause</th>
+            <th>Liable party</th>
+            <th>Remedy / Penalty</th>
+            <th>Cure period</th>
+          </tr>
+        </thead>
+        <tbody id="playbook-breach-tbody"></tbody>
+      </table>
+    </div>
+    <div class="btn-actions">
+      <button class="btn-reset" onclick="reset()">&larr; Review another contract</button>
+      <button class="btn-print" onclick="printReport()">&#128438; Print / Save PDF</button>
+    </div>
   </div>
 </main>
 
-<footer>&copy; 2026 ClauseCheck &middot; Built for small law firms &middot; v4.2</footer>
+<footer>&copy; 2026 ClauseCheck &nbsp;&middot;&nbsp; Built for small law firms &nbsp;&middot;&nbsp; v4.2 &nbsp;&middot;&nbsp; <a href="terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="mailto:legal@conduitlab.ai">Feedback</a></footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-// ── Config ──────────────────────────────────────────────────────────────────
-const WORKER_URL    = 'https://clausecheck.dgambill1975.workers.dev';
+const WORKER_URL    = 'https://api.clausecheck.conduitlab.ai';
 const SUPABASE_URL  = 'https://gmzawvbidpjrqixkdiyh.supabase.co';
 const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtemF3dmJpZHBqcnFpeGtkaXloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NDEzMjQsImV4cCI6MjA5MTAxNzMyNH0._RctCMV0iF-gBSlv8M9e67cVII2gcy_f2yIDGcSqFo4';
+const MIN_TEXT_LENGTH = 100;
 
-pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
+const { createClient } = supabase;
+const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
-const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
-
-// ── State ────────────────────────────────────────────────────────────────────
 let currentSession = null;
-let currentProfile = null;
-let fileContent    = '';
-let authMode       = 'signin'; // 'signin' | 'signup'
+let CHAR_LIMIT = 100000;
 
-// ── Boot ─────────────────────────────────────────────────────────────────────
-// Show auth gate immediately so the page is never blank while Supabase initializes
-showAuthGate();
+pdfjsLib.GlobalWorkerOptions.workerSrc =
+  'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-sb.auth.onAuthStateChange(async (event, session) => {
-  currentSession = session;
-  if (session) {
-    await loadProfile(session.user.id);
-    showApp();
-  } else {
-    showAuthGate();
+function showOcrStatus() { const el = document.getElementById('ocr-status'); if (el) el.style.display = 'flex'; }
+function hideOcrStatus() { const el = document.getElementById('ocr-status'); if (el) el.style.display = 'none'; }
+
+// ── Session sync ──────────────────────────────────────────────
+async function syncSessionToken(session) {
+  if (!session) return;
+  await fetch(`${SUPABASE_URL}/rest/v1/sessions?user_id=eq.${session.user.id}`, {
+    method: 'PATCH',
+    headers: {
+      'Content-Type': 'application/json',
+      'apikey': SUPABASE_ANON,
+      'Authorization': `Bearer ${session.access_token}`,
+      'Prefer': 'return=minimal',
+    },
+    body: JSON.stringify({ session_token: session.access_token })
+  });
+}
+
+sb.auth.onAuthStateChange((event, session) => {
+  if (event === 'TOKEN_REFRESHED' && session) {
+    currentSession = session;
+    syncSessionToken(session);
+  }
+  if (event === 'SIGNED_OUT') {
+    window.location.href = 'index.html';
   }
 });
 
-async function loadProfile(userId) {
-  const { data } = await sb.from('profiles').select('*').eq('id', userId).single();
-  currentProfile = data;
-  updatePlanUI();
-}
-
-function updatePlanUI() {
-  if (!currentProfile) return;
-  const tier = currentProfile.tier || 'trial';
-  const isPro = tier === 'pro';
-  const isStandard = tier === 'standard';
-
-  // Nav user display
-  const email = currentSession?.user?.email || '';
-  const name  = currentProfile.full_name ? currentProfile.full_name.split(' ')[0] : email.split('@')[0];
-  document.getElementById('nav-user').textContent = name;
-
-  // Plan banner
-  if (isPro) {
-    document.getElementById('plan-info').innerHTML = '<strong>Pro Plan</strong> &mdash; Unlimited contract length';
-    document.getElementById('limit-note').textContent = 'Pro plan supports unlimited contract length';
-    document.getElementById('plan-upgrade').style.display = 'none';
-    document.getElementById('upsell-banner').style.display = 'none';
-  } else if (isStandard) {
-    document.getElementById('plan-info').innerHTML = '<strong>Standard Plan</strong> &mdash; Up to 50 pages per contract';
-    document.getElementById('limit-note').textContent = 'Standard plan supports contracts up to 50 pages';
-    document.getElementById('plan-upgrade').style.display = 'block';
-    document.getElementById('upsell-banner').style.display = 'flex';
-  } else {
-    // Trial
-    document.getElementById('plan-info').innerHTML = '<strong>Free Trial</strong> &mdash; Up to 50 pages per contract';
-    document.getElementById('limit-note').textContent = 'Trial supports contracts up to 50 pages';
-    document.getElementById('plan-upgrade').style.display = 'block';
-    document.getElementById('upsell-banner').style.display = 'flex';
-  }
-
-  const tierLabel = isPro ? 'Pro' : isStandard ? 'Standard' : 'Trial';
-  document.getElementById('plan-badge').textContent = tierLabel;
-}
-
-// ── Auth UI ───────────────────────────────────────────────────────────────────
-function showApp() {
+async function initAuth() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'index.html'; return; }
+  currentSession = session;
+  await syncSessionToken(session);
   document.getElementById('auth-gate').style.display = 'none';
-  document.getElementById('app-main').style.display = 'block';
-  document.getElementById('nav-user').style.display = 'inline';
-  document.getElementById('nav-signout').style.display = 'inline';
-  document.getElementById('nav-signin').style.display = 'none';
+  document.getElementById('nav-user').textContent = session.user.email;
+  if (window.posthog) posthog.identify(session.user.id, { email: session.user.email });
 }
 
-function showAuthGate() {
-  document.getElementById('auth-gate').style.display = 'block';
-  document.getElementById('app-main').style.display = 'none';
-  document.getElementById('nav-user').style.display = 'none';
-  document.getElementById('nav-signout').style.display = 'none';
-  document.getElementById('nav-signin').style.display = 'none';
-}
-
-function showAuth() {
-  document.getElementById('auth-gate').style.display = 'block';
-  document.getElementById('app-main').style.display = 'none';
-}
-
-function toggleAuthMode() {
-  authMode = authMode === 'signin' ? 'signup' : 'signin';
-  const isSignup = authMode === 'signup';
-  document.getElementById('auth-title').textContent    = isSignup ? 'Create your account' : 'Sign in to ClauseCheck';
-  document.getElementById('auth-subtitle').textContent = isSignup ? 'Start your free trial — no credit card required.' : 'Enter your email and password to continue.';
-  document.getElementById('auth-btn').textContent      = isSignup ? 'Create account' : 'Sign in';
-  document.getElementById('auth-toggle-text').textContent = isSignup ? 'Already have an account?' : "Don't have an account?";
-  document.getElementById('auth-toggle-link').textContent = isSignup ? 'Sign in' : 'Sign up';
-  document.getElementById('auth-password2').style.display = isSignup ? 'block' : 'none';
-  document.getElementById('auth-error').style.display   = 'none';
-  document.getElementById('auth-success').style.display = 'none';
-}
-
-async function handleAuth() {
-  const email    = document.getElementById('auth-email').value.trim();
-  const password = document.getElementById('auth-password').value;
-  const password2 = document.getElementById('auth-password2').value;
-  const btn      = document.getElementById('auth-btn');
-  const errEl    = document.getElementById('auth-error');
-  const okEl     = document.getElementById('auth-success');
-
-  errEl.style.display = 'none';
-  okEl.style.display  = 'none';
-
-  if (!email || !password) { showAuthError('Please enter your email and password.'); return; }
-  if (authMode === 'signup' && password !== password2) { showAuthError('Passwords do not match.'); return; }
-
-  btn.disabled = true;
-  btn.textContent = authMode === 'signup' ? 'Creating account...' : 'Signing in...';
-
-  if (authMode === 'signup') {
-    const { error } = await sb.auth.signUp({ email, password });
-    if (error) {
-      showAuthError(error.message);
-    } else {
-      okEl.textContent = 'Check your email to confirm your account, then sign in.';
-      okEl.style.display = 'block';
-      toggleAuthMode();
-    }
-  } else {
-    const { data, error } = await sb.auth.signInWithPassword({ email, password });
-    if (error) {
-      showAuthError(error.message);
-    } else {
-      currentSession = data.session;
-    }
-  }
-
-  btn.disabled = false;
-  btn.textContent = authMode === 'signup' ? 'Create account' : 'Sign in';
-}
-
-function showAuthError(msg) {
-  const el = document.getElementById('auth-error');
-  el.textContent = msg;
-  el.style.display = 'block';
+function applyTierUI(tier) {
+  const isPro = tier === 'pro';
+  document.getElementById('plan-info').innerHTML = isPro
+    ? '<strong>Pro Plan</strong> &mdash; Unlimited contract length'
+    : '<strong>Standard Plan</strong> &mdash; Up to 50 pages per contract';
+  document.getElementById('plan-badge').textContent = isPro ? 'Pro' : 'Active';
+  document.getElementById('limit-note').textContent = isPro
+    ? 'Pro plan supports contracts of any length'
+    : 'Standard plan supports contracts up to 50 pages';
+  if (isPro) document.getElementById('upsell-banner').style.display = 'none';
+  CHAR_LIMIT = isPro ? 500000 : 100000;
 }
 
 async function signOut() {
+  if (window.posthog) posthog.capture('signed_out');
   await sb.auth.signOut();
-  currentSession = null;
-  currentProfile = null;
+  window.location.href = 'index.html';
 }
 
-// ── Upgrade ───────────────────────────────────────────────────────────────────
-async function handleUpgrade() {
-  if (!currentSession) return;
-  // Kick off Stripe checkout via worker
-  try {
-    const res = await fetch(WORKER_URL.replace(/\/$/, '') + '/api/create-checkout', {
-      method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + currentSession.access_token,
-      },
-      body: JSON.stringify({ priceId: 'price_1TK9oQ6hMZoGqmhSnu5PxBma' }) // Standard
-    });
-    const data = await res.json();
-    if (data.url) window.location.href = data.url;
-  } catch (e) {
-    console.error('Upgrade error:', e);
-  }
-}
+// ── File handling ─────────────────────────────────────────────
+const dropZone       = document.getElementById('drop-zone');
+const fileInput      = document.getElementById('file-input');
+const fileNameEl     = document.getElementById('file-name');
+const fileWarningEl  = document.getElementById('file-warning');
+const processingNote = document.getElementById('processing-note');
+const analyzeBtn     = document.getElementById('analyze-btn');
 
-// ── File handling ─────────────────────────────────────────────────────────────
-const CHAR_LIMIT_STANDARD = 100000;
-const CHAR_LIMIT_PRO      = 500000;
-
-const dropZone        = document.getElementById('drop-zone');
-const fileInput       = document.getElementById('file-input');
-const fileNameEl      = document.getElementById('file-name');
-const fileWarningEl   = document.getElementById('file-warning');
-const processingNoteEl = document.getElementById('processing-note');
-const analyzeBtn      = document.getElementById('analyze-btn');
+let fileContent  = '';
+let rawPdfBase64 = null;
 
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
@@ -436,12 +434,13 @@ async function handleFile(file) {
   fileNameEl.textContent = file.name;
   fileNameEl.style.display = 'block';
   fileWarningEl.style.display = 'none';
-  processingNoteEl.style.display = 'block';
+  hideOcrStatus();
+  processingNote.style.display = 'block';
   analyzeBtn.disabled = true;
-  fileContent = '';
+  fileContent  = '';
+  rawPdfBase64 = null;
 
   const ext = file.name.split('.').pop().toLowerCase();
-  const charLimit = (currentProfile?.tier === 'pro') ? CHAR_LIMIT_PRO : CHAR_LIMIT_STANDARD;
 
   try {
     if (ext === 'docx') {
@@ -450,6 +449,10 @@ async function handleFile(file) {
       fileContent = result.value;
     } else if (ext === 'pdf') {
       const arrayBuffer = await file.arrayBuffer();
+      const bytes = new Uint8Array(arrayBuffer);
+      let binary = '';
+      for (let i = 0; i < bytes.byteLength; i++) binary += String.fromCharCode(bytes[i]);
+      rawPdfBase64 = btoa(binary);
       const pdf = await pdfjsLib.getDocument({ data: arrayBuffer }).promise;
       let fullText = '';
       for (let i = 1; i <= pdf.numPages; i++) {
@@ -458,58 +461,80 @@ async function handleFile(file) {
         fullText += textContent.items.map(item => item.str).join(' ') + '\n';
       }
       fileContent = fullText;
+      if (fileContent.trim().length < MIN_TEXT_LENGTH) showOcrStatus();
     } else {
       fileContent = await file.text();
     }
 
-    if (fileContent.length > charLimit) {
+    if (fileContent.length > CHAR_LIMIT) {
       fileWarningEl.style.display = 'block';
-      fileContent = fileContent.slice(0, charLimit);
+      fileContent = fileContent.slice(0, CHAR_LIMIT);
     }
   } catch (err) {
-    fileContent = '';
+    fileContent  = '';
+    rawPdfBase64 = null;
     showError('Could not read file: ' + err.message);
   }
 
-  processingNoteEl.style.display = 'none';
+  processingNote.style.display = 'none';
   analyzeBtn.disabled = false;
 }
 
-// ── Analysis ──────────────────────────────────────────────────────────────────
-function showError(msg) {
-  const el = document.getElementById('error-msg');
-  el.textContent = msg;
-  el.style.display = 'block';
-}
-
+// ── Standard analysis ─────────────────────────────────────────
 async function analyzeContract() {
-  if (!fileContent) { showError('Please upload a contract file first.'); return; }
-  if (!currentSession) { showError('You must be signed in to analyze contracts.'); return; }
+  const isScanned = fileContent.trim().length < MIN_TEXT_LENGTH && rawPdfBase64;
+  if (!fileContent && !rawPdfBase64) { showError('Please upload a contract file first.'); return; }
+
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'index.html'; return; }
+  currentSession = session;
 
   document.getElementById('upload-form').style.display = 'none';
+  hideOcrStatus();
+  document.getElementById('loading-heading').textContent = isScanned ? 'Converting scanned document...' : 'Reviewing your contract...';
+  document.getElementById('loading-subtext').textContent = isScanned ? 'Converting to readable text — this may take 10–20 additional seconds' : 'Flagging clauses, assessing risk, extracting key terms';
   document.getElementById('loading').style.display = 'block';
+  document.getElementById('error-msg').style.display = 'none';
+  if (window.posthog) posthog.capture('analysis_started', { ocr: isScanned });
 
   try {
+    const body = { contractText: fileContent };
+    if (isScanned) body.pdfBase64 = rawPdfBase64;
+
     const response = await fetch(WORKER_URL, {
       method: 'POST',
-      headers: {
-        'Content-Type': 'application/json',
-        'Authorization': 'Bearer ' + currentSession.access_token,
-      },
-      body: JSON.stringify({ contractText: fileContent })
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentSession.access_token}` },
+      body: JSON.stringify(body)
     });
-
     const result = await response.json();
 
-    if (result.trialExpired) {
-      document.getElementById('loading').style.display = 'none';
-      document.getElementById('upload-form').style.display = 'block';
-      showError('Your trial has expired. Please upgrade to continue.');
+    if (!response.ok || result.error) {
+      if (result.trialExpired) throw new Error('Your trial has expired. Please upgrade to continue.');
+      throw new Error(result.error || `Server error (${response.status})`);
+    }
+
+    if (result.ocr_pdf_base64) {
+      document.getElementById('loading-heading').textContent = 'Reviewing your contract...';
+      document.getElementById('loading-subtext').textContent = 'Flagging clauses, assessing risk, extracting key terms';
+      const ocrText = await extractTextFromBase64PDF(result.ocr_pdf_base64);
+      if (!ocrText || ocrText.trim().length < 50) throw new Error('Unable to extract text from scanned PDF. Please convert it manually at https://smallpdf.com/ocr-pdf and re-upload.');
+      const response2 = await fetch(WORKER_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentSession.access_token}` },
+        body: JSON.stringify({ contractText: ocrText })
+      });
+      const result2 = await response2.json();
+      if (!response2.ok || result2.error) throw new Error(result2.error || `Server error (${response2.status})`);
+      if (result2.tier) applyTierUI(result2.tier);
+      renderResults(result2);
+      if (window.posthog) posthog.capture('analysis_completed', { risk: result2.overall_risk, tier: result2.tier, ocr: true });
       return;
     }
 
-    if (result.error) throw new Error(result.error);
+    if (result.tier) applyTierUI(result.tier);
     renderResults(result);
+    if (window.posthog) posthog.capture('analysis_completed', { risk: result.overall_risk, tier: result.tier, ocr: isScanned });
+
   } catch (err) {
     document.getElementById('loading').style.display = 'none';
     document.getElementById('upload-form').style.display = 'block';
@@ -517,67 +542,193 @@ async function analyzeContract() {
   }
 }
 
-// ── Render ────────────────────────────────────────────────────────────────────
+// ── Playbook analysis ─────────────────────────────────────────
+async function analyzePlaybook() {
+  const contractType = document.getElementById('contract-type').value;
+  if (!contractType) { showError('Please select a contract type.'); return; }
+  const isScanned = fileContent.trim().length < MIN_TEXT_LENGTH && rawPdfBase64;
+  if (!fileContent && !rawPdfBase64) { showError('Please upload a contract file first.'); return; }
+
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'index.html'; return; }
+  currentSession = session;
+
+  document.getElementById('upload-form').style.display = 'none';
+  hideOcrStatus();
+  document.getElementById('loading-heading').textContent = isScanned ? 'Converting scanned document...' : 'Running playbook review...';
+  document.getElementById('loading-subtext').textContent = isScanned ? 'Converting to readable text — this may take 10–20 additional seconds' : 'Analyzing provisions against the playbook';
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('error-msg').style.display = 'none';
+  if (window.posthog) posthog.capture('playbook_analysis_started', { contract_type: contractType, ocr: isScanned });
+
+  try {
+    const body = { contractText: fileContent, contractType };
+    if (isScanned) body.pdfBase64 = rawPdfBase64;
+
+    const response = await fetch(WORKER_URL + '/api/analyze-playbook', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentSession.access_token}` },
+      body: JSON.stringify(body)
+    });
+    const result = await response.json();
+
+    if (!response.ok || result.error) {
+      if (result.trialExpired) throw new Error('Your trial has expired. Please upgrade to continue.');
+      throw new Error(result.error || `Server error (${response.status})`);
+    }
+
+    if (result.ocr_pdf_base64) {
+      document.getElementById('loading-heading').textContent = 'Running playbook review...';
+      document.getElementById('loading-subtext').textContent = 'Analyzing provisions against the playbook';
+      const ocrText = await extractTextFromBase64PDF(result.ocr_pdf_base64);
+      if (!ocrText || ocrText.trim().length < 50) throw new Error('Unable to extract text from scanned PDF. Please convert it manually at https://smallpdf.com/ocr-pdf and re-upload.');
+      const response2 = await fetch(WORKER_URL + '/api/analyze-playbook', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentSession.access_token}` },
+        body: JSON.stringify({ contractText: ocrText, contractType })
+      });
+      const result2 = await response2.json();
+      if (!response2.ok || result2.error) throw new Error(result2.error || `Server error (${response2.status})`);
+      renderPlaybookResults(result2);
+      if (window.posthog) posthog.capture('playbook_analysis_completed', { contract_type: contractType, risk: result2.overall_risk, ocr: true });
+      return;
+    }
+
+    renderPlaybookResults(result);
+    if (window.posthog) posthog.capture('playbook_analysis_completed', { contract_type: contractType, risk: result.overall_risk, ocr: isScanned });
+
+  } catch (err) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('upload-form').style.display = 'block';
+    showError('Something went wrong: ' + err.message);
+  }
+}
+
+// ── Render functions ──────────────────────────────────────────
 function renderResults(data) {
   document.getElementById('loading').style.display = 'none';
   document.getElementById('results').style.display = 'block';
-
   const badge = document.getElementById('risk-badge');
   badge.textContent = data.overall_risk + ' Risk';
   badge.className = 'risk-badge risk-' + data.overall_risk.toLowerCase();
-
   document.getElementById('summary-text').textContent = data.summary;
-
-  document.getElementById('clauses-list').innerHTML = (data.flagged_clauses || []).map(c =>
-    '<div class="clause-item ' + c.severity.toLowerCase() + '">' +
-    '<div class="clause-header"><span class="clause-title">' + c.title + '</span>' +
-    '<span class="sev-tag sev-' + c.severity.toLowerCase() + '">' + c.severity + '</span></div>' +
-    '<div class="clause-explanation">' + c.explanation + '</div></div>'
+  document.getElementById('clauses-list').innerHTML = data.flagged_clauses.map(c =>
+    `<div class="clause-item ${c.severity.toLowerCase()}">
+      <div class="clause-header">
+        <span class="clause-title">${escapeHtml(c.title)}</span>
+        <span class="sev-tag sev-${c.severity.toLowerCase()}">${c.severity}</span>
+      </div>
+      <div class="clause-explanation">${escapeHtml(c.explanation)}</div>
+    </div>`
   ).join('');
-
-  document.getElementById('terms-grid').innerHTML = (data.key_terms || []).map(t =>
-    '<div class="term-item"><div class="term-label">' + t.label + '</div>' +
-    '<div class="term-value">' + t.value + '</div></div>'
+  document.getElementById('terms-grid').innerHTML = data.key_terms.map(t =>
+    `<div class="term-item">
+      <div class="term-label">${escapeHtml(t.label)}</div>
+      <div class="term-value">${escapeHtml(t.value)}</div>
+    </div>`
   ).join('');
-
   if (data.breach_penalties && data.breach_penalties.length > 0) {
     document.getElementById('breach-tbody').innerHTML = data.breach_penalties.map(p => {
-      const remedyClass = p.remedy && p.remedy.toLowerCase().startsWith('not specified') ? ' class="not-specified"' : '';
-      return '<tr>' +
-        '<td>' + p.clause + '</td>' +
-        '<td>' + p.liable_party + '</td>' +
-        '<td' + remedyClass + '>' + p.remedy + '</td>' +
-        '<td>' + p.cure_period + '</td>' +
-        '</tr>';
+      const cls = p.remedy && p.remedy.toLowerCase().startsWith('not specified') ? ' class="not-specified"' : '';
+      return `<tr><td>${escapeHtml(p.clause)}</td><td>${escapeHtml(p.liable_party)}</td><td${cls}>${escapeHtml(p.remedy)}</td><td>${escapeHtml(p.cure_period)}</td></tr>`;
     }).join('');
     document.getElementById('breach-card').style.display = 'block';
   }
-
-  // Refresh profile tier from response in case it changed
-  if (data.tier && currentProfile) currentProfile.tier = data.tier;
-  updatePlanUI();
 }
 
-// ── Reset ─────────────────────────────────────────────────────────────────────
-function resetApp() {
+function renderPlaybookResults(data) {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('playbook-results').style.display = 'block';
+  document.getElementById('playbook-title').textContent = data.contract_type + ' — Playbook Review';
+  document.getElementById('playbook-summary').textContent = data.summary;
+  const badge = document.getElementById('playbook-risk-badge');
+  badge.textContent = data.overall_risk + ' Risk';
+  badge.className = 'risk-badge risk-' + data.overall_risk.toLowerCase();
+  document.getElementById('provision-list').innerHTML = data.provisions.map(p => {
+    const riskClass = p.risk_level === 'none' ? 'risk-none' : 'risk-' + p.risk_level;
+    const presentClass = p.present ? 'yes' : 'no';
+    const presentLabel = p.present ? 'Present' : 'Missing';
+    const quoteHtml = p.quote ? `<div class="provision-quote">"${escapeHtml(p.quote)}"</div>` : '';
+    return `<div class="provision-item ${riskClass}">
+      <div class="provision-top">
+        <span class="provision-name">${escapeHtml(p.name)}</span>
+        <div class="provision-badges">
+          <span class="badge-present ${presentClass}">${presentLabel}</span>
+          <span class="badge-status ${p.status}">${p.status}</span>
+        </div>
+      </div>
+      <div class="provision-finding">${escapeHtml(p.finding)}</div>
+      <div class="provision-consequence">&#9888; ${escapeHtml(p.consequence)}</div>
+      ${quoteHtml}
+    </div>`;
+  }).join('');
+  if (data.breach_penalties && data.breach_penalties.length > 0) {
+    document.getElementById('playbook-breach-tbody').innerHTML = data.breach_penalties.map(p => {
+      const cls = p.remedy && p.remedy.toLowerCase().startsWith('not specified') ? ' class="not-specified"' : '';
+      return `<tr><td>${escapeHtml(p.clause)}</td><td>${escapeHtml(p.liable_party)}</td><td${cls}>${escapeHtml(p.remedy)}</td><td>${escapeHtml(p.cure_period)}</td></tr>`;
+    }).join('');
+    document.getElementById('playbook-breach-card').style.display = 'block';
+  }
+}
+
+// ── Utilities ─────────────────────────────────────────────────
+function showError(msg) {
+  const el = document.getElementById('error-msg');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+function escapeHtml(str) {
+  return String(str)
+    .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
+}
+
+function reset() {
   document.getElementById('results').style.display = 'none';
+  document.getElementById('playbook-results').style.display = 'none';
   document.getElementById('breach-card').style.display = 'none';
+  document.getElementById('playbook-breach-card').style.display = 'none';
   document.getElementById('upload-form').style.display = 'block';
   document.getElementById('error-msg').style.display = 'none';
   document.getElementById('file-name').style.display = 'none';
   fileWarningEl.style.display = 'none';
-  processingNoteEl.style.display = 'none';
-  fileContent = '';
+  processingNote.style.display = 'none';
+  hideOcrStatus();
+  fileContent  = '';
+  rawPdfBase64 = null;
   fileInput.value = '';
   analyzeBtn.disabled = false;
 }
 
-// ── Enter key on auth form ────────────────────────────────────────────────────
-document.addEventListener('keydown', e => {
-  if (e.key === 'Enter' && document.getElementById('auth-gate').style.display !== 'none') {
-    handleAuth();
+let currentMode = 'standard';
+function switchMode(mode) {
+  currentMode = mode;
+  document.getElementById('mode-standard').classList.toggle('active', mode === 'standard');
+  document.getElementById('mode-playbook').classList.toggle('active', mode === 'playbook');
+  document.getElementById('playbook-selector').style.display = mode === 'playbook' ? 'block' : 'none';
+}
+
+function printReport() {
+  document.getElementById('print-date').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
+  if (window.posthog) posthog.capture('report_printed');
+  window.print();
+}
+
+async function extractTextFromBase64PDF(base64) {
+  const binaryStr = atob(base64);
+  const bytes = new Uint8Array(binaryStr.length);
+  for (let i = 0; i < binaryStr.length; i++) bytes[i] = binaryStr.charCodeAt(i);
+  const pdf = await pdfjsLib.getDocument({ data: bytes }).promise;
+  let fullText = '';
+  for (let i = 1; i <= pdf.numPages; i++) {
+    const page = await pdf.getPage(i);
+    const textContent = await page.getTextContent();
+    fullText += textContent.items.map(item => item.str).join(' ') + '\n';
   }
-});
+  return fullText.trim();
+}
+
+initAuth();
 </script>
 </body>
 </html>
