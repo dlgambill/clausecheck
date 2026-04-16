@@ -16,12 +16,40 @@
 <style>
 *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
 body { font-family: system-ui, -apple-system, sans-serif; background: #0a0a0a; color: #f0f0f0; line-height: 1.6; min-height: 100vh; }
-nav { padding: 20px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
-.logo { font-size: 1.1rem; font-weight: 600; color: #fff; letter-spacing: -0.02em; text-decoration: none; }
+
+/* ── Nav ── */
+nav { padding: 16px 40px; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid #2a2a2a; }
+.logo { font-size: 1.1rem; font-weight: 600; letter-spacing: -0.02em; text-decoration: none; }
+.logo-clause { color: #fff; }
+.logo-check  { color: #f97316; }
 .nav-right { display: flex; align-items: center; gap: 16px; }
-.nav-badge { font-size: 0.75rem; color: #777; letter-spacing: 0.04em; text-transform: uppercase; }
-.nav-version { font-size: 0.72rem; color: #444; letter-spacing: 0.04em; font-family: monospace; }
-main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
+.nav-version { font-size: 0.72rem; color: #444; font-family: monospace; }
+.nav-user { font-size: 0.82rem; color: #aaa; }
+.nav-user strong { color: #f0f0f0; }
+.nav-signout { font-size: 0.82rem; color: #666; background: none; border: none; cursor: pointer; font-family: inherit; padding: 0; transition: color 0.2s; }
+.nav-signout:hover { color: #f97316; }
+.nav-signin { font-size: 0.85rem; font-weight: 500; color: #fff; background: #f97316; border: none; border-radius: 6px; padding: 8px 18px; cursor: pointer; font-family: inherit; text-decoration: none; transition: opacity 0.2s; }
+.nav-signin:hover { opacity: 0.88; }
+
+/* ── Auth gate ── */
+#auth-gate { max-width: 400px; margin: 100px auto; padding: 0 24px; }
+#auth-gate h2 { font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; margin-bottom: 8px; }
+#auth-gate p { font-size: 0.88rem; color: #777; margin-bottom: 28px; }
+.auth-form { display: flex; flex-direction: column; gap: 12px; }
+.auth-form input { background: #141414; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px 14px; color: #f0f0f0; font-size: 0.9rem; font-family: inherit; outline: none; transition: border-color 0.2s; }
+.auth-form input:focus { border-color: #f97316; }
+.auth-form input::placeholder { color: #555; }
+.btn-auth { background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 13px; font-size: 0.95rem; font-weight: 600; cursor: pointer; font-family: inherit; transition: opacity 0.2s; }
+.btn-auth:hover { opacity: 0.88; }
+.btn-auth:disabled { opacity: 0.4; cursor: not-allowed; }
+.auth-toggle { font-size: 0.82rem; color: #666; text-align: center; margin-top: 4px; }
+.auth-toggle a { color: #f97316; text-decoration: none; cursor: pointer; }
+.auth-toggle a:hover { text-decoration: underline; }
+.auth-error { font-size: 0.82rem; color: #f87171; background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.2); border-radius: 6px; padding: 10px 14px; display: none; }
+.auth-success { font-size: 0.82rem; color: #4ade80; background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.2); border-radius: 6px; padding: 10px 14px; display: none; }
+
+/* ── Main app ── */
+main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; display: none; }
 .plan-banner { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 .plan-info { font-size: 0.85rem; color: #aaa; }
 .plan-info strong { color: #f0f0f0; }
@@ -52,28 +80,28 @@ main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
 .results-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 28px; padding-bottom: 20px; border-bottom: 1px solid #2a2a2a; }
 .results-header h2 { font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; color: #fff; }
 .risk-badge { font-size: 0.75rem; font-weight: 600; padding: 6px 14px; border-radius: 20px; text-transform: uppercase; letter-spacing: 0.05em; }
-.risk-high { background: rgba(239,68,68,0.15); color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
+.risk-high   { background: rgba(239,68,68,0.15);  color: #f87171; border: 1px solid rgba(239,68,68,0.3); }
 .risk-medium { background: rgba(249,115,22,0.15); color: #fb923c; border: 1px solid rgba(249,115,22,0.3); }
-.risk-low { background: rgba(34,197,94,0.15); color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
+.risk-low    { background: rgba(34,197,94,0.15);  color: #4ade80; border: 1px solid rgba(34,197,94,0.3); }
 .card { background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; padding: 24px; margin-bottom: 12px; }
 .card-label { font-size: 0.72rem; text-transform: uppercase; letter-spacing: 0.08em; color: #777; margin-bottom: 12px; }
 .summary-text { font-size: 0.95rem; color: #d4d4d4; line-height: 1.7; }
 .clause-item { border-left: 2px solid #2a2a2a; padding: 14px 16px; margin-bottom: 10px; border-radius: 0 8px 8px 0; background: rgba(255,255,255,0.03); }
-.clause-item.high { border-left-color: #ef4444; }
+.clause-item.high   { border-left-color: #ef4444; }
 .clause-item.medium { border-left-color: #f97316; }
-.clause-item.low { border-left-color: #22c55e; }
+.clause-item.low    { border-left-color: #22c55e; }
 .clause-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; }
 .clause-title { font-size: 0.9rem; font-weight: 600; color: #f0f0f0; }
 .sev-tag { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; }
-.sev-high { background: rgba(239,68,68,0.15); color: #f87171; }
+.sev-high   { background: rgba(239,68,68,0.15);  color: #f87171; }
 .sev-medium { background: rgba(249,115,22,0.15); color: #fb923c; }
-.sev-low { background: rgba(34,197,94,0.15); color: #4ade80; }
+.sev-low    { background: rgba(34,197,94,0.15);  color: #4ade80; }
 .clause-explanation { font-size: 0.85rem; color: #aaa; line-height: 1.6; }
 .terms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
 .term-item { background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px 14px; }
 .term-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: #666; margin-bottom: 4px; }
 .term-value { font-size: 0.88rem; color: #f0f0f0; font-weight: 500; }
-/* Breach penalties table */
+/* Breach penalties */
 .breach-table { width: 100%; border-collapse: collapse; font-size: 0.85rem; }
 .breach-table thead tr { border-bottom: 1px solid #2a2a2a; }
 .breach-table th { text-align: left; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.07em; color: #666; padding: 0 12px 10px 0; font-weight: 600; }
@@ -97,30 +125,51 @@ footer { border-top: 1px solid #2a2a2a; padding: 20px 40px; text-align: center; 
 <body>
 
 <nav>
-  <a href="index.html" class="logo">ClauseCheck</a>
+  <a href="index.html" class="logo"><span class="logo-clause">Clause</span><span class="logo-check">Check</span></a>
   <div class="nav-right">
     <span class="nav-version">v4.2</span>
-    <span class="nav-badge">AI Contract Review</span>
+    <span class="nav-user" id="nav-user" style="display:none;"></span>
+    <button class="nav-signout" id="nav-signout" style="display:none;" onclick="signOut()">Sign out</button>
+    <a href="#" class="nav-signin" id="nav-signin" style="display:none;" onclick="showAuth()">Sign in</a>
   </div>
 </nav>
 
-<main>
+<!-- Auth gate -->
+<div id="auth-gate" style="display:none;">
+  <h2 id="auth-title">Sign in to ClauseCheck</h2>
+  <p id="auth-subtitle">Enter your email and password to continue.</p>
+  <div class="auth-form">
+    <input type="email" id="auth-email" placeholder="Email address" autocomplete="email">
+    <input type="password" id="auth-password" placeholder="Password" autocomplete="current-password">
+    <input type="password" id="auth-password2" placeholder="Confirm password" autocomplete="new-password" style="display:none;">
+    <div class="auth-error" id="auth-error"></div>
+    <div class="auth-success" id="auth-success"></div>
+    <button class="btn-auth" id="auth-btn" onclick="handleAuth()">Sign in</button>
+    <div class="auth-toggle">
+      <span id="auth-toggle-text">Don't have an account?</span>
+      <a onclick="toggleAuthMode()"> <span id="auth-toggle-link">Sign up</span></a>
+    </div>
+  </div>
+</div>
+
+<!-- Main app -->
+<main id="app-main">
   <div id="upload-form">
-    <div class="plan-banner">
+    <div class="plan-banner" id="plan-banner">
       <div>
-        <div class="plan-info"><strong>Standard Plan</strong> &mdash; Up to 50 pages per contract</div>
-        <div class="plan-upgrade">Need to analyze longer contracts? <a href="#">Upgrade to Pro &rarr;</a></div>
+        <div class="plan-info" id="plan-info"><strong>Loading...</strong></div>
+        <div class="plan-upgrade" id="plan-upgrade" style="display:none;">Need to analyze longer contracts? <a href="#" onclick="handleUpgrade()">Upgrade to Pro &rarr;</a></div>
       </div>
-      <div class="plan-badge">Active</div>
+      <div class="plan-badge" id="plan-badge">Active</div>
     </div>
 
     <div class="upload-zone" id="drop-zone">
       <input type="file" id="file-input" accept=".txt,.doc,.docx,.pdf">
       <h2>Drop your contract here</h2>
       <p>PDF, Word (.docx), or plain text &mdash; any contract type</p>
-      <p class="limit-note">Standard plan supports contracts up to 50 pages</p>
+      <p class="limit-note" id="limit-note">Standard plan supports contracts up to 50 pages</p>
       <div class="file-name" id="file-name"></div>
-      <div class="file-warning" id="file-warning">This contract exceeds 50 pages. Only the first 50 pages will be analyzed. Upgrade to Pro for unlimited length.</div>
+      <div class="file-warning" id="file-warning">This contract exceeds the page limit. Only the first portion will be analyzed.</div>
       <div class="processing-note" id="processing-note">Extracting text from file...</div>
     </div>
 
@@ -171,33 +220,203 @@ footer { border-top: 1px solid #2a2a2a; padding: 20px 40px; text-align: center; 
       </table>
     </div>
 
-    <div class="upsell-banner">
+    <div class="upsell-banner" id="upsell-banner" style="display:none;">
       <p><strong>Need more?</strong> Upgrade to Pro for unlimited contract length, deeper analysis with Claude Sonnet, and priority support.</p>
-      <a href="#" class="upsell-btn">Upgrade to Pro</a>
+      <a href="#" class="upsell-btn" onclick="handleUpgrade()">Upgrade to Pro</a>
     </div>
 
-    <button class="btn-reset" onclick="reset()">&larr; Review another contract</button>
+    <button class="btn-reset" onclick="resetApp()">&larr; Review another contract</button>
   </div>
 </main>
 
 <footer>&copy; 2026 ClauseCheck &middot; Built for small law firms &middot; v4.2</footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2/dist/umd/supabase.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script>
-const WORKER_URL = 'https://clausecheck.dgambill1975.workers.dev';
-const CHAR_LIMIT = 100000;
+// ── Config ──────────────────────────────────────────────────────────────────
+const WORKER_URL    = 'https://clausecheck.dgambill1975.workers.dev';
+const SUPABASE_URL  = 'https://gmzawvbidpjrqixkdiyh.supabase.co';
+const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtemF3dmJpZHBqcnFpeGtkaXloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NDQ0MTM3NjQsImV4cCI6MjA1OTk4OTc2NH0.example'; // ← replace with your actual anon key
 
 pdfjsLib.GlobalWorkerOptions.workerSrc = 'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
 
-const dropZone = document.getElementById('drop-zone');
-const fileInput = document.getElementById('file-input');
-const fileNameEl = document.getElementById('file-name');
-const fileWarningEl = document.getElementById('file-warning');
-const processingNoteEl = document.getElementById('processing-note');
-const analyzeBtn = document.getElementById('analyze-btn');
+const sb = supabase.createClient(SUPABASE_URL, SUPABASE_ANON);
 
-let fileContent = '';
+// ── State ────────────────────────────────────────────────────────────────────
+let currentSession = null;
+let currentProfile = null;
+let fileContent    = '';
+let authMode       = 'signin'; // 'signin' | 'signup'
+
+// ── Boot ─────────────────────────────────────────────────────────────────────
+sb.auth.onAuthStateChange(async (event, session) => {
+  currentSession = session;
+  if (session) {
+    await loadProfile(session.user.id);
+    showApp();
+  } else {
+    showAuthGate();
+  }
+});
+
+async function loadProfile(userId) {
+  const { data } = await sb.from('profiles').select('*').eq('id', userId).single();
+  currentProfile = data;
+  updatePlanUI();
+}
+
+function updatePlanUI() {
+  if (!currentProfile) return;
+  const tier = currentProfile.tier || 'trial';
+  const isPro = tier === 'pro';
+  const isStandard = tier === 'standard';
+
+  // Nav user display
+  const email = currentSession?.user?.email || '';
+  const name  = currentProfile.full_name ? currentProfile.full_name.split(' ')[0] : email.split('@')[0];
+  document.getElementById('nav-user').textContent = name;
+
+  // Plan banner
+  if (isPro) {
+    document.getElementById('plan-info').innerHTML = '<strong>Pro Plan</strong> &mdash; Unlimited contract length';
+    document.getElementById('limit-note').textContent = 'Pro plan supports unlimited contract length';
+    document.getElementById('plan-upgrade').style.display = 'none';
+    document.getElementById('upsell-banner').style.display = 'none';
+  } else if (isStandard) {
+    document.getElementById('plan-info').innerHTML = '<strong>Standard Plan</strong> &mdash; Up to 50 pages per contract';
+    document.getElementById('limit-note').textContent = 'Standard plan supports contracts up to 50 pages';
+    document.getElementById('plan-upgrade').style.display = 'block';
+    document.getElementById('upsell-banner').style.display = 'flex';
+  } else {
+    // Trial
+    document.getElementById('plan-info').innerHTML = '<strong>Free Trial</strong> &mdash; Up to 50 pages per contract';
+    document.getElementById('limit-note').textContent = 'Trial supports contracts up to 50 pages';
+    document.getElementById('plan-upgrade').style.display = 'block';
+    document.getElementById('upsell-banner').style.display = 'flex';
+  }
+
+  const tierLabel = isPro ? 'Pro' : isStandard ? 'Standard' : 'Trial';
+  document.getElementById('plan-badge').textContent = tierLabel;
+}
+
+// ── Auth UI ───────────────────────────────────────────────────────────────────
+function showApp() {
+  document.getElementById('auth-gate').style.display = 'none';
+  document.getElementById('app-main').style.display = 'block';
+  document.getElementById('nav-user').style.display = 'inline';
+  document.getElementById('nav-signout').style.display = 'inline';
+  document.getElementById('nav-signin').style.display = 'none';
+}
+
+function showAuthGate() {
+  document.getElementById('auth-gate').style.display = 'block';
+  document.getElementById('app-main').style.display = 'none';
+  document.getElementById('nav-user').style.display = 'none';
+  document.getElementById('nav-signout').style.display = 'none';
+  document.getElementById('nav-signin').style.display = 'none';
+}
+
+function showAuth() {
+  document.getElementById('auth-gate').style.display = 'block';
+  document.getElementById('app-main').style.display = 'none';
+}
+
+function toggleAuthMode() {
+  authMode = authMode === 'signin' ? 'signup' : 'signin';
+  const isSignup = authMode === 'signup';
+  document.getElementById('auth-title').textContent    = isSignup ? 'Create your account' : 'Sign in to ClauseCheck';
+  document.getElementById('auth-subtitle').textContent = isSignup ? 'Start your free trial — no credit card required.' : 'Enter your email and password to continue.';
+  document.getElementById('auth-btn').textContent      = isSignup ? 'Create account' : 'Sign in';
+  document.getElementById('auth-toggle-text').textContent = isSignup ? 'Already have an account?' : "Don't have an account?";
+  document.getElementById('auth-toggle-link').textContent = isSignup ? 'Sign in' : 'Sign up';
+  document.getElementById('auth-password2').style.display = isSignup ? 'block' : 'none';
+  document.getElementById('auth-error').style.display   = 'none';
+  document.getElementById('auth-success').style.display = 'none';
+}
+
+async function handleAuth() {
+  const email    = document.getElementById('auth-email').value.trim();
+  const password = document.getElementById('auth-password').value;
+  const password2 = document.getElementById('auth-password2').value;
+  const btn      = document.getElementById('auth-btn');
+  const errEl    = document.getElementById('auth-error');
+  const okEl     = document.getElementById('auth-success');
+
+  errEl.style.display = 'none';
+  okEl.style.display  = 'none';
+
+  if (!email || !password) { showAuthError('Please enter your email and password.'); return; }
+  if (authMode === 'signup' && password !== password2) { showAuthError('Passwords do not match.'); return; }
+
+  btn.disabled = true;
+  btn.textContent = authMode === 'signup' ? 'Creating account...' : 'Signing in...';
+
+  if (authMode === 'signup') {
+    const { error } = await sb.auth.signUp({ email, password });
+    if (error) {
+      showAuthError(error.message);
+    } else {
+      okEl.textContent = 'Check your email to confirm your account, then sign in.';
+      okEl.style.display = 'block';
+      toggleAuthMode();
+    }
+  } else {
+    const { data, error } = await sb.auth.signInWithPassword({ email, password });
+    if (error) {
+      showAuthError(error.message);
+    } else {
+      currentSession = data.session;
+    }
+  }
+
+  btn.disabled = false;
+  btn.textContent = authMode === 'signup' ? 'Create account' : 'Sign in';
+}
+
+function showAuthError(msg) {
+  const el = document.getElementById('auth-error');
+  el.textContent = msg;
+  el.style.display = 'block';
+}
+
+async function signOut() {
+  await sb.auth.signOut();
+  currentSession = null;
+  currentProfile = null;
+}
+
+// ── Upgrade ───────────────────────────────────────────────────────────────────
+async function handleUpgrade() {
+  if (!currentSession) return;
+  // Kick off Stripe checkout via worker
+  try {
+    const res = await fetch(WORKER_URL.replace(/\/$/, '') + '/api/create-checkout', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + currentSession.access_token,
+      },
+      body: JSON.stringify({ priceId: 'price_1TK9oQ6hMZoGqmhSnu5PxBma' }) // Standard
+    });
+    const data = await res.json();
+    if (data.url) window.location.href = data.url;
+  } catch (e) {
+    console.error('Upgrade error:', e);
+  }
+}
+
+// ── File handling ─────────────────────────────────────────────────────────────
+const CHAR_LIMIT_STANDARD = 100000;
+const CHAR_LIMIT_PRO      = 500000;
+
+const dropZone        = document.getElementById('drop-zone');
+const fileInput       = document.getElementById('file-input');
+const fileNameEl      = document.getElementById('file-name');
+const fileWarningEl   = document.getElementById('file-warning');
+const processingNoteEl = document.getElementById('processing-note');
+const analyzeBtn      = document.getElementById('analyze-btn');
 
 dropZone.addEventListener('dragover', e => { e.preventDefault(); dropZone.classList.add('drag-over'); });
 dropZone.addEventListener('dragleave', () => dropZone.classList.remove('drag-over'));
@@ -219,6 +438,7 @@ async function handleFile(file) {
   fileContent = '';
 
   const ext = file.name.split('.').pop().toLowerCase();
+  const charLimit = (currentProfile?.tier === 'pro') ? CHAR_LIMIT_PRO : CHAR_LIMIT_STANDARD;
 
   try {
     if (ext === 'docx') {
@@ -232,28 +452,27 @@ async function handleFile(file) {
       for (let i = 1; i <= pdf.numPages; i++) {
         const page = await pdf.getPage(i);
         const textContent = await page.getTextContent();
-        const pageText = textContent.items.map(item => item.str).join(' ');
-        fullText += pageText + '\n';
+        fullText += textContent.items.map(item => item.str).join(' ') + '\n';
       }
       fileContent = fullText;
     } else {
       fileContent = await file.text();
     }
 
-    if (fileContent.length > CHAR_LIMIT) {
+    if (fileContent.length > charLimit) {
       fileWarningEl.style.display = 'block';
-      fileContent = fileContent.slice(0, CHAR_LIMIT);
+      fileContent = fileContent.slice(0, charLimit);
     }
   } catch (err) {
     fileContent = '';
-    document.getElementById('error-msg').textContent = 'Could not read file: ' + err.message;
-    document.getElementById('error-msg').style.display = 'block';
+    showError('Could not read file: ' + err.message);
   }
 
   processingNoteEl.style.display = 'none';
   analyzeBtn.disabled = false;
 }
 
+// ── Analysis ──────────────────────────────────────────────────────────────────
 function showError(msg) {
   const el = document.getElementById('error-msg');
   el.textContent = msg;
@@ -262,16 +481,30 @@ function showError(msg) {
 
 async function analyzeContract() {
   if (!fileContent) { showError('Please upload a contract file first.'); return; }
+  if (!currentSession) { showError('You must be signed in to analyze contracts.'); return; }
+
   document.getElementById('upload-form').style.display = 'none';
   document.getElementById('loading').style.display = 'block';
 
   try {
     const response = await fetch(WORKER_URL, {
       method: 'POST',
-      headers: { 'Content-Type': 'application/json' },
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': 'Bearer ' + currentSession.access_token,
+      },
       body: JSON.stringify({ contractText: fileContent })
     });
+
     const result = await response.json();
+
+    if (result.trialExpired) {
+      document.getElementById('loading').style.display = 'none';
+      document.getElementById('upload-form').style.display = 'block';
+      showError('Your trial has expired. Please upgrade to continue.');
+      return;
+    }
+
     if (result.error) throw new Error(result.error);
     renderResults(result);
   } catch (err) {
@@ -281,6 +514,7 @@ async function analyzeContract() {
   }
 }
 
+// ── Render ────────────────────────────────────────────────────────────────────
 function renderResults(data) {
   document.getElementById('loading').style.display = 'none';
   document.getElementById('results').style.display = 'block';
@@ -291,19 +525,18 @@ function renderResults(data) {
 
   document.getElementById('summary-text').textContent = data.summary;
 
-  document.getElementById('clauses-list').innerHTML = data.flagged_clauses.map(c =>
+  document.getElementById('clauses-list').innerHTML = (data.flagged_clauses || []).map(c =>
     '<div class="clause-item ' + c.severity.toLowerCase() + '">' +
     '<div class="clause-header"><span class="clause-title">' + c.title + '</span>' +
     '<span class="sev-tag sev-' + c.severity.toLowerCase() + '">' + c.severity + '</span></div>' +
     '<div class="clause-explanation">' + c.explanation + '</div></div>'
   ).join('');
 
-  document.getElementById('terms-grid').innerHTML = data.key_terms.map(t =>
+  document.getElementById('terms-grid').innerHTML = (data.key_terms || []).map(t =>
     '<div class="term-item"><div class="term-label">' + t.label + '</div>' +
     '<div class="term-value">' + t.value + '</div></div>'
   ).join('');
 
-  // Breach penalties — hidden if not returned
   if (data.breach_penalties && data.breach_penalties.length > 0) {
     document.getElementById('breach-tbody').innerHTML = data.breach_penalties.map(p => {
       const remedyClass = p.remedy && p.remedy.toLowerCase().startsWith('not specified') ? ' class="not-specified"' : '';
@@ -316,9 +549,14 @@ function renderResults(data) {
     }).join('');
     document.getElementById('breach-card').style.display = 'block';
   }
+
+  // Refresh profile tier from response in case it changed
+  if (data.tier && currentProfile) currentProfile.tier = data.tier;
+  updatePlanUI();
 }
 
-function reset() {
+// ── Reset ─────────────────────────────────────────────────────────────────────
+function resetApp() {
   document.getElementById('results').style.display = 'none';
   document.getElementById('breach-card').style.display = 'none';
   document.getElementById('upload-form').style.display = 'block';
@@ -330,6 +568,13 @@ function reset() {
   fileInput.value = '';
   analyzeBtn.disabled = false;
 }
+
+// ── Enter key on auth form ────────────────────────────────────────────────────
+document.addEventListener('keydown', e => {
+  if (e.key === 'Enter' && document.getElementById('auth-gate').style.display !== 'none') {
+    handleAuth();
+  }
+});
 </script>
 </body>
 </html>
