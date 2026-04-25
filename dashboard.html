@@ -54,6 +54,20 @@
     .trial-banner p { font-size: 0.88rem; color: #fb923c; }
     .trial-banner p strong { color: #f97316; }
 
+    /* USAGE METER */
+    .usage-card { background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px 24px; margin-bottom: 16px; }
+    .usage-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
+    .usage-label { font-size: 0.85rem; color: #aaa; }
+    .usage-label strong { color: #f0f0f0; }
+    .usage-count { font-size: 0.85rem; color: #f0f0f0; font-weight: 600; font-family: monospace; }
+    .usage-bar { height: 6px; background: #0a0a0a; border-radius: 3px; overflow: hidden; border: 1px solid #2a2a2a; }
+    .usage-bar-fill { height: 100%; background: #f97316; transition: width 0.3s; }
+    .usage-bar-fill.warn { background: #fb923c; }
+    .usage-bar-fill.full { background: #ef4444; }
+    .usage-note { font-size: 0.78rem; color: #666; margin-top: 8px; }
+    .usage-note a { color: #f97316; text-decoration: none; }
+    .usage-note a:hover { text-decoration: underline; }
+
     /* STATS GRID */
     .stats-grid { display: grid; grid-template-columns: repeat(3, 1fr); gap: 12px; margin-bottom: 16px; }
     .stat-card { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 20px; text-align: center; }
@@ -71,6 +85,7 @@
     .risk-dot.medium { background: #f97316; }
     .risk-dot.low { background: #22c55e; }
     .empty-state { text-align: center; padding: 40px; color: #555; font-size: 0.88rem; }
+    .history-footer { font-size: 0.78rem; color: #555; text-align: center; margin-top: 14px; padding-top: 14px; border-top: 1px solid #1e1e1e; }
 
     /* PROFILE FORM */
     .form-group { margin-bottom: 14px; }
@@ -147,6 +162,16 @@
     </div>
   </div>
 
+  <!-- Usage Meter -->
+  <div class="usage-card" id="usage-card" style="display:none;">
+    <div class="usage-row">
+      <span class="usage-label"><strong>This month's usage</strong></span>
+      <span class="usage-count" id="usage-count">— / —</span>
+    </div>
+    <div class="usage-bar"><div class="usage-bar-fill" id="usage-bar-fill" style="width:0%"></div></div>
+    <p class="usage-note" id="usage-note"></p>
+  </div>
+
   <!-- Stats -->
   <div class="stats-grid">
     <div class="stat-card">
@@ -195,7 +220,7 @@
   <div class="card">
     <div class="card-label">Account</div>
     <p style="font-size:0.85rem; color:#666; margin-bottom:16px;">Need to cancel your subscription or delete your account? Contact us and we'll take care of it.</p>
-    <a href="mailto:legal@conduitlab.ai" class="btn-secondary" style="margin-right:10px;">Contact support</a>
+    <a href="/cdn-cgi/l/email-protection#630f0604020f23000c0d07160a170f02014d020a" class="btn-secondary" style="margin-right:10px;">Contact support</a>
     <button class="btn-danger" onclick="signOut()">Sign out</button>
   </div>
 
@@ -203,11 +228,14 @@
 
 <footer>&copy; 2026 ClauseCheck &nbsp;·&nbsp; Built for small law firms &nbsp;·&nbsp; <a href="terms.html">Terms</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy</a></footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js"></script><script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
   const WORKER_URL    = 'https://api.clausecheck.conduitlab.ai';
   const SUPABASE_URL  = 'https://gmzawvbidpjrqixkdiyh.supabase.co';
   const SUPABASE_ANON = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImdtemF3dmJpZHBqcnFpeGtkaXloIiwicm9sZSI6ImFub24iLCJpYXQiOjE3NzU0NDEzMjQsImV4cCI6MjA5MTAxNzMyNH0._RctCMV0iF-gBSlv8M9e67cVII2gcy_f2yIDGcSqFo4';
+
+  // Mirrors the worker's USAGE_LIMITS
+  const USAGE_LIMITS = { trial: 3, standard: 10, pro: Infinity };
 
   const { createClient } = supabase;
   const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
@@ -230,7 +258,7 @@
     document.getElementById('profile-email').value = session.user.email;
     document.getElementById('auth-gate').style.display = 'none';
 
-    await Promise.all([loadProfile(session), loadHistory(session)]);
+    await Promise.all([loadProfile(session), loadHistory(session), loadUsage(session)]);
   }
 
   async function loadProfile(session) {
@@ -282,59 +310,148 @@
       document.getElementById('plan-actions').innerHTML = `
         <button class="btn-primary" onclick="upgradePlan()">Upgrade to Standard — $20/mo</button>`;
     } else if (tier === 'standard') {
-      document.getElementById('plan-detail').textContent = 'Up to 50 pages per contract · Claude Haiku';
+      document.getElementById('plan-detail').textContent = 'Up to 10 contracts/month · Up to 50 pages each · Claude Haiku';
       document.getElementById('plan-actions').innerHTML = `
         <button class="btn-secondary" onclick="openBillingPortal()">Manage billing</button>`;
     } else if (tier === 'pro') {
-      document.getElementById('plan-detail').textContent = 'Unlimited contract length · Claude Sonnet';
+      document.getElementById('plan-detail').textContent = 'Unlimited contracts · Unlimited length · Claude Sonnet · Contract chat';
       document.getElementById('plan-actions').innerHTML = `
         <button class="btn-secondary" onclick="openBillingPortal()">Manage billing</button>`;
+    }
+
+    // Usage meter — populated separately by loadUsage(), but we need the tier.
+    renderUsageMeter(tier);
+  }
+
+  // We compute "this month's usage" from the analyses list filtered to the
+  // current calendar month (UTC, matching the worker's month_year key).
+  // This avoids needing a separate usage endpoint and stays in sync with the
+  // history shown on this page.
+  let usageState = { tier: null, count: 0 };
+
+  async function loadUsage(session) {
+    // Wait until profile loads to know the tier; we'll compute count from
+    // the same /api/history call to avoid duplicate work.
+    // The actual rendering is done from inside loadHistory once it has data.
+  }
+
+  function renderUsageMeter(tier) {
+    usageState.tier = tier;
+    refreshUsageDisplay();
+  }
+
+  function refreshUsageDisplay() {
+    const tier = usageState.tier;
+    if (!tier) return;
+    const limit = USAGE_LIMITS[tier];
+    const card = document.getElementById('usage-card');
+    const countEl = document.getElementById('usage-count');
+    const fillEl = document.getElementById('usage-bar-fill');
+    const noteEl = document.getElementById('usage-note');
+
+    card.style.display = 'block';
+
+    if (limit === Infinity) {
+      countEl.textContent = `${usageState.count} / ∞`;
+      fillEl.style.width = '12%';
+      fillEl.className = 'usage-bar-fill';
+      noteEl.textContent = 'Pro plan — unlimited contract reviews each month.';
+      return;
+    }
+
+    const used = Math.min(usageState.count, limit);
+    const pct = Math.min(100, Math.round((used / limit) * 100));
+    countEl.textContent = `${usageState.count} / ${limit}`;
+    fillEl.style.width = pct + '%';
+    fillEl.className = 'usage-bar-fill' + (pct >= 100 ? ' full' : pct >= 80 ? ' warn' : '');
+
+    if (usageState.count >= limit) {
+      noteEl.innerHTML = 'You\'ve used all your reviews for this month. <a href="#" onclick="upgradePlan(); return false;">Upgrade to Pro</a> for unlimited reviews.';
+    } else {
+      const remaining = limit - usageState.count;
+      noteEl.innerHTML = `${remaining} review${remaining === 1 ? '' : 's'} remaining this month. Resets on the 1st. <a href="#" onclick="upgradePlan(); return false;">Upgrade to Pro</a> for unlimited.`;
     }
   }
 
   async function loadHistory(session) {
-    const res = await fetch(`${SUPABASE_URL}/rest/v1/analyses?user_id=eq.${session.user.id}&order=created_at.desc&limit=10`, {
-      headers: {
-        'apikey': SUPABASE_ANON,
-        'Authorization': `Bearer ${session.access_token}`,
+    try {
+      const res = await fetch(`${WORKER_URL}/api/history`, {
+        method: 'GET',
+        headers: { 'Authorization': `Bearer ${session.access_token}` }
+      });
+      const data = await res.json();
+
+      if (!res.ok || data.error) {
+        document.getElementById('history-container').innerHTML =
+          `<div class="empty-state">Could not load history: ${escapeHtml(data.error || 'Server error')}</div>`;
+        return;
       }
-    });
-    const analyses = await res.json();
 
-    document.getElementById('stat-analyses').textContent = analyses.length;
+      const analyses = Array.isArray(data.history) ? data.history : [];
+      const tier = data.tier || 'trial';
 
-    const container = document.getElementById('history-container');
+      // Populate stats and current-month usage
+      document.getElementById('stat-analyses').textContent = analyses.length;
+      usageState.count = countCurrentMonth(analyses);
+      usageState.tier = tier;
+      refreshUsageDisplay();
 
-    if (!analyses || analyses.length === 0) {
-      container.innerHTML = '<div class="empty-state">No analyses yet. <a href="app.html" style="color:#f97316;">Review your first contract →</a></div>';
-      return;
+      const container = document.getElementById('history-container');
+      if (analyses.length === 0) {
+        container.innerHTML = '<div class="empty-state">No analyses yet. <a href="app.html" style="color:#f97316;">Review your first contract →</a></div>';
+        return;
+      }
+
+      // Show up to 10 most recent in the dashboard table; full list lives in the app
+      const visible = analyses.slice(0, 10);
+      const rows = visible.map(a => {
+        const date = new Date(a.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        const score = a.risk_score || 0;
+        const riskLevel = score >= 7 ? 'high' : score >= 4 ? 'medium' : 'low';
+        const riskLabel = score >= 7 ? 'High' : score >= 4 ? 'Medium' : 'Low';
+        const summary = a.summary ? a.summary.slice(0, 80) + (a.summary.length > 80 ? '...' : '') : '—';
+        return `<tr>
+          <td>${date}</td>
+          <td style="color:#f0f0f0;">${escapeHtml(a.file_name || 'Contract')}</td>
+          <td><span class="risk-dot ${riskLevel}"></span>${riskLabel}</td>
+          <td style="max-width:260px;">${escapeHtml(summary)}</td>
+        </tr>`;
+      }).join('');
+
+      const footer = analyses.length > 10
+        ? `<div class="history-footer">Showing 10 of ${analyses.length} analyses. <a href="app.html" style="color:#f97316; text-decoration:none;">View all in the app →</a></div>`
+        : '';
+
+      container.innerHTML = `<table class="history-table">
+        <thead>
+          <tr>
+            <th>Date</th>
+            <th>File</th>
+            <th>Risk</th>
+            <th>Summary</th>
+          </tr>
+        </thead>
+        <tbody>${rows}</tbody>
+      </table>${footer}`;
+    } catch (err) {
+      document.getElementById('history-container').innerHTML =
+        `<div class="empty-state">Could not load history: ${escapeHtml(err.message)}</div>`;
     }
+  }
 
-    const rows = analyses.map(a => {
-      const date = new Date(a.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
-      const score = a.risk_score || 0;
-      const riskLevel = score >= 7 ? 'high' : score >= 4 ? 'medium' : 'low';
-      const riskLabel = score >= 7 ? 'High' : score >= 4 ? 'Medium' : 'Low';
-      const summary = a.summary ? a.summary.slice(0, 80) + (a.summary.length > 80 ? '...' : '') : '—';
-      return `<tr>
-        <td>${date}</td>
-        <td style="color:#f0f0f0;">${escapeHtml(a.file_name || 'Contract')}</td>
-        <td><span class="risk-dot ${riskLevel}"></span>${riskLabel}</td>
-        <td style="max-width:260px;">${escapeHtml(summary)}</td>
-      </tr>`;
-    }).join('');
-
-    container.innerHTML = `<table class="history-table">
-      <thead>
-        <tr>
-          <th>Date</th>
-          <th>File</th>
-          <th>Risk</th>
-          <th>Summary</th>
-        </tr>
-      </thead>
-      <tbody>${rows}</tbody>
-    </table>`;
+  // Count analyses created in the current UTC calendar month — matches the
+  // worker's currentMonthYear() key format.
+  function countCurrentMonth(analyses) {
+    const now = new Date();
+    const ym = now.getUTCFullYear() + '-' + String(now.getUTCMonth() + 1).padStart(2, '0');
+    let count = 0;
+    for (const a of analyses) {
+      if (!a.created_at) continue;
+      const d = new Date(a.created_at);
+      const aYm = d.getUTCFullYear() + '-' + String(d.getUTCMonth() + 1).padStart(2, '0');
+      if (aYm === ym) count++;
+    }
+    return count;
   }
 
   async function saveProfile() {
@@ -378,7 +495,11 @@
     const { data: { session } } = await sb.auth.getSession();
     if (!session) return;
 
+    // Default upgrade target: Pro for current Standard users, Standard for trial users
+    const tier = currentProfile && currentProfile.tier;
     const STANDARD_PRICE_ID = 'price_1TK9oQ6hMZoGqmhSnu5PxBma';
+    const PRO_PRICE_ID      = 'price_1TK9mp6hMZoGqmhSGfcpTY5u';
+    const priceId = tier === 'standard' ? PRO_PRICE_ID : STANDARD_PRICE_ID;
 
     const res = await fetch(`${WORKER_URL}/api/create-checkout`, {
       method: 'POST',
@@ -386,12 +507,12 @@
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${session.access_token}`
       },
-      body: JSON.stringify({ priceId: STANDARD_PRICE_ID })
+      body: JSON.stringify({ priceId })
     });
 
     const data = await res.json();
     if (data.url) {
-      if (window.posthog) posthog.capture('upgrade_initiated', { from: 'dashboard' });
+      if (window.posthog) posthog.capture('upgrade_initiated', { from: 'dashboard', target: priceId === PRO_PRICE_ID ? 'pro' : 'standard' });
       window.location.href = data.url;
     }
   }
