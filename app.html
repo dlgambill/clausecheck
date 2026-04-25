@@ -104,7 +104,7 @@ main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
 .redline-item { background: rgba(255,255,255,0.02); border: 1px solid #2a2a2a; border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
 .redline-clause { font-size: 0.88rem; font-weight: 600; color: #f0f0f0; margin-bottom: 10px; }
 .redline-label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; color: #666; margin-bottom: 4px; font-weight: 600; }
-.redline-original { font-size: 0.84rem; color: #fca5a5; background: rgba(239,68,68,0.06); border-left: 2px solid #ef4444; padding: 8px 12px; margin-bottom: 8px; line-height: 1.55; text-decoration: line-through; }
+.redline-original { font-size: 0.84rem; color: #fca5a5; background: rgba(239,68,68,0.06); border-left: 2px solid #ef4444; padding: 8px 12px; margin-bottom: 8px; line-height: 1.55; }
 .redline-suggested { font-size: 0.84rem; color: #86efac; background: rgba(34,197,94,0.06); border-left: 2px solid #22c55e; padding: 8px 12px; margin-bottom: 8px; line-height: 1.55; }
 .redline-rationale { font-size: 0.78rem; color: #888; line-height: 1.55; font-style: italic; }
 /* Jurisdiction issue items */
@@ -174,6 +174,43 @@ main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
 .btn-modal-primary:disabled { opacity: 0.4; cursor: not-allowed; }
 .btn-modal-secondary { background: transparent; border: 1px solid #2a2a2a; color: #888; border-radius: 8px; padding: 10px 18px; font-size: 0.88rem; cursor: pointer; font-family: 'DM Sans', system-ui, sans-serif; transition: border-color 0.2s, color 0.2s; }
 .btn-modal-secondary:hover { border-color: #f97316; color: #f97316; }
+
+/* Recommend Changes button — small, inline with card label */
+.btn-recommend { background: transparent; border: 1px solid #f97316; color: #f97316; border-radius: 6px; padding: 5px 12px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.78rem; font-weight: 600; cursor: pointer; text-transform: none; letter-spacing: 0; transition: background 0.2s, color 0.2s; }
+.btn-recommend:hover { background: #f97316; color: #fff; }
+
+/* Recommend Changes modal — light theme so the lawyer can preview/print clean output */
+.recommend-content { background: #fff; color: #1a1a1a; padding: 28px 32px; border-radius: 10px 10px 0 0; max-height: 60vh; overflow-y: auto; }
+.recommend-title { font-family: Georgia, serif; font-size: 1.2rem; color: #0a0a0a; margin-bottom: 6px; font-weight: 600; }
+.recommend-subtitle { font-size: 0.85rem; color: #666; margin-bottom: 22px; }
+.recommend-item { margin-bottom: 22px; padding-bottom: 18px; border-bottom: 1px solid #e5e5e5; }
+.recommend-item:last-child { border-bottom: none; padding-bottom: 0; margin-bottom: 0; }
+.recommend-clause { font-size: 0.92rem; font-weight: 600; color: #0a0a0a; margin-bottom: 10px; }
+.recommend-label { font-size: 0.7rem; color: #666; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; font-weight: 600; }
+.recommend-original { font-size: 0.88rem; color: #991b1b; background: rgba(239,68,68,0.06); border-left: 3px solid #ef4444; padding: 10px 14px; margin-bottom: 10px; line-height: 1.55; border-radius: 0 4px 4px 0; }
+.recommend-suggested { font-size: 0.88rem; color: #14532d; background: rgba(34,197,94,0.06); border-left: 3px solid #22c55e; padding: 10px 14px; margin-bottom: 10px; line-height: 1.55; border-radius: 0 4px 4px 0; }
+.recommend-rationale { font-size: 0.82rem; color: #555; line-height: 1.55; font-style: italic; }
+.recommend-actions { background: #f5f5f5; padding: 14px 22px; border-top: 1px solid #e5e5e5; border-radius: 0 0 10px 10px; display: flex; gap: 10px; flex-wrap: wrap; justify-content: flex-end; }
+.recommend-action-btn { background: #fff; border: 1px solid #d4d4d4; color: #333; border-radius: 8px; padding: 9px 18px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.85rem; font-weight: 500; cursor: pointer; transition: border-color 0.2s, color 0.2s; }
+.recommend-action-btn:hover { border-color: #f97316; color: #f97316; }
+.recommend-action-btn.primary { background: #f97316; border-color: #f97316; color: #fff; }
+.recommend-action-btn.primary:hover { opacity: 0.88; color: #fff; }
+
+/* Subform for the email-send step inside the recommend modal */
+.recommend-email-form { background: #fff; padding: 22px 26px; border-radius: 10px; }
+.recommend-email-form .form-row { margin-bottom: 12px; }
+.recommend-email-form label { display: block; font-size: 0.72rem; color: #666; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 4px; font-weight: 600; }
+.recommend-email-form input, .recommend-email-form textarea { width: 100%; background: #fafafa; border: 1px solid #d4d4d4; border-radius: 6px; padding: 9px 12px; font-size: 0.88rem; color: #1a1a1a; font-family: 'DM Sans', system-ui, sans-serif; outline: none; transition: border-color 0.2s; }
+.recommend-email-form input:focus, .recommend-email-form textarea:focus { border-color: #f97316; }
+.recommend-email-form textarea { resize: vertical; min-height: 90px; line-height: 1.55; }
+
+/* When printing the recommend modal, print only the modal content */
+@media print {
+  body.printing-recommend > * { display: none !important; }
+  body.printing-recommend .modal-overlay#recommend-modal { display: flex !important; position: static !important; background: #fff !important; padding: 0 !important; }
+  body.printing-recommend .modal-overlay#recommend-modal .modal-card { box-shadow: none !important; max-height: none !important; }
+  body.printing-recommend .recommend-actions { display: none !important; }
+}
 .btn-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0; }
 .mode-toggle { display: flex; background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 4px; margin-bottom: 20px; gap: 4px; }
 .mode-btn { flex: 1; padding: 10px; text-align: center; font-size: 0.85rem; font-weight: 500; color: #555; cursor: pointer; border-radius: 7px; border: none; background: none; font-family: 'DM Sans', system-ui, sans-serif; transition: all 0.2s; }
@@ -440,7 +477,10 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
 
     <!-- Pro: Redline suggestions -->
     <div class="card" id="redline-card" style="display:none;">
-      <div class="card-label">Suggested redlines</div>
+      <div class="card-label" style="display:flex; align-items:center; justify-content:space-between;">
+        <span>Suggested redlines</span>
+        <button class="btn-recommend" onclick="openRecommendModal()">Recommend these changes &rarr;</button>
+      </div>
       <div id="redline-list"></div>
     </div>
 
@@ -498,7 +538,10 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
 
     <!-- Pro: Redline suggestions -->
     <div class="card" id="playbook-redline-card" style="display:none;">
-      <div class="card-label">Suggested redlines</div>
+      <div class="card-label" style="display:flex; align-items:center; justify-content:space-between;">
+        <span>Suggested redlines</span>
+        <button class="btn-recommend" onclick="openRecommendModal()">Recommend these changes &rarr;</button>
+      </div>
       <div id="playbook-redline-list"></div>
     </div>
 
@@ -560,6 +603,59 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
     <h3>Chat with your contract</h3>
     <p>Pro subscribers can ask follow-up questions about any contract — specific clauses, what a term means in practice, or what to watch out for.</p>
     <a href="dashboard.html" class="upgrade-link">Upgrade to Pro &rarr;</a>
+  </div>
+</div>
+
+<!-- Recommend Changes modal — shows redlines as a clean, printable doc -->
+<div class="modal-overlay" id="recommend-modal" onclick="if(event.target===this)closeRecommendModal()">
+  <div class="modal-card" style="background:#fff; max-width:680px;">
+
+    <!-- Default view: redlines list with action buttons -->
+    <div id="recommend-view-list">
+      <div class="recommend-content" id="recommend-printable">
+        <div class="recommend-title" id="recommend-title-line">Recommended Changes</div>
+        <div class="recommend-subtitle" id="recommend-subtitle-line"></div>
+        <div id="recommend-items"></div>
+      </div>
+      <div class="recommend-actions">
+        <button class="recommend-action-btn" onclick="closeRecommendModal()">Close</button>
+        <button class="recommend-action-btn" onclick="copyRecommendText()" id="recommend-copy-btn">&#128203; Copy</button>
+        <button class="recommend-action-btn" onclick="printRecommend()">&#128438; Print</button>
+        <button class="recommend-action-btn primary" onclick="showRecommendEmailForm()">&#9993; Email</button>
+      </div>
+    </div>
+
+    <!-- Email subform: shown after clicking Email -->
+    <div id="recommend-view-email" style="display:none;">
+      <div class="recommend-email-form">
+        <div style="display:flex; align-items:center; justify-content:space-between; margin-bottom:18px;">
+          <div style="font-family:Georgia,serif; font-size:1.1rem; color:#0a0a0a; font-weight:600;">Email these changes</div>
+          <button class="modal-close" onclick="hideRecommendEmailForm()" aria-label="Back" style="color:#888;">&larr; Back</button>
+        </div>
+        <div class="form-row">
+          <label for="rec-email-recipient">Recipient email</label>
+          <input type="email" id="rec-email-recipient" placeholder="opposing@counsel.com or client@example.com">
+        </div>
+        <div class="form-row">
+          <label for="rec-email-name">Recipient name (optional)</label>
+          <input type="text" id="rec-email-name" placeholder="Jane Smith">
+        </div>
+        <div class="form-row">
+          <label for="rec-email-subject">Subject</label>
+          <input type="text" id="rec-email-subject" placeholder="Proposed redlines">
+        </div>
+        <div class="form-row">
+          <label for="rec-email-message">Your message (optional)</label>
+          <textarea id="rec-email-message" placeholder="Add a personal note. The redlines below will be appended automatically."></textarea>
+        </div>
+        <div class="modal-success" id="rec-email-success" style="background:rgba(34,197,94,0.08); color:#14532d;">Email sent.</div>
+        <div class="modal-error" id="rec-email-error" style="background:rgba(239,68,68,0.08); color:#991b1b;"></div>
+      </div>
+      <div class="recommend-actions">
+        <button class="recommend-action-btn" onclick="hideRecommendEmailForm()">Cancel</button>
+        <button class="recommend-action-btn primary" onclick="sendRedlinesEmail()" id="rec-email-send-btn">Send email</button>
+      </div>
+    </div>
   </div>
 </div>
 
@@ -1416,7 +1512,179 @@ async function sendClientEmail() {
   }
 }
 
-// ── Chatbot: draft client email ──────────────────────────────
+// ── Recommend Changes modal ──────────────────────────────────
+// Pulls redline_suggestions from the cached lastAnalysisResult and
+// shows them as a clean, printable doc with copy/print/email actions.
+
+function openRecommendModal() {
+  if (!lastAnalysisResult) return;
+  const redlines = lastAnalysisResult.redline_suggestions;
+  if (!Array.isArray(redlines) || redlines.length === 0) return;
+
+  // Title + subtitle
+  const title = `Recommended Changes — ${lastContractName || 'Contract'}`;
+  document.getElementById('recommend-title-line').textContent = title;
+  document.getElementById('recommend-subtitle-line').textContent =
+    `${redlines.length} proposed ${redlines.length === 1 ? 'change' : 'changes'}`;
+
+  // Items
+  document.getElementById('recommend-items').innerHTML = redlines.map((r, i) => `
+    <div class="recommend-item">
+      <div class="recommend-clause">${i + 1}. ${escapeHtml(r.clause || '')}</div>
+      <div class="recommend-label">Current text</div>
+      <div class="recommend-original">${escapeHtml(r.original_text || '')}</div>
+      <div class="recommend-label">Proposed</div>
+      <div class="recommend-suggested">${escapeHtml(r.suggested_text || '')}</div>
+      ${r.rationale ? `<div class="recommend-rationale">${escapeHtml(r.rationale)}</div>` : ''}
+    </div>`).join('');
+
+  // Show the list view, hide the email subform
+  document.getElementById('recommend-view-list').style.display = 'block';
+  document.getElementById('recommend-view-email').style.display = 'none';
+  document.getElementById('recommend-modal').classList.add('open');
+  if (window.posthog) posthog.capture('recommend_modal_opened');
+}
+
+function closeRecommendModal() {
+  document.getElementById('recommend-modal').classList.remove('open');
+}
+
+// Plain-text rendering of the redlines for clipboard copy
+function buildRedlinesPlainText() {
+  if (!lastAnalysisResult) return '';
+  const redlines = lastAnalysisResult.redline_suggestions || [];
+  const lines = [];
+  lines.push(`Recommended Changes — ${lastContractName || 'Contract'}`);
+  lines.push(''.padEnd(60, '='));
+  lines.push('');
+  redlines.forEach((r, i) => {
+    lines.push(`${i + 1}. ${r.clause || ''}`);
+    lines.push('');
+    lines.push('CURRENT TEXT:');
+    lines.push(r.original_text || '');
+    lines.push('');
+    lines.push('PROPOSED:');
+    lines.push(r.suggested_text || '');
+    if (r.rationale) {
+      lines.push('');
+      lines.push(`Rationale: ${r.rationale}`);
+    }
+    lines.push('');
+    lines.push(''.padEnd(60, '-'));
+    lines.push('');
+  });
+  return lines.join('\n');
+}
+
+async function copyRecommendText() {
+  const text = buildRedlinesPlainText();
+  const btn = document.getElementById('recommend-copy-btn');
+  const originalLabel = btn.textContent;
+  try {
+    await navigator.clipboard.writeText(text);
+    btn.textContent = '✓ Copied';
+    setTimeout(() => { btn.textContent = originalLabel; }, 1800);
+    if (window.posthog) posthog.capture('redlines_copied');
+  } catch (err) {
+    btn.textContent = 'Copy failed';
+    setTimeout(() => { btn.textContent = originalLabel; }, 1800);
+  }
+}
+
+function printRecommend() {
+  document.body.classList.add('printing-recommend');
+  // Defer the print so the class takes effect
+  setTimeout(() => {
+    window.print();
+    // Remove class after print dialog closes
+    setTimeout(() => { document.body.classList.remove('printing-recommend'); }, 100);
+  }, 50);
+  if (window.posthog) posthog.capture('redlines_printed');
+}
+
+function showRecommendEmailForm() {
+  document.getElementById('recommend-view-list').style.display = 'none';
+  document.getElementById('recommend-view-email').style.display = 'block';
+  // Reset form state
+  document.getElementById('rec-email-recipient').value = '';
+  document.getElementById('rec-email-name').value = '';
+  document.getElementById('rec-email-subject').value = `Proposed redlines: ${lastContractName || 'Contract'}`;
+  document.getElementById('rec-email-message').value = '';
+  document.getElementById('rec-email-success').style.display = 'none';
+  document.getElementById('rec-email-error').style.display = 'none';
+}
+
+function hideRecommendEmailForm() {
+  document.getElementById('recommend-view-email').style.display = 'none';
+  document.getElementById('recommend-view-list').style.display = 'block';
+}
+
+async function sendRedlinesEmail() {
+  if (currentTier !== 'pro') return;
+
+  const recipientEmail = document.getElementById('rec-email-recipient').value.trim();
+  const recipientName  = document.getElementById('rec-email-name').value.trim();
+  const subject        = document.getElementById('rec-email-subject').value.trim();
+  const attorneyMessage = document.getElementById('rec-email-message').value.trim();
+  const successEl = document.getElementById('rec-email-success');
+  const errorEl   = document.getElementById('rec-email-error');
+  const btn       = document.getElementById('rec-email-send-btn');
+
+  successEl.style.display = 'none';
+  errorEl.style.display = 'none';
+
+  if (!recipientEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipientEmail)) {
+    errorEl.textContent = 'Please enter a valid recipient email address.';
+    errorEl.style.display = 'block';
+    return;
+  }
+  const redlines = lastAnalysisResult && lastAnalysisResult.redline_suggestions;
+  if (!Array.isArray(redlines) || redlines.length === 0) {
+    errorEl.textContent = 'No redlines available to send.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    currentSession = session;
+
+    const res = await fetch(WORKER_URL + '/api/send-redlines-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentSession.access_token}` },
+      body: JSON.stringify({
+        recipientEmail,
+        recipientName,
+        subject,
+        attorneyMessage,
+        redlines,
+        contractName: lastContractName,
+      })
+    });
+    const data = await res.json();
+    if (!res.ok || data.error) {
+      errorEl.textContent = data.error || `Send failed (${res.status}).`;
+      errorEl.style.display = 'block';
+      return;
+    }
+    successEl.textContent = `Email sent to ${recipientEmail}. Replies will route to your email address.`;
+    successEl.style.display = 'block';
+    if (window.posthog) posthog.capture('redlines_email_sent');
+    setTimeout(() => { closeRecommendModal(); }, 2200);
+  } catch (err) {
+    errorEl.textContent = 'Send failed: ' + err.message;
+    errorEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Send email';
+  }
+}
+
+
 // When the lawyer clicks "Draft email to client" suggestion in the chat,
 // the chatbot asks 2-3 quick questions then produces a draft. The draft
 // then populates the Send modal's message field for review.
