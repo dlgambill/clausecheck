@@ -216,6 +216,90 @@
     <div class="error-msg" id="profile-error"></div>
   </div>
 
+  <!-- Firm Branding (Pro only) -->
+  <div class="card" id="branding-card">
+    <div class="card-label" style="display:flex; align-items:center; justify-content:space-between;">
+      <span>Firm branding</span>
+      <span class="plan-badge pro" style="font-size:0.62rem; padding:3px 9px;">Pro</span>
+    </div>
+
+    <!-- Locked state for non-Pro -->
+    <div id="branding-locked" style="display:none;">
+      <p style="font-size:0.85rem; color:#888; line-height:1.6; margin-bottom:14px;">
+        Send branded contract reviews to your clients with your firm's logo, signature, and contact information.
+        Replies route directly to your email — your clients see professional, white-labeled correspondence.
+      </p>
+      <button class="btn-primary" onclick="upgradePlan()">Upgrade to Pro</button>
+    </div>
+
+    <!-- Pro state -->
+    <div id="branding-active" style="display:none;">
+      <p style="font-size:0.83rem; color:#777; line-height:1.6; margin-bottom:18px;">
+        These details appear on emails you send to clients from ClauseCheck.
+      </p>
+
+      <div class="form-group">
+        <label class="form-label">Firm logo (PNG or JPG, max 2MB)</label>
+        <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <div id="logo-preview-wrap" style="width:140px; height:60px; background:#0a0a0a; border:1px solid #2a2a2a; border-radius:6px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+            <img id="logo-preview" src="" alt="" style="max-width:100%; max-height:100%; display:none;">
+            <span id="logo-placeholder" style="font-size:0.72rem; color:#555;">No logo</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <label class="btn-secondary" style="cursor:pointer;">
+              <input type="file" id="logo-input" accept="image/png,image/jpeg" style="display:none;" onchange="uploadFirmAsset(event,'logo')">
+              Upload logo
+            </label>
+            <button class="btn-secondary" id="logo-remove-btn" onclick="removeFirmAsset('logo')" style="display:none;">Remove</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Signature image (PNG, transparent background recommended, max 2MB)</label>
+        <div style="display:flex; align-items:center; gap:14px; flex-wrap:wrap;">
+          <div id="sig-preview-wrap" style="width:200px; height:70px; background:#0a0a0a; border:1px solid #2a2a2a; border-radius:6px; display:flex; align-items:center; justify-content:center; overflow:hidden;">
+            <img id="sig-preview" src="" alt="" style="max-width:100%; max-height:100%; display:none;">
+            <span id="sig-placeholder" style="font-size:0.72rem; color:#555;">No signature</span>
+          </div>
+          <div style="display:flex; gap:8px;">
+            <label class="btn-secondary" style="cursor:pointer;">
+              <input type="file" id="sig-input" accept="image/png,image/jpeg" style="display:none;" onchange="uploadFirmAsset(event,'signature')">
+              Upload signature
+            </label>
+            <button class="btn-secondary" id="sig-remove-btn" onclick="removeFirmAsset('signature')" style="display:none;">Remove</button>
+          </div>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Firm address</label>
+        <input type="text" class="form-input" id="firm-address" placeholder="123 Main St, Suite 400, Kansas City, MO 64105">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Firm phone</label>
+        <input type="text" class="form-input" id="firm-phone" placeholder="(816) 555-0123">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Firm website</label>
+        <input type="text" class="form-input" id="firm-website" placeholder="www.yourfirm.com">
+      </div>
+
+      <div class="form-group">
+        <label class="form-label">Licensed jurisdictions (up to 4)</label>
+        <p style="font-size:0.78rem; color:#666; line-height:1.5; margin-bottom:10px;">Pro analyses will surface state-specific enforceability concerns for the jurisdictions you select.</p>
+        <div id="jurisdiction-rows" style="display:flex; flex-direction:column; gap:8px;"></div>
+        <button type="button" class="btn-secondary" id="add-jurisdiction-btn" onclick="addJurisdictionRow()" style="margin-top:10px; padding:8px 14px; font-size:0.83rem;">+ Add jurisdiction</button>
+      </div>
+
+      <button class="btn-primary" id="save-branding-btn" onclick="saveBranding()">Save branding</button>
+      <div class="success-msg" id="branding-success">Branding updated successfully.</div>
+      <div class="error-msg" id="branding-error"></div>
+    </div>
+  </div>
+
   <!-- Danger Zone -->
   <div class="card">
     <div class="card-label">Account</div>
@@ -321,6 +405,9 @@
 
     // Usage meter — populated separately by loadUsage(), but we need the tier.
     renderUsageMeter(tier);
+
+    // Firm branding section (Pro only)
+    renderBrandingSection(p);
   }
 
   // We compute "this month's usage" from the analyses list filtered to the
@@ -489,6 +576,270 @@
       errorEl.textContent = 'Failed to save. Please try again.';
       errorEl.style.display = 'block';
     }
+  }
+
+  // ── Firm branding (Pro) ────────────────────────────────────────
+  function renderBrandingSection(profile) {
+    const isPro = profile.tier === 'pro';
+    document.getElementById('branding-locked').style.display = isPro ? 'none' : 'block';
+    document.getElementById('branding-active').style.display = isPro ? 'block' : 'none';
+    if (!isPro) return;
+
+    document.getElementById('firm-address').value = profile.firm_address || '';
+    document.getElementById('firm-phone').value   = profile.firm_phone   || '';
+    document.getElementById('firm-website').value = profile.firm_website || '';
+
+    if (profile.firm_logo_url) showAssetPreview('logo', profile.firm_logo_url);
+    if (profile.firm_signature_url) showAssetPreview('signature', profile.firm_signature_url);
+
+    // Render jurisdictions — saved as comma-separated state codes ("MO,KS,IL")
+    const saved = (profile.primary_jurisdiction || '')
+      .split(',').map(s => s.trim().toUpperCase()).filter(Boolean);
+    renderJurisdictionRows(saved);
+  }
+
+  // ── Jurisdictions ──────────────────────────────────────────────
+  const MAX_JURISDICTIONS = 4;
+  // US states + DC + territories that have practicing attorneys. Keeping this
+  // list inside the page (not the worker) so the dropdown can stay simple.
+  const US_JURISDICTIONS = [
+    ['AL','Alabama'],['AK','Alaska'],['AZ','Arizona'],['AR','Arkansas'],
+    ['CA','California'],['CO','Colorado'],['CT','Connecticut'],['DE','Delaware'],
+    ['DC','District of Columbia'],['FL','Florida'],['GA','Georgia'],['HI','Hawaii'],
+    ['ID','Idaho'],['IL','Illinois'],['IN','Indiana'],['IA','Iowa'],
+    ['KS','Kansas'],['KY','Kentucky'],['LA','Louisiana'],['ME','Maine'],
+    ['MD','Maryland'],['MA','Massachusetts'],['MI','Michigan'],['MN','Minnesota'],
+    ['MS','Mississippi'],['MO','Missouri'],['MT','Montana'],['NE','Nebraska'],
+    ['NV','Nevada'],['NH','New Hampshire'],['NJ','New Jersey'],['NM','New Mexico'],
+    ['NY','New York'],['NC','North Carolina'],['ND','North Dakota'],['OH','Ohio'],
+    ['OK','Oklahoma'],['OR','Oregon'],['PA','Pennsylvania'],['PR','Puerto Rico'],
+    ['RI','Rhode Island'],['SC','South Carolina'],['SD','South Dakota'],['TN','Tennessee'],
+    ['TX','Texas'],['UT','Utah'],['VT','Vermont'],['VA','Virginia'],
+    ['WA','Washington'],['WV','West Virginia'],['WI','Wisconsin'],['WY','Wyoming'],
+  ];
+
+  function renderJurisdictionRows(savedCodes) {
+    const container = document.getElementById('jurisdiction-rows');
+    container.innerHTML = '';
+    // Always render at least one row, even if empty
+    const codes = (savedCodes && savedCodes.length > 0) ? savedCodes : [''];
+    codes.forEach((code, idx) => addJurisdictionRow(code, idx === 0 && codes.length === 1 && !code));
+    refreshAddJurisdictionBtn();
+  }
+
+  function addJurisdictionRow(presetCode, isInitialEmpty) {
+    const container = document.getElementById('jurisdiction-rows');
+    if (container.children.length >= MAX_JURISDICTIONS) return;
+
+    const row = document.createElement('div');
+    row.className = 'jurisdiction-row';
+    row.style.cssText = 'display:flex; gap:8px; align-items:center;';
+
+    const select = document.createElement('select');
+    select.className = 'form-input';
+    select.style.cssText = 'flex:1; appearance:auto; cursor:pointer;';
+    select.innerHTML = '<option value="">— Select jurisdiction —</option>' +
+      US_JURISDICTIONS.map(([code, name]) => `<option value="${code}">${code} — ${name}</option>`).join('');
+    if (presetCode) select.value = presetCode;
+
+    const removeBtn = document.createElement('button');
+    removeBtn.type = 'button';
+    removeBtn.className = 'btn-secondary';
+    removeBtn.textContent = '×';
+    removeBtn.title = 'Remove';
+    removeBtn.style.cssText = 'padding:8px 14px; font-size:1rem; line-height:1; min-width:40px;';
+    removeBtn.onclick = () => {
+      row.remove();
+      if (document.getElementById('jurisdiction-rows').children.length === 0) {
+        addJurisdictionRow();
+      }
+      refreshAddJurisdictionBtn();
+    };
+
+    row.appendChild(select);
+    row.appendChild(removeBtn);
+    container.appendChild(row);
+    refreshAddJurisdictionBtn();
+  }
+
+  function refreshAddJurisdictionBtn() {
+    const container = document.getElementById('jurisdiction-rows');
+    const btn = document.getElementById('add-jurisdiction-btn');
+    if (!btn) return;
+    btn.disabled = container.children.length >= MAX_JURISDICTIONS;
+    btn.style.opacity = btn.disabled ? '0.4' : '1';
+    btn.style.cursor = btn.disabled ? 'not-allowed' : 'pointer';
+  }
+
+  // Collect current jurisdiction selections, dedupe, return as comma-separated string
+  function collectJurisdictions() {
+    const selects = document.querySelectorAll('#jurisdiction-rows select');
+    const seen = new Set();
+    const out = [];
+    selects.forEach(s => {
+      const v = (s.value || '').trim().toUpperCase();
+      if (v && !seen.has(v)) { seen.add(v); out.push(v); }
+    });
+    return out.join(',');
+  }
+
+  function showAssetPreview(kind, url) {
+    const prefix = kind === 'logo' ? 'logo' : 'sig';
+    const img = document.getElementById(prefix + '-preview');
+    const placeholder = document.getElementById(prefix + '-placeholder');
+    const removeBtn = document.getElementById(prefix + '-remove-btn');
+    if (url) {
+      img.src = url;
+      img.style.display = 'block';
+      placeholder.style.display = 'none';
+      removeBtn.style.display = 'inline-block';
+    } else {
+      img.src = '';
+      img.style.display = 'none';
+      placeholder.style.display = 'block';
+      removeBtn.style.display = 'none';
+    }
+  }
+
+  // Uploads to Supabase Storage bucket 'firm-branding' under <user_id>/<kind>.<ext>.
+  // Bucket must exist with public read + authenticated write policies.
+  async function uploadFirmAsset(event, kind) {
+    const file = event.target.files[0];
+    if (!file) return;
+    if (file.size > 2 * 1024 * 1024) {
+      showBrandingError('File is too large (max 2MB).');
+      return;
+    }
+
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+
+    const ext = (file.name.split('.').pop() || 'png').toLowerCase();
+    const path = `${session.user.id}/${kind}.${ext}`;
+
+    // Upload (upsert overwrites the previous file at this path)
+    const upRes = await fetch(
+      `${SUPABASE_URL}/storage/v1/object/firm-branding/${path}`,
+      {
+        method: 'POST',
+        headers: {
+          'Authorization': `Bearer ${session.access_token}`,
+          'apikey': SUPABASE_ANON,
+          'Content-Type': file.type,
+          'x-upsert': 'true',
+        },
+        body: file,
+      }
+    );
+
+    if (!upRes.ok) {
+      const errText = await upRes.text();
+      console.error('Upload failed:', errText);
+      showBrandingError('Upload failed. Please try again.');
+      return;
+    }
+
+    // Build public URL with a cache-buster so the new image renders immediately
+    const publicUrl = `${SUPABASE_URL}/storage/v1/object/public/firm-branding/${path}?t=${Date.now()}`;
+
+    // Save the URL on the profile
+    const fieldName = kind === 'logo' ? 'firm_logo_url' : 'firm_signature_url';
+    const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${session.user.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${session.access_token}`,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({ [fieldName]: publicUrl, updated_at: new Date().toISOString() }),
+    });
+
+    if (!patchRes.ok) {
+      showBrandingError('Could not save the new asset.');
+      return;
+    }
+
+    if (currentProfile) currentProfile[fieldName] = publicUrl;
+    showAssetPreview(kind, publicUrl);
+    if (window.posthog) posthog.capture('firm_asset_uploaded', { kind });
+  }
+
+  async function removeFirmAsset(kind) {
+    if (!confirm(`Remove your ${kind}?`)) return;
+
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+
+    const fieldName = kind === 'logo' ? 'firm_logo_url' : 'firm_signature_url';
+    const patchRes = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${session.user.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${session.access_token}`,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify({ [fieldName]: null, updated_at: new Date().toISOString() }),
+    });
+
+    if (!patchRes.ok) {
+      showBrandingError('Could not remove asset.');
+      return;
+    }
+    if (currentProfile) currentProfile[fieldName] = null;
+    showAssetPreview(kind, null);
+  }
+
+  async function saveBranding() {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+
+    const btn = document.getElementById('save-branding-btn');
+    const successEl = document.getElementById('branding-success');
+    const errorEl   = document.getElementById('branding-error');
+
+    successEl.style.display = 'none';
+    errorEl.style.display = 'none';
+    btn.disabled = true;
+    btn.textContent = 'Saving...';
+
+    const payload = {
+      firm_address: document.getElementById('firm-address').value.trim() || null,
+      firm_phone:   document.getElementById('firm-phone').value.trim()   || null,
+      firm_website: document.getElementById('firm-website').value.trim() || null,
+      primary_jurisdiction: collectJurisdictions() || null,
+      updated_at: new Date().toISOString(),
+    };
+
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${session.user.id}`, {
+      method: 'PATCH',
+      headers: {
+        'Content-Type': 'application/json',
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${session.access_token}`,
+        'Prefer': 'return=minimal',
+      },
+      body: JSON.stringify(payload),
+    });
+
+    btn.disabled = false;
+    btn.textContent = 'Save branding';
+
+    if (res.ok) {
+      Object.assign(currentProfile || {}, payload);
+      successEl.style.display = 'block';
+      if (window.posthog) posthog.capture('firm_branding_updated');
+    } else {
+      errorEl.textContent = 'Failed to save. Please try again.';
+      errorEl.style.display = 'block';
+    }
+  }
+
+  function showBrandingError(msg) {
+    const el = document.getElementById('branding-error');
+    el.textContent = msg;
+    el.style.display = 'block';
   }
 
   async function upgradePlan() {
