@@ -95,6 +95,28 @@ main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
 .sev-medium { background: rgba(249,115,22,0.15); color: #fb923c; }
 .sev-low    { background: rgba(34,197,94,0.15);  color: #4ade80; }
 .clause-explanation { font-size: 0.85rem; color: #aaa; line-height: 1.6; }
+/* Verbatim quote inside a flagged clause — italicized blockquote */
+.clause-quote { font-size: 0.82rem; color: #888; font-style: italic; border-left: 2px solid #333; padding: 8px 12px; margin-top: 10px; line-height: 1.55; background: rgba(255,255,255,0.02); border-radius: 0 4px 4px 0; }
+.clause-quote::before { content: '"'; color: #555; }
+.clause-quote::after { content: '"'; color: #555; }
+.clause-location { font-size: 0.74rem; color: #555; margin-top: 6px; font-family: monospace; }
+/* Redline suggestions card */
+.redline-item { background: rgba(255,255,255,0.02); border: 1px solid #2a2a2a; border-radius: 8px; padding: 14px 16px; margin-bottom: 10px; }
+.redline-clause { font-size: 0.88rem; font-weight: 600; color: #f0f0f0; margin-bottom: 10px; }
+.redline-label { font-size: 0.66rem; text-transform: uppercase; letter-spacing: 0.06em; color: #666; margin-bottom: 4px; font-weight: 600; }
+.redline-original { font-size: 0.84rem; color: #fca5a5; background: rgba(239,68,68,0.06); border-left: 2px solid #ef4444; padding: 8px 12px; margin-bottom: 8px; line-height: 1.55; text-decoration: line-through; }
+.redline-suggested { font-size: 0.84rem; color: #86efac; background: rgba(34,197,94,0.06); border-left: 2px solid #22c55e; padding: 8px 12px; margin-bottom: 8px; line-height: 1.55; }
+.redline-rationale { font-size: 0.78rem; color: #888; line-height: 1.55; font-style: italic; }
+/* Jurisdiction issue items */
+.juris-item { border-left: 2px solid #2a2a2a; padding: 12px 14px; margin-bottom: 10px; border-radius: 0 8px 8px 0; background: rgba(255,255,255,0.03); }
+.juris-item.high   { border-left-color: #ef4444; }
+.juris-item.medium { border-left-color: #f97316; }
+.juris-item.low    { border-left-color: #eab308; }
+.juris-header { display: flex; align-items: center; gap: 10px; margin-bottom: 6px; flex-wrap: wrap; }
+.juris-state { font-size: 0.78rem; font-weight: 700; color: #f97316; background: rgba(249,115,22,0.1); padding: 2px 8px; border-radius: 4px; text-transform: uppercase; letter-spacing: 0.04em; font-family: monospace; }
+.juris-concern { font-size: 0.88rem; font-weight: 600; color: #f0f0f0; flex: 1; }
+.juris-affected { font-size: 0.78rem; color: #888; margin-bottom: 4px; }
+.juris-explanation { font-size: 0.84rem; color: #aaa; line-height: 1.6; }
 .terms-grid { display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr)); gap: 10px; }
 .term-item { background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 12px 14px; }
 .term-label { font-size: 0.68rem; text-transform: uppercase; letter-spacing: 0.06em; color: #666; margin-bottom: 4px; }
@@ -114,6 +136,44 @@ main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
 .btn-reset:hover { border-color: #f97316; color: #f97316; }
 .btn-print { background: transparent; border: 1px solid #2a2a2a; color: #888; border-radius: 8px; padding: 10px 20px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.85rem; cursor: pointer; margin-top: 20px; margin-left: 10px; transition: border-color 0.2s, color 0.2s; }
 .btn-print:hover { border-color: #f97316; color: #f97316; }
+/* Primary "Send to Client" button — orange-filled, matches analyze button intent */
+.btn-send { background: #f97316; color: #fff; border: 1px solid #f97316; border-radius: 8px; padding: 10px 20px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; margin-top: 20px; margin-right: 10px; transition: opacity 0.2s; }
+.btn-send:hover { opacity: 0.88; }
+.btn-send:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-send.locked { background: transparent; color: #888; border-color: #2a2a2a; font-weight: 500; }
+.btn-send.locked:hover { opacity: 1; border-color: #f97316; color: #f97316; }
+
+/* Modal overlay for compose-and-send */
+.modal-overlay { position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 100; display: none; align-items: center; justify-content: center; padding: 20px; }
+.modal-overlay.open { display: flex; }
+.modal-card { background: #141414; border: 1px solid #2a2a2a; border-radius: 14px; max-width: 600px; width: 100%; max-height: 90vh; display: flex; flex-direction: column; overflow: hidden; }
+.modal-header { display: flex; align-items: center; justify-content: space-between; padding: 18px 22px; border-bottom: 1px solid #2a2a2a; flex-shrink: 0; }
+.modal-title { font-size: 1.05rem; font-weight: 600; color: #f0f0f0; }
+.modal-close { background: none; border: none; color: #666; cursor: pointer; font-size: 1.4rem; line-height: 1; padding: 0 6px; transition: color 0.2s; }
+.modal-close:hover { color: #f0f0f0; }
+.modal-body { padding: 20px 22px; overflow-y: auto; flex: 1; }
+.modal-footer { padding: 14px 22px; border-top: 1px solid #2a2a2a; display: flex; justify-content: flex-end; gap: 10px; flex-shrink: 0; }
+.modal-form-group { margin-bottom: 14px; }
+.modal-form-label { display: block; font-size: 0.72rem; font-weight: 600; color: #777; text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+.modal-input { width: 100%; background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 11px 14px; font-size: 0.92rem; color: #f0f0f0; font-family: 'DM Sans', system-ui, sans-serif; outline: none; transition: border-color 0.2s; }
+.modal-input:focus { border-color: #f97316; }
+.modal-textarea { width: 100%; background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 11px 14px; font-size: 0.9rem; color: #f0f0f0; font-family: 'DM Sans', system-ui, sans-serif; outline: none; transition: border-color 0.2s; resize: vertical; min-height: 120px; line-height: 1.6; }
+.modal-textarea:focus { border-color: #f97316; }
+.modal-help { font-size: 0.78rem; color: #666; line-height: 1.5; margin-top: 6px; }
+.modal-help a { color: #f97316; text-decoration: none; }
+.modal-success { background: rgba(34,197,94,0.08); border: 1px solid rgba(34,197,94,0.25); color: #4ade80; border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; margin-top: 10px; display: none; }
+.modal-error { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #f87171; border-radius: 8px; padding: 10px 14px; font-size: 0.85rem; margin-top: 10px; display: none; }
+.modal-locked { text-align: center; padding: 12px 0; }
+.modal-locked-icon { font-size: 2rem; margin-bottom: 10px; }
+.modal-locked h3 { font-size: 1.05rem; font-weight: 600; color: #f0f0f0; margin-bottom: 8px; }
+.modal-locked p { font-size: 0.88rem; color: #aaa; line-height: 1.6; margin-bottom: 18px; max-width: 440px; margin-left: auto; margin-right: auto; }
+.modal-locked .upgrade-link { display: inline-block; background: #f97316; color: #fff; text-decoration: none; padding: 11px 22px; border-radius: 8px; font-size: 0.9rem; font-weight: 600; transition: opacity 0.2s; }
+.modal-locked .upgrade-link:hover { opacity: 0.88; }
+.btn-modal-primary { background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 10px 20px; font-size: 0.88rem; font-weight: 600; cursor: pointer; font-family: 'DM Sans', system-ui, sans-serif; transition: opacity 0.2s; }
+.btn-modal-primary:hover { opacity: 0.88; }
+.btn-modal-primary:disabled { opacity: 0.4; cursor: not-allowed; }
+.btn-modal-secondary { background: transparent; border: 1px solid #2a2a2a; color: #888; border-radius: 8px; padding: 10px 18px; font-size: 0.88rem; cursor: pointer; font-family: 'DM Sans', system-ui, sans-serif; transition: border-color 0.2s, color 0.2s; }
+.btn-modal-secondary:hover { border-color: #f97316; color: #f97316; }
 .btn-actions { display: flex; align-items: center; flex-wrap: wrap; gap: 0; }
 .mode-toggle { display: flex; background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 4px; margin-bottom: 20px; gap: 4px; }
 .mode-btn { flex: 1; padding: 10px; text-align: center; font-size: 0.85rem; font-weight: 500; color: #555; cursor: pointer; border-radius: 7px; border: none; background: none; font-family: 'DM Sans', system-ui, sans-serif; transition: all 0.2s; }
@@ -158,35 +218,57 @@ main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
 .history-empty { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 40px 20px; text-align: center; color: #666; font-size: 0.88rem; }
 .history-empty a { color: #f97316; text-decoration: none; }
 .history-loading { text-align: center; padding: 40px 20px; color: #666; font-size: 0.88rem; }
-/* Chat panel */
-.chat-panel { background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 12px; }
-.chat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #2a2a2a; }
+/* Floating chat widget */
+.chat-fab { position: fixed; bottom: 24px; right: 24px; width: 56px; height: 56px; border-radius: 50%; background: #f97316; color: #fff; border: none; cursor: pointer; box-shadow: 0 8px 24px rgba(249,115,22,0.35), 0 2px 8px rgba(0,0,0,0.4); z-index: 90; display: none; align-items: center; justify-content: center; transition: transform 0.2s, box-shadow 0.2s; font-family: inherit; }
+.chat-fab:hover { transform: translateY(-2px); box-shadow: 0 12px 28px rgba(249,115,22,0.45), 0 2px 8px rgba(0,0,0,0.4); }
+.chat-fab svg { width: 24px; height: 24px; fill: none; stroke: currentColor; stroke-width: 2; stroke-linecap: round; stroke-linejoin: round; }
+.chat-fab .fab-badge { position: absolute; top: -4px; right: -4px; background: #4ade80; color: #052e16; font-size: 0.6rem; font-weight: 700; padding: 2px 6px; border-radius: 10px; text-transform: uppercase; letter-spacing: 0.04em; border: 2px solid #0a0a0a; }
+.chat-fab.locked { background: #2a2a2a; color: #888; box-shadow: 0 4px 12px rgba(0,0,0,0.4); }
+.chat-fab.locked:hover { background: #3a3a3a; box-shadow: 0 6px 16px rgba(0,0,0,0.5); }
+.chat-fab.locked .fab-badge { background: #f97316; color: #fff; }
+
+.chat-window { position: fixed; bottom: 96px; right: 24px; width: 400px; max-width: calc(100vw - 32px); height: 560px; max-height: calc(100vh - 120px); background: #141414; border: 1px solid #2a2a2a; border-radius: 14px; box-shadow: 0 20px 50px rgba(0,0,0,0.6), 0 4px 12px rgba(0,0,0,0.4); z-index: 91; display: none; flex-direction: column; overflow: hidden; }
+.chat-window.open { display: flex; }
+.chat-header { display: flex; align-items: center; justify-content: space-between; padding: 14px 16px; border-bottom: 1px solid #2a2a2a; flex-shrink: 0; }
+.chat-header-left { display: flex; align-items: center; gap: 8px; }
 .chat-title { font-size: 0.9rem; font-weight: 600; color: #f0f0f0; }
-.chat-pro-badge { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
-.chat-messages { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding: 4px; margin-bottom: 14px; }
-.chat-empty { font-size: 0.85rem; color: #666; text-align: center; padding: 20px; }
-.chat-message { padding: 10px 14px; border-radius: 10px; font-size: 0.88rem; line-height: 1.6; max-width: 88%; word-wrap: break-word; }
-.chat-message.user { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2); color: #f0f0f0; align-self: flex-end; }
-.chat-message.assistant { background: #0a0a0a; border: 1px solid #2a2a2a; color: #d4d4d4; align-self: flex-start; }
+.chat-pro-badge { font-size: 0.62rem; font-weight: 700; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 7px; border-radius: 4px; background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
+.chat-close-btn { background: none; border: none; color: #666; cursor: pointer; padding: 4px 8px; font-size: 1.2rem; line-height: 1; transition: color 0.2s; }
+.chat-close-btn:hover { color: #f0f0f0; }
+.chat-messages { flex: 1; display: flex; flex-direction: column; gap: 10px; overflow-y: auto; padding: 16px; }
+.chat-empty { font-size: 0.85rem; color: #666; text-align: center; padding: 20px 12px; line-height: 1.6; }
+.chat-suggestions { display: flex; flex-direction: column; gap: 6px; padding: 0 16px 12px; flex-shrink: 0; }
+.chat-suggestion-btn { background: #0a0a0a; border: 1px solid #2a2a2a; color: #aaa; border-radius: 8px; padding: 8px 12px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.8rem; cursor: pointer; text-align: left; transition: border-color 0.2s, color 0.2s; }
+.chat-suggestion-btn:hover { border-color: #f97316; color: #f0f0f0; }
+.chat-message { padding: 10px 13px; border-radius: 10px; font-size: 0.86rem; line-height: 1.55; max-width: 88%; word-wrap: break-word; }
+.chat-message.user { background: rgba(249,115,22,0.12); border: 1px solid rgba(249,115,22,0.25); color: #f0f0f0; align-self: flex-end; }
+.chat-message.assistant { background: #0a0a0a; border: 1px solid #2a2a2a; color: #d4d4d4; align-self: flex-start; white-space: pre-wrap; }
 .chat-message.thinking { color: #777; font-style: italic; }
-.chat-input-row { display: flex; gap: 8px; }
-.chat-input { flex: 1; background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 11px 14px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.9rem; color: #f0f0f0; outline: none; transition: border-color 0.2s; resize: none; }
+.chat-input-row { display: flex; gap: 8px; padding: 12px 16px 12px; border-top: 1px solid #2a2a2a; flex-shrink: 0; }
+.chat-input { flex: 1; background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 10px 12px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.88rem; color: #f0f0f0; outline: none; transition: border-color 0.2s; resize: none; }
 .chat-input:focus { border-color: #f97316; }
 .chat-input:disabled { opacity: 0.5; cursor: not-allowed; }
-.chat-send-btn { background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 0 18px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+.chat-send-btn { background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 0 14px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.85rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
 .chat-send-btn:hover { opacity: 0.88; }
 .chat-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
-.chat-disclaimer { font-size: 0.74rem; color: #555; text-align: center; margin-top: 10px; }
-.chat-locked { background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; padding: 28px 24px; margin-bottom: 12px; text-align: center; }
-.chat-locked-icon { font-size: 1.6rem; margin-bottom: 10px; }
-.chat-locked h3 { font-size: 1rem; font-weight: 600; color: #f0f0f0; margin-bottom: 6px; }
-.chat-locked p { font-size: 0.85rem; color: #888; line-height: 1.6; margin-bottom: 16px; max-width: 460px; margin-left: auto; margin-right: auto; }
-.chat-locked .upgrade-link { display: inline-block; background: #f97316; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-size: 0.88rem; font-weight: 600; transition: opacity 0.2s; }
-.chat-locked .upgrade-link:hover { opacity: 0.88; }
+.chat-disclaimer { font-size: 0.7rem; color: #555; text-align: center; padding: 0 16px 12px; flex-shrink: 0; }
+
+/* Locked-state widget content */
+.chat-locked-content { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 24px; text-align: center; gap: 10px; }
+.chat-locked-icon { font-size: 1.8rem; }
+.chat-locked-content h3 { font-size: 1rem; font-weight: 600; color: #f0f0f0; }
+.chat-locked-content p { font-size: 0.85rem; color: #888; line-height: 1.6; max-width: 320px; }
+.chat-locked-content .upgrade-link { display: inline-block; background: #f97316; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-size: 0.85rem; font-weight: 600; transition: opacity 0.2s; margin-top: 6px; }
+.chat-locked-content .upgrade-link:hover { opacity: 0.88; }
+
+@media (max-width: 600px) {
+  .chat-window { right: 12px; left: 12px; width: auto; bottom: 86px; height: calc(100vh - 110px); }
+  .chat-fab { bottom: 16px; right: 16px; }
+}
 @media print {
 * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 body { background: #fff !important; color: #000 !important; }
-nav, footer, .plan-banner, .upsell-banner, .btn-reset, .btn-print, .btn-actions, #auth-gate, .tabs, .chat-panel, .chat-locked { display: none !important; }
+nav, footer, .plan-banner, .upsell-banner, .btn-reset, .btn-print, .btn-send, .btn-actions, #auth-gate, .tabs, .chat-fab, .chat-window, .modal-overlay { display: none !important; }
 main { max-width: 100%; padding: 0; }
 .results { display: block !important; }
 .results-header { border-bottom: 2px solid #000; margin-bottom: 20px; padding-bottom: 12px; }
@@ -242,7 +324,7 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
 <nav>
   <a href="index.html" class="logo">Clause<span>Check</span></a>
   <div class="nav-right">
-    <span class="nav-version">v4.3</span>
+    <span class="nav-version">v4.5</span>
     <a href="dashboard.html" class="nav-link">Account</a>
     <span class="nav-user" id="nav-user"></span>
     <button class="nav-signout" onclick="signOut()">Sign out</button>
@@ -269,6 +351,14 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
         <option value="Vendor/Services Agreement">Vendor / Services Agreement</option>
         <option value="Commercial Lease">Commercial Lease</option>
         <option value="Independent Contractor Agreement">Independent Contractor Agreement</option>
+        <option value="Settlement Agreement">Settlement Agreement</option>
+        <option value="Malpractice Settlement">Malpractice Settlement</option>
+        <option value="Asset Purchase Agreement">Asset Purchase Agreement</option>
+        <option value="Operating Agreement (LLC)">Operating Agreement (LLC)</option>
+        <option value="Loan Agreement / Promissory Note">Loan Agreement / Promissory Note</option>
+        <option value="Severance Agreement">Severance Agreement</option>
+        <option value="Subcontractor Agreement">Subcontractor Agreement</option>
+        <option value="Software License / SaaS Agreement">Software License / SaaS Agreement</option>
       </select>
     </div>
     <div class="plan-banner">
@@ -292,7 +382,7 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
       <p><strong>Scanned PDF detected.</strong> This document will be converted to text before analysis. Expect 10&#8211;20 additional seconds.</p>
     </div>
     <button class="btn-analyze" id="analyze-btn" onclick="currentMode === 'playbook' ? analyzePlaybook() : analyzeContract()">Analyze Contract</button>
-    <p class="btn-note">Your contract is never stored. Analysis takes under 60 seconds.</p>
+    <p class="btn-note">Your contract text is never stored. Analysis takes under 60 seconds.</p>
     <div class="error-msg" id="error-msg"></div>
     <div class="limit-banner" id="limit-banner">
       <h3>Monthly limit reached</h3>
@@ -342,28 +432,16 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
       </table>
     </div>
 
-    <!-- Chat: Pro -->
-    <div class="chat-panel" id="chat-panel" style="display:none;">
-      <div class="chat-header">
-        <span class="chat-title">Ask follow-up questions</span>
-        <span class="chat-pro-badge">Pro</span>
-      </div>
-      <div class="chat-messages" id="chat-messages">
-        <div class="chat-empty">Ask anything about this contract &mdash; specific clauses, what a term means in practice, or how a provision compares to standard.</div>
-      </div>
-      <div class="chat-input-row">
-        <input type="text" class="chat-input" id="chat-input" placeholder="e.g. What does the indemnification clause actually require?" onkeydown="if(event.key==='Enter'){sendChatMessage();}">
-        <button class="chat-send-btn" id="chat-send-btn" onclick="sendChatMessage()">Send</button>
-      </div>
-      <p class="chat-disclaimer">Not legal advice &mdash; this assistant explains what the contract says.</p>
+    <!-- Pro: Jurisdiction-specific concerns -->
+    <div class="card" id="juris-card" style="display:none;">
+      <div class="card-label">Jurisdiction-specific concerns</div>
+      <div id="juris-list"></div>
     </div>
 
-    <!-- Chat: locked for non-Pro -->
-    <div class="chat-locked" id="chat-locked" style="display:none;">
-      <div class="chat-locked-icon">&#128274;</div>
-      <h3>Ask follow-up questions about this contract</h3>
-      <p>Pro subscribers can chat with an AI assistant about specific clauses, terms, and what they mean in practice. Available on the Pro plan.</p>
-      <a href="dashboard.html" class="upgrade-link">Upgrade to Pro &#8594;</a>
+    <!-- Pro: Redline suggestions -->
+    <div class="card" id="redline-card" style="display:none;">
+      <div class="card-label">Suggested redlines</div>
+      <div id="redline-list"></div>
     </div>
 
     <div class="upsell-banner" id="upsell-banner">
@@ -378,6 +456,7 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
       <div style="font-size: 11px; color: #777; margin-bottom: 16px;">AI-powered contract review &nbsp;&middot;&nbsp; clausecheck.conduitlab.ai &nbsp;&middot;&nbsp; Not legal advice</div>
     </div>
     <div class="btn-actions">
+      <button class="btn-send" onclick="openSendModal()" id="send-btn-standard">&#9993;&nbsp; Send to Client</button>
       <button class="btn-reset" onclick="reset()">&larr; Review another contract</button>
       <button class="btn-print" onclick="printReport()">&#128438; Print / Save PDF</button>
     </div>
@@ -411,31 +490,22 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
       </table>
     </div>
 
-    <!-- Chat: Pro (playbook) -->
-    <div class="chat-panel" id="playbook-chat-panel" style="display:none;">
-      <div class="chat-header">
-        <span class="chat-title">Ask follow-up questions</span>
-        <span class="chat-pro-badge">Pro</span>
-      </div>
-      <div class="chat-messages" id="playbook-chat-messages">
-        <div class="chat-empty">Ask anything about this contract &mdash; specific clauses, what a term means in practice, or how a provision compares to standard.</div>
-      </div>
-      <div class="chat-input-row">
-        <input type="text" class="chat-input" id="playbook-chat-input" placeholder="e.g. What does the indemnification clause actually require?" onkeydown="if(event.key==='Enter'){sendChatMessage(true);}">
-        <button class="chat-send-btn" id="playbook-chat-send-btn" onclick="sendChatMessage(true)">Send</button>
-      </div>
-      <p class="chat-disclaimer">Not legal advice &mdash; this assistant explains what the contract says.</p>
+    <!-- Pro: Jurisdiction-specific concerns -->
+    <div class="card" id="playbook-juris-card" style="display:none;">
+      <div class="card-label">Jurisdiction-specific concerns</div>
+      <div id="playbook-juris-list"></div>
     </div>
 
-    <!-- Chat: locked (playbook) -->
-    <div class="chat-locked" id="playbook-chat-locked" style="display:none;">
-      <div class="chat-locked-icon">&#128274;</div>
-      <h3>Ask follow-up questions about this contract</h3>
-      <p>Pro subscribers can chat with an AI assistant about specific clauses, terms, and what they mean in practice. Available on the Pro plan.</p>
-      <a href="dashboard.html" class="upgrade-link">Upgrade to Pro &#8594;</a>
+    <!-- Pro: Redline suggestions -->
+    <div class="card" id="playbook-redline-card" style="display:none;">
+      <div class="card-label">Suggested redlines</div>
+      <div id="playbook-redline-list"></div>
     </div>
+
+    <!-- Chat lives in the floating widget at the bottom of the page -->
 
     <div class="btn-actions">
+      <button class="btn-send" onclick="openSendModal()" id="send-btn-playbook">&#9993;&nbsp; Send to Client</button>
       <button class="btn-reset" onclick="reset()">&larr; Review another contract</button>
       <button class="btn-print" onclick="printReport()">&#128438; Print / Save PDF</button>
     </div>
@@ -450,7 +520,101 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
   </div>
 </main>
 
-<footer>&copy; 2026 ClauseCheck &nbsp;&middot;&nbsp; Built for small law firms &nbsp;&middot;&nbsp; v4.3 &nbsp;&middot;&nbsp; <a href="terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="/cdn-cgi/l/email-protection#8de1e8eaece1cdeee2e3e9f8e4f9e1ecefa3ece4">Feedback</a></footer>
+<!-- Floating chat widget (appears only after a contract is analyzed) -->
+<button class="chat-fab" id="chat-fab" onclick="toggleChatWindow()" aria-label="Open contract chat">
+  <svg viewBox="0 0 24 24" aria-hidden="true">
+    <path d="M21 11.5a8.38 8.38 0 0 1-.9 3.8 8.5 8.5 0 0 1-7.6 4.7 8.38 8.38 0 0 1-3.8-.9L3 21l1.9-5.7a8.38 8.38 0 0 1-.9-3.8 8.5 8.5 0 0 1 4.7-7.6 8.38 8.38 0 0 1 3.8-.9h.5a8.48 8.48 0 0 1 8 8v.5z"/>
+  </svg>
+  <span class="fab-badge" id="fab-badge">Pro</span>
+</button>
+
+<div class="chat-window" id="chat-window" role="dialog" aria-label="Contract chat">
+  <div class="chat-header">
+    <div class="chat-header-left">
+      <span class="chat-title">Ask about this contract</span>
+      <span class="chat-pro-badge">Pro</span>
+    </div>
+    <button class="chat-close-btn" onclick="toggleChatWindow()" aria-label="Close chat">&times;</button>
+  </div>
+
+  <!-- Active state (Pro) -->
+  <div id="chat-active" style="display:none; flex:1; display:flex; flex-direction:column; min-height:0;">
+    <div class="chat-messages" id="chat-messages">
+      <div class="chat-empty" id="chat-empty">Ask anything about this contract &mdash; specific clauses, what a term means in practice, or how a provision compares to standard.</div>
+    </div>
+    <div class="chat-suggestions" id="chat-suggestions">
+      <button class="chat-suggestion-btn" onclick="startEmailDraft()">&#9993; Draft an email to my client</button>
+      <button class="chat-suggestion-btn" onclick="usePromptSuggestion('What are the most important terms I should negotiate before signing?')">What should I negotiate before signing?</button>
+      <button class="chat-suggestion-btn" onclick="usePromptSuggestion('What does the indemnification clause actually require me to do?')">Explain the indemnification clause</button>
+    </div>
+    <div class="chat-input-row">
+      <input type="text" class="chat-input" id="chat-input" placeholder="Ask about the contract..." onkeydown="if(event.key==='Enter'){sendChatMessage();}">
+      <button class="chat-send-btn" id="chat-send-btn" onclick="sendChatMessage()">Send</button>
+    </div>
+    <p class="chat-disclaimer">Not legal advice &mdash; this assistant explains what the contract says.</p>
+  </div>
+
+  <!-- Locked state (Standard / trial) -->
+  <div class="chat-locked-content" id="chat-locked" style="display:none;">
+    <div class="chat-locked-icon">&#128274;</div>
+    <h3>Chat with your contract</h3>
+    <p>Pro subscribers can ask follow-up questions about any contract — specific clauses, what a term means in practice, or what to watch out for.</p>
+    <a href="dashboard.html" class="upgrade-link">Upgrade to Pro &rarr;</a>
+  </div>
+</div>
+
+<!-- Send to Client modal -->
+<div class="modal-overlay" id="send-modal" onclick="if(event.target===this)closeSendModal()">
+  <div class="modal-card">
+    <div class="modal-header">
+      <span class="modal-title">Send review to client</span>
+      <button class="modal-close" onclick="closeSendModal()" aria-label="Close">&times;</button>
+    </div>
+
+    <!-- Pro: compose form -->
+    <div id="send-modal-active" style="display:none; flex:1; overflow:hidden; flex-direction:column;">
+      <div class="modal-body">
+        <div class="modal-form-group">
+          <label class="modal-form-label">Client name (optional)</label>
+          <input type="text" class="modal-input" id="send-recipient-name" placeholder="Jane Smith">
+        </div>
+        <div class="modal-form-group">
+          <label class="modal-form-label">Client email</label>
+          <input type="email" class="modal-input" id="send-recipient-email" placeholder="client@example.com">
+        </div>
+        <div class="modal-form-group">
+          <label class="modal-form-label">Subject</label>
+          <input type="text" class="modal-input" id="send-subject" placeholder="Contract review">
+        </div>
+        <div class="modal-form-group">
+          <label class="modal-form-label">Your recommendations &amp; notes</label>
+          <textarea class="modal-textarea" id="send-message" placeholder="Add your professional assessment and recommendations here. This message appears at the top of the email, before the analysis findings."></textarea>
+          <p class="modal-help">Your message appears at the top of the email above the contract findings. Replies from your client will route to your email address.</p>
+        </div>
+        <div class="modal-success" id="send-success">Email sent successfully.</div>
+        <div class="modal-error" id="send-error"></div>
+      </div>
+      <div class="modal-footer">
+        <button class="btn-modal-secondary" onclick="closeSendModal()">Cancel</button>
+        <button class="btn-modal-primary" id="send-confirm-btn" onclick="sendClientEmail()">Send email</button>
+      </div>
+    </div>
+
+    <!-- Standard/trial: locked state -->
+    <div id="send-modal-locked" style="display:none;">
+      <div class="modal-body">
+        <div class="modal-locked">
+          <div class="modal-locked-icon">&#9993;</div>
+          <h3>Branded client emails are a Pro feature</h3>
+          <p>Send polished, white-labeled contract reviews to your clients with your firm's logo, signature, and contact information. Your clients see professional correspondence; replies route directly to your email.</p>
+          <a href="dashboard.html" class="upgrade-link">Upgrade to Pro &rarr;</a>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<footer>&copy; 2026 ClauseCheck &nbsp;&middot;&nbsp; Built for small law firms &nbsp;&middot;&nbsp; v4.5 &nbsp;&middot;&nbsp; <a href="terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="/cdn-cgi/l/email-protection#8de1e8eaece1cdeee2e3e9f8e4f9e1ecefa3ece4">Feedback</a></footer>
 
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
@@ -471,6 +635,9 @@ let CHAR_LIMIT     = 100000;
 // State for chat — populated after a successful analysis
 let lastContractText = '';
 let chatHistory      = [];
+// Cached analysis result + filename for the Send to Client modal and chatbot
+let lastAnalysisResult = null;
+let lastContractName   = '';
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -558,6 +725,8 @@ function switchTab(tab) {
   document.getElementById('tab-review').classList.toggle('active', tab === 'review');
   document.getElementById('tab-history').classList.toggle('active', tab === 'history');
 
+  const fab = document.getElementById('chat-fab');
+
   if (tab === 'review') {
     // Show whichever review surface was active; default to upload
     const resultsVisible = document.getElementById('results').style.display === 'block';
@@ -566,12 +735,19 @@ function switchTab(tab) {
     if (!resultsVisible && !playbookVisible) {
       document.getElementById('upload-form').style.display = 'block';
     }
+    // Restore FAB if we have an analysis loaded
+    if ((resultsVisible || playbookVisible) && lastContractText) {
+      fab.style.display = 'flex';
+    }
   } else {
     document.getElementById('upload-form').style.display = 'none';
     document.getElementById('results').style.display = 'none';
     document.getElementById('playbook-results').style.display = 'none';
     document.getElementById('loading').style.display = 'none';
     document.getElementById('history-panel').style.display = 'block';
+    // Hide chat widget on history tab — chat is contract-specific
+    fab.style.display = 'none';
+    document.getElementById('chat-window').classList.remove('open');
     loadHistory();
     if (window.posthog) posthog.capture('history_viewed');
   }
@@ -874,21 +1050,31 @@ async function analyzePlaybook() {
 
 // ── Render functions ──────────────────────────────────────────
 function renderResults(data) {
+  // Cache the result for the Send to Client modal and the chatbot's email-draft flow
+  lastAnalysisResult = data;
+  // Take filename from the upload if available, else generic
+  lastContractName = (fileInput.files && fileInput.files[0]) ? fileInput.files[0].name : 'Contract';
   document.getElementById('loading').style.display = 'none';
   document.getElementById('results').style.display = 'block';
   const badge = document.getElementById('risk-badge');
   badge.textContent = data.overall_risk + ' Risk';
   badge.className = 'risk-badge risk-' + data.overall_risk.toLowerCase();
   document.getElementById('summary-text').textContent = data.summary;
-  document.getElementById('clauses-list').innerHTML = data.flagged_clauses.map(c =>
-    `<div class="clause-item ${c.severity.toLowerCase()}">
+  document.getElementById('clauses-list').innerHTML = data.flagged_clauses.map(c => {
+    const sev = c.severity.toLowerCase();
+    // Pro analyses include verbatim_quote and location_hint; render inline if present
+    const quoteHtml = c.verbatim_quote ? `<div class="clause-quote">${escapeHtml(c.verbatim_quote)}</div>` : '';
+    const locationHtml = c.location_hint ? `<div class="clause-location">&#128205; ${escapeHtml(c.location_hint)}</div>` : '';
+    return `<div class="clause-item ${sev}">
       <div class="clause-header">
         <span class="clause-title">${escapeHtml(c.title)}</span>
-        <span class="sev-tag sev-${c.severity.toLowerCase()}">${c.severity}</span>
+        <span class="sev-tag sev-${sev}">${c.severity}</span>
       </div>
       <div class="clause-explanation">${escapeHtml(c.explanation)}</div>
-    </div>`
-  ).join('');
+      ${quoteHtml}
+      ${locationHtml}
+    </div>`;
+  }).join('');
   document.getElementById('terms-grid').innerHTML = data.key_terms.map(t =>
     `<div class="term-item">
       <div class="term-label">${escapeHtml(t.label)}</div>
@@ -902,10 +1088,15 @@ function renderResults(data) {
     }).join('');
     document.getElementById('breach-card').style.display = 'block';
   }
+  // Pro-only: jurisdiction issues + redlines (will be empty arrays for Standard)
+  renderJurisdictionIssues('juris-card', 'juris-list', data.jurisdiction_issues);
+  renderRedlines('redline-card', 'redline-list', data.redline_suggestions);
   setupChatVisibility(false);
 }
 
 function renderPlaybookResults(data) {
+  lastAnalysisResult = data;
+  lastContractName = (fileInput.files && fileInput.files[0]) ? fileInput.files[0].name : 'Contract';
   document.getElementById('loading').style.display = 'none';
   document.getElementById('playbook-results').style.display = 'block';
   document.getElementById('playbook-title').textContent = data.contract_type + ' — Playbook Review';
@@ -938,51 +1129,135 @@ function renderPlaybookResults(data) {
     }).join('');
     document.getElementById('playbook-breach-card').style.display = 'block';
   }
+  // Pro-only: jurisdiction issues + redlines
+  renderJurisdictionIssues('playbook-juris-card', 'playbook-juris-list', data.jurisdiction_issues);
+  renderRedlines('playbook-redline-card', 'playbook-redline-list', data.redline_suggestions);
   setupChatVisibility(true);
 }
 
-// ── Chat ──────────────────────────────────────────────────────
-function setupChatVisibility(isPlaybook) {
-  const isPro = currentTier === 'pro';
-  const panelId  = isPlaybook ? 'playbook-chat-panel'  : 'chat-panel';
-  const lockedId = isPlaybook ? 'playbook-chat-locked' : 'chat-locked';
-  document.getElementById(panelId).style.display  = isPro  ? 'block' : 'none';
-  document.getElementById(lockedId).style.display = !isPro ? 'block' : 'none';
-  // Reset visible chat thread to its empty state
-  const messagesId = isPlaybook ? 'playbook-chat-messages' : 'chat-messages';
-  document.getElementById(messagesId).innerHTML = '<div class="chat-empty">Ask anything about this contract &mdash; specific clauses, what a term means in practice, or how a provision compares to standard.</div>';
-  const inputId = isPlaybook ? 'playbook-chat-input' : 'chat-input';
-  document.getElementById(inputId).value = '';
+// Shared renderers for the two Pro-only sections
+function renderJurisdictionIssues(cardId, listId, issues) {
+  const card = document.getElementById(cardId);
+  if (!issues || !Array.isArray(issues) || issues.length === 0) {
+    card.style.display = 'none';
+    return;
+  }
+  document.getElementById(listId).innerHTML = issues.map(j => {
+    const sev = String(j.severity || 'low').toLowerCase();
+    return `<div class="juris-item ${sev}">
+      <div class="juris-header">
+        <span class="juris-state">${escapeHtml(j.jurisdiction || '')}</span>
+        <span class="juris-concern">${escapeHtml(j.concern || '')}</span>
+        <span class="sev-tag sev-${sev}">${escapeHtml(j.severity || '')}</span>
+      </div>
+      ${j.clause_affected ? `<div class="juris-affected">Affects: ${escapeHtml(j.clause_affected)}</div>` : ''}
+      <div class="juris-explanation">${escapeHtml(j.explanation || '')}</div>
+    </div>`;
+  }).join('');
+  card.style.display = 'block';
 }
 
-function appendChatMessage(isPlaybook, role, content, opts) {
-  const messagesId = isPlaybook ? 'playbook-chat-messages' : 'chat-messages';
-  const container = document.getElementById(messagesId);
-  // Clear empty-state placeholder if present
+function renderRedlines(cardId, listId, redlines) {
+  const card = document.getElementById(cardId);
+  if (!redlines || !Array.isArray(redlines) || redlines.length === 0) {
+    card.style.display = 'none';
+    return;
+  }
+  document.getElementById(listId).innerHTML = redlines.map(r => `
+    <div class="redline-item">
+      <div class="redline-clause">${escapeHtml(r.clause || '')}</div>
+      <div class="redline-label">Original</div>
+      <div class="redline-original">${escapeHtml(r.original_text || '')}</div>
+      <div class="redline-label">Suggested</div>
+      <div class="redline-suggested">${escapeHtml(r.suggested_text || '')}</div>
+      ${r.rationale ? `<div class="redline-rationale">${escapeHtml(r.rationale)}</div>` : ''}
+    </div>
+  `).join('');
+  card.style.display = 'block';
+}
+
+// ── Floating chat widget ──────────────────────────────────────
+function setupChatVisibility(isPlaybook) {
+  // Show the FAB; isPlaybook is unused but kept for call-site compatibility
+  const isPro = currentTier === 'pro';
+  const fab = document.getElementById('chat-fab');
+  const fabBadge = document.getElementById('fab-badge');
+  const active = document.getElementById('chat-active');
+  const locked = document.getElementById('chat-locked');
+
+  fab.style.display = 'flex';
+  fab.classList.toggle('locked', !isPro);
+  fabBadge.textContent = isPro ? 'Pro' : 'Pro';
+
+  // Configure window contents based on tier
+  active.style.display = isPro ? 'flex' : 'none';
+  locked.style.display = !isPro ? 'flex' : 'none';
+
+  // Reset visible thread + history each time a new analysis completes
+  if (isPro) {
+    document.getElementById('chat-messages').innerHTML =
+      '<div class="chat-empty" id="chat-empty">Ask anything about this contract &mdash; specific clauses, what a term means in practice, or how a provision compares to standard.</div>';
+    document.getElementById('chat-suggestions').style.display = 'flex';
+    document.getElementById('chat-input').value = '';
+  }
+  // Window starts closed
+  document.getElementById('chat-window').classList.remove('open');
+}
+
+function toggleChatWindow() {
+  const win = document.getElementById('chat-window');
+  const wasOpen = win.classList.contains('open');
+  win.classList.toggle('open');
+  if (!wasOpen) {
+    if (window.posthog) posthog.capture('chat_window_opened', { tier: currentTier });
+    if (currentTier === 'pro') {
+      setTimeout(() => { document.getElementById('chat-input').focus(); }, 50);
+    }
+  }
+}
+
+function usePromptSuggestion(text) {
+  const input = document.getElementById('chat-input');
+  input.value = text;
+  input.focus();
+}
+
+function appendChatMessage(role, content, opts) {
+  const container = document.getElementById('chat-messages');
   const empty = container.querySelector('.chat-empty');
   if (empty) empty.remove();
+  // Hide suggestion buttons after first message
+  const suggestions = document.getElementById('chat-suggestions');
+  if (suggestions) suggestions.style.display = 'none';
   const div = document.createElement('div');
   div.className = 'chat-message ' + role + (opts && opts.thinking ? ' thinking' : '');
   if (opts && opts.id) div.id = opts.id;
   div.textContent = content;
   container.appendChild(div);
+
+  // For substantial assistant replies (likely draft content), offer a quick
+  // "Use as email draft" action that pipes the reply into the Send modal.
+  if (role === 'assistant' && !(opts && opts.thinking) && content && content.length > 200) {
+    const action = document.createElement('div');
+    action.style.cssText = 'align-self:flex-start; margin-top:-4px; margin-bottom:4px;';
+    action.innerHTML = '<button onclick="useChatDraftInEmail()" style="background:none; border:none; color:#f97316; font-size:0.78rem; cursor:pointer; padding:4px 0; font-family:inherit;">&#9993; Use as email draft &rarr;</button>';
+    container.appendChild(action);
+  }
+
   container.scrollTop = container.scrollHeight;
   return div;
 }
 
-async function sendChatMessage(isPlaybook) {
-  isPlaybook = !!isPlaybook;
+async function sendChatMessage() {
   if (currentTier !== 'pro') return;
 
-  const inputId  = isPlaybook ? 'playbook-chat-input' : 'chat-input';
-  const sendId   = isPlaybook ? 'playbook-chat-send-btn' : 'chat-send-btn';
-  const inputEl  = document.getElementById(inputId);
-  const sendEl   = document.getElementById(sendId);
+  const inputEl = document.getElementById('chat-input');
+  const sendEl  = document.getElementById('chat-send-btn');
 
   const message = (inputEl.value || '').trim();
   if (!message) return;
   if (!lastContractText) {
-    appendChatMessage(isPlaybook, 'assistant', 'Contract context is missing — please re-run the analysis.');
+    appendChatMessage('assistant', 'Contract context is missing — please re-run the analysis.');
     return;
   }
 
@@ -990,9 +1265,9 @@ async function sendChatMessage(isPlaybook) {
   inputEl.disabled = true;
   sendEl.disabled = true;
 
-  appendChatMessage(isPlaybook, 'user', message);
+  appendChatMessage('user', message);
   const thinkingId = 'thinking-' + Date.now();
-  appendChatMessage(isPlaybook, 'assistant', 'Thinking...', { thinking: true, id: thinkingId });
+  appendChatMessage('assistant', 'Thinking...', { thinking: true, id: thinkingId });
 
   try {
     const { data: { session } } = await sb.auth.getSession();
@@ -1014,17 +1289,17 @@ async function sendChatMessage(isPlaybook) {
     if (thinkingEl) thinkingEl.remove();
 
     if (!res.ok || data.error) {
-      appendChatMessage(isPlaybook, 'assistant', 'Sorry — ' + (data.error || `request failed (${res.status})`));
+      appendChatMessage('assistant', 'Sorry — ' + (data.error || `request failed (${res.status})`));
       return;
     }
 
     chatHistory = Array.isArray(data.history) ? data.history : chatHistory;
-    appendChatMessage(isPlaybook, 'assistant', data.reply || '(no reply)');
-    if (window.posthog) posthog.capture('chat_message_sent', { playbook: isPlaybook });
+    appendChatMessage('assistant', data.reply || '(no reply)');
+    if (window.posthog) posthog.capture('chat_message_sent');
   } catch (err) {
     const thinkingEl = document.getElementById(thinkingId);
     if (thinkingEl) thinkingEl.remove();
-    appendChatMessage(isPlaybook, 'assistant', 'Sorry — ' + err.message);
+    appendChatMessage('assistant', 'Sorry — ' + err.message);
   } finally {
     inputEl.disabled = false;
     sendEl.disabled = false;
@@ -1044,25 +1319,166 @@ function escapeHtml(str) {
     .replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;').replace(/"/g, '&quot;');
 }
 
+// ── Send to Client modal ──────────────────────────────────────
+function openSendModal() {
+  if (!lastAnalysisResult) {
+    showError('No analysis loaded yet.');
+    return;
+  }
+  const overlay = document.getElementById('send-modal');
+  const isPro = currentTier === 'pro';
+  document.getElementById('send-modal-active').style.display = isPro ? 'flex' : 'none';
+  document.getElementById('send-modal-locked').style.display = isPro ? 'none' : 'block';
+
+  if (isPro) {
+    // Reset form state
+    document.getElementById('send-recipient-name').value = '';
+    document.getElementById('send-recipient-email').value = '';
+    document.getElementById('send-subject').value = `Contract review: ${lastContractName}`;
+    // Don't clear the message field — chatbot may have populated it
+    document.getElementById('send-success').style.display = 'none';
+    document.getElementById('send-error').style.display = 'none';
+  }
+  overlay.classList.add('open');
+  if (window.posthog) posthog.capture('send_modal_opened', { tier: currentTier });
+}
+
+function closeSendModal() {
+  document.getElementById('send-modal').classList.remove('open');
+}
+
+async function sendClientEmail() {
+  if (currentTier !== 'pro') return;
+
+  const recipientEmail = document.getElementById('send-recipient-email').value.trim();
+  const recipientName  = document.getElementById('send-recipient-name').value.trim();
+  const subject        = document.getElementById('send-subject').value.trim();
+  const attorneyMessage = document.getElementById('send-message').value.trim();
+
+  const successEl = document.getElementById('send-success');
+  const errorEl   = document.getElementById('send-error');
+  const btn       = document.getElementById('send-confirm-btn');
+
+  successEl.style.display = 'none';
+  errorEl.style.display = 'none';
+
+  if (!recipientEmail || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(recipientEmail)) {
+    errorEl.textContent = 'Please enter a valid client email address.';
+    errorEl.style.display = 'block';
+    return;
+  }
+  if (!lastAnalysisResult) {
+    errorEl.textContent = 'No analysis to send.';
+    errorEl.style.display = 'block';
+    return;
+  }
+
+  btn.disabled = true;
+  btn.textContent = 'Sending...';
+
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    currentSession = session;
+
+    const res = await fetch(WORKER_URL + '/api/send-client-email', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentSession.access_token}` },
+      body: JSON.stringify({
+        recipientEmail,
+        recipientName,
+        subject,
+        attorneyMessage,
+        analysis: lastAnalysisResult,
+        contractText: lastContractText, // server uses this only to generate the linked-findings HTML attachment in-memory; not stored
+        contractName: lastContractName,
+      })
+    });
+    const data = await res.json();
+
+    if (!res.ok || data.error) {
+      errorEl.textContent = data.error || `Send failed (${res.status}).`;
+      errorEl.style.display = 'block';
+      return;
+    }
+
+    successEl.textContent = `Email sent to ${recipientEmail}. Replies will route to your email address.`;
+    successEl.style.display = 'block';
+    if (window.posthog) posthog.capture('client_email_sent');
+    // Auto-close after a moment
+    setTimeout(() => { closeSendModal(); }, 2200);
+  } catch (err) {
+    errorEl.textContent = 'Send failed: ' + err.message;
+    errorEl.style.display = 'block';
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Send email';
+  }
+}
+
+// ── Chatbot: draft client email ──────────────────────────────
+// When the lawyer clicks "Draft email to client" suggestion in the chat,
+// the chatbot asks 2-3 quick questions then produces a draft. The draft
+// then populates the Send modal's message field for review.
+function startEmailDraft() {
+  if (currentTier !== 'pro') return;
+  // Open the chat window if it's not open
+  const win = document.getElementById('chat-window');
+  if (!win.classList.contains('open')) win.classList.add('open');
+
+  // Hide the suggestion chips after kicking off
+  const suggestions = document.getElementById('chat-suggestions');
+  if (suggestions) suggestions.style.display = 'none';
+
+  // Send a special message that the worker recognizes as a draft request.
+  // We do this by injecting a user-side message and routing through chat.
+  const seedMessage = "Help me draft a short email summary of this contract review to send to my client. First ask me 2-3 brief questions to gather what I want to emphasize (overall recommendation, key clauses to highlight, any deadlines). Then produce a polished draft message I can paste into a client email. Format the draft as plain text suitable for an email body, no markdown.";
+  const inputEl = document.getElementById('chat-input');
+  inputEl.value = seedMessage;
+  sendChatMessage();
+  if (window.posthog) posthog.capture('chat_email_draft_started');
+}
+
+// Helper exposed so the chat can offer "Use this draft" — it grabs the
+// last assistant reply, finds the draft (heuristically: longest paragraph
+// in the last assistant message), and pastes into the Send modal.
+function useChatDraftInEmail() {
+  const messages = document.querySelectorAll('#chat-messages .chat-message.assistant');
+  if (messages.length === 0) {
+    alert('No chat messages yet to use as a draft.');
+    return;
+  }
+  // Take the most recent assistant message
+  const lastAssistant = messages[messages.length - 1].textContent;
+  document.getElementById('send-message').value = lastAssistant.trim();
+  openSendModal();
+  if (window.posthog) posthog.capture('chat_draft_used_in_email');
+}
+
 function reset() {
   document.getElementById('results').style.display = 'none';
   document.getElementById('playbook-results').style.display = 'none';
   document.getElementById('breach-card').style.display = 'none';
   document.getElementById('playbook-breach-card').style.display = 'none';
+  document.getElementById('juris-card').style.display = 'none';
+  document.getElementById('redline-card').style.display = 'none';
+  document.getElementById('playbook-juris-card').style.display = 'none';
+  document.getElementById('playbook-redline-card').style.display = 'none';
   document.getElementById('upload-form').style.display = 'block';
   document.getElementById('error-msg').style.display = 'none';
   document.getElementById('limit-banner').style.display = 'none';
   document.getElementById('file-name').style.display = 'none';
-  document.getElementById('chat-panel').style.display = 'none';
-  document.getElementById('chat-locked').style.display = 'none';
-  document.getElementById('playbook-chat-panel').style.display = 'none';
-  document.getElementById('playbook-chat-locked').style.display = 'none';
+  // Hide the floating chat widget and close the window
+  document.getElementById('chat-fab').style.display = 'none';
+  document.getElementById('chat-window').classList.remove('open');
   fileWarningEl.style.display = 'none';
   processingNote.style.display = 'none';
   hideOcrStatus();
   fileContent  = '';
   rawPdfBase64 = null;
   lastContractText = '';
+  lastAnalysisResult = null;
+  lastContractName = '';
   chatHistory = [];
   fileInput.value = '';
   analyzeBtn.disabled = false;
