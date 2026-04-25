@@ -33,6 +33,11 @@ nav { padding: 20px 40px; display: flex; justify-content: space-between; align-i
 .nav-signout { font-size: 0.8rem; color: #fff; background: none; border: none; cursor: pointer; padding: 0; font-family: 'DM Sans', system-ui, sans-serif; transition: color 0.2s; }
 .nav-signout:hover { color: #f97316; }
 main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
+/* Tab nav */
+.tabs { display: flex; gap: 4px; background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 4px; margin-bottom: 20px; }
+.tab-btn { flex: 1; padding: 10px; text-align: center; font-size: 0.85rem; font-weight: 500; color: #555; cursor: pointer; border-radius: 7px; border: none; background: none; font-family: 'DM Sans', system-ui, sans-serif; transition: all 0.2s; }
+.tab-btn.active { background: #1e1e1e; color: #f0f0f0; border: 1px solid #2a2a2a; }
+.tab-btn:hover:not(.active) { color: #aaa; }
 .plan-banner { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 14px 20px; margin-bottom: 20px; display: flex; align-items: center; justify-content: space-between; flex-wrap: wrap; gap: 10px; }
 .plan-info { font-size: 0.85rem; color: #aaa; }
 .plan-info strong { color: #f0f0f0; }
@@ -54,6 +59,12 @@ main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
 .btn-analyze:disabled { opacity: 0.4; cursor: not-allowed; }
 .btn-note { text-align: center; font-size: 0.8rem; color: #666; }
 .error-msg { background: rgba(239,68,68,0.08); border: 1px solid rgba(239,68,68,0.25); color: #f87171; border-radius: 8px; padding: 14px 18px; font-size: 0.875rem; margin-top: 14px; display: none; }
+/* Limit-reached banner */
+.limit-banner { background: rgba(249,115,22,0.06); border: 1px solid rgba(249,115,22,0.25); border-radius: 10px; padding: 20px; margin-top: 14px; display: none; }
+.limit-banner h3 { font-size: 1rem; font-weight: 600; color: #fb923c; margin-bottom: 6px; }
+.limit-banner p { font-size: 0.88rem; color: #d4d4d4; line-height: 1.6; margin-bottom: 14px; }
+.limit-banner .upgrade-link { display: inline-block; background: #f97316; color: #fff; text-decoration: none; padding: 10px 18px; border-radius: 8px; font-size: 0.88rem; font-weight: 600; transition: opacity 0.2s; }
+.limit-banner .upgrade-link:hover { opacity: 0.88; }
 .loading { display: none; text-align: center; padding: 80px 24px; }
 .loading-spinner { width: 36px; height: 36px; border: 2px solid #2a2a2a; border-top-color: #f97316; border-radius: 50%; animation: spin 0.8s linear infinite; margin: 0 auto 20px; }
 @keyframes spin { to { transform: rotate(360deg); } }
@@ -133,10 +144,49 @@ main { max-width: 720px; margin: 0 auto; padding: 60px 24px 80px; }
 .provision-finding { font-size: 0.84rem; color: #d4d4d4; line-height: 1.6; margin-bottom: 6px; }
 .provision-consequence { font-size: 0.82rem; color: #888; line-height: 1.6; margin-bottom: 8px; }
 .provision-quote { font-size: 0.78rem; color: #666; font-style: italic; border-left: 2px solid #333; padding-left: 10px; margin-top: 8px; line-height: 1.6; }
+/* History panel */
+.history-panel { display: none; }
+.history-panel h2 { font-size: 1.4rem; font-weight: 600; letter-spacing: -0.02em; color: #fff; margin-bottom: 20px; }
+.history-list { display: flex; flex-direction: column; gap: 10px; }
+.history-item { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 16px 18px; transition: border-color 0.2s; }
+.history-item:hover { border-color: #3a3a3a; }
+.history-top { display: flex; align-items: center; justify-content: space-between; gap: 10px; margin-bottom: 8px; flex-wrap: wrap; }
+.history-file { font-size: 0.9rem; font-weight: 600; color: #f0f0f0; }
+.history-meta { display: flex; align-items: center; gap: 10px; }
+.history-date { font-size: 0.78rem; color: #666; }
+.history-summary { font-size: 0.84rem; color: #aaa; line-height: 1.6; }
+.history-empty { background: #141414; border: 1px solid #2a2a2a; border-radius: 10px; padding: 40px 20px; text-align: center; color: #666; font-size: 0.88rem; }
+.history-empty a { color: #f97316; text-decoration: none; }
+.history-loading { text-align: center; padding: 40px 20px; color: #666; font-size: 0.88rem; }
+/* Chat panel */
+.chat-panel { background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px; margin-bottom: 12px; }
+.chat-header { display: flex; align-items: center; justify-content: space-between; margin-bottom: 14px; padding-bottom: 14px; border-bottom: 1px solid #2a2a2a; }
+.chat-title { font-size: 0.9rem; font-weight: 600; color: #f0f0f0; }
+.chat-pro-badge { font-size: 0.68rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.06em; padding: 2px 8px; border-radius: 4px; background: rgba(34,197,94,0.12); color: #4ade80; border: 1px solid rgba(34,197,94,0.25); }
+.chat-messages { display: flex; flex-direction: column; gap: 10px; max-height: 400px; overflow-y: auto; padding: 4px; margin-bottom: 14px; }
+.chat-empty { font-size: 0.85rem; color: #666; text-align: center; padding: 20px; }
+.chat-message { padding: 10px 14px; border-radius: 10px; font-size: 0.88rem; line-height: 1.6; max-width: 88%; word-wrap: break-word; }
+.chat-message.user { background: rgba(249,115,22,0.1); border: 1px solid rgba(249,115,22,0.2); color: #f0f0f0; align-self: flex-end; }
+.chat-message.assistant { background: #0a0a0a; border: 1px solid #2a2a2a; color: #d4d4d4; align-self: flex-start; }
+.chat-message.thinking { color: #777; font-style: italic; }
+.chat-input-row { display: flex; gap: 8px; }
+.chat-input { flex: 1; background: #0a0a0a; border: 1px solid #2a2a2a; border-radius: 8px; padding: 11px 14px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.9rem; color: #f0f0f0; outline: none; transition: border-color 0.2s; resize: none; }
+.chat-input:focus { border-color: #f97316; }
+.chat-input:disabled { opacity: 0.5; cursor: not-allowed; }
+.chat-send-btn { background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 0 18px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.88rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s; }
+.chat-send-btn:hover { opacity: 0.88; }
+.chat-send-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+.chat-disclaimer { font-size: 0.74rem; color: #555; text-align: center; margin-top: 10px; }
+.chat-locked { background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; padding: 28px 24px; margin-bottom: 12px; text-align: center; }
+.chat-locked-icon { font-size: 1.6rem; margin-bottom: 10px; }
+.chat-locked h3 { font-size: 1rem; font-weight: 600; color: #f0f0f0; margin-bottom: 6px; }
+.chat-locked p { font-size: 0.85rem; color: #888; line-height: 1.6; margin-bottom: 16px; max-width: 460px; margin-left: auto; margin-right: auto; }
+.chat-locked .upgrade-link { display: inline-block; background: #f97316; color: #fff; text-decoration: none; padding: 10px 20px; border-radius: 8px; font-size: 0.88rem; font-weight: 600; transition: opacity 0.2s; }
+.chat-locked .upgrade-link:hover { opacity: 0.88; }
 @media print {
 * { -webkit-print-color-adjust: exact; print-color-adjust: exact; }
 body { background: #fff !important; color: #000 !important; }
-nav, footer, .plan-banner, .upsell-banner, .btn-reset, .btn-print, .btn-actions, #auth-gate { display: none !important; }
+nav, footer, .plan-banner, .upsell-banner, .btn-reset, .btn-print, .btn-actions, #auth-gate, .tabs, .chat-panel, .chat-locked { display: none !important; }
 main { max-width: 100%; padding: 0; }
 .results { display: block !important; }
 .results-header { border-bottom: 2px solid #000; margin-bottom: 20px; padding-bottom: 12px; }
@@ -192,7 +242,7 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
 <nav>
   <a href="index.html" class="logo">Clause<span>Check</span></a>
   <div class="nav-right">
-    <span class="nav-version">v4.2</span>
+    <span class="nav-version">v4.3</span>
     <a href="dashboard.html" class="nav-link">Account</a>
     <span class="nav-user" id="nav-user"></span>
     <button class="nav-signout" onclick="signOut()">Sign out</button>
@@ -200,6 +250,12 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
 </nav>
 
 <main>
+  <!-- Top-level tabs: Review vs History -->
+  <div class="tabs" id="top-tabs">
+    <button class="tab-btn active" id="tab-review" onclick="switchTab('review')">New Review</button>
+    <button class="tab-btn" id="tab-history" onclick="switchTab('history')">History</button>
+  </div>
+
   <div id="upload-form">
     <div class="mode-toggle">
       <button class="mode-btn active" id="mode-standard" onclick="switchMode('standard')">Standard Review</button>
@@ -238,6 +294,11 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
     <button class="btn-analyze" id="analyze-btn" onclick="currentMode === 'playbook' ? analyzePlaybook() : analyzeContract()">Analyze Contract</button>
     <p class="btn-note">Your contract is never stored. Analysis takes under 60 seconds.</p>
     <div class="error-msg" id="error-msg"></div>
+    <div class="limit-banner" id="limit-banner">
+      <h3>Monthly limit reached</h3>
+      <p id="limit-banner-text">You've used all your contract reviews for this month. Upgrade your plan to continue reviewing contracts.</p>
+      <a href="dashboard.html" class="upgrade-link" id="limit-upgrade-link">Upgrade your plan &#8594;</a>
+    </div>
   </div>
 
   <div class="loading" id="loading">
@@ -280,6 +341,31 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
         <tbody id="breach-tbody"></tbody>
       </table>
     </div>
+
+    <!-- Chat: Pro -->
+    <div class="chat-panel" id="chat-panel" style="display:none;">
+      <div class="chat-header">
+        <span class="chat-title">Ask follow-up questions</span>
+        <span class="chat-pro-badge">Pro</span>
+      </div>
+      <div class="chat-messages" id="chat-messages">
+        <div class="chat-empty">Ask anything about this contract &mdash; specific clauses, what a term means in practice, or how a provision compares to standard.</div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" class="chat-input" id="chat-input" placeholder="e.g. What does the indemnification clause actually require?" onkeydown="if(event.key==='Enter'){sendChatMessage();}">
+        <button class="chat-send-btn" id="chat-send-btn" onclick="sendChatMessage()">Send</button>
+      </div>
+      <p class="chat-disclaimer">Not legal advice &mdash; this assistant explains what the contract says.</p>
+    </div>
+
+    <!-- Chat: locked for non-Pro -->
+    <div class="chat-locked" id="chat-locked" style="display:none;">
+      <div class="chat-locked-icon">&#128274;</div>
+      <h3>Ask follow-up questions about this contract</h3>
+      <p>Pro subscribers can chat with an AI assistant about specific clauses, terms, and what they mean in practice. Available on the Pro plan.</p>
+      <a href="dashboard.html" class="upgrade-link">Upgrade to Pro &#8594;</a>
+    </div>
+
     <div class="upsell-banner" id="upsell-banner">
       <p><strong>Pro coming soon.</strong> Unlimited contract length, deeper analysis with Claude Sonnet, and priority support.</p>
       <a href="dashboard.html" class="upsell-btn">Upgrade &#8594;</a>
@@ -324,16 +410,49 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
         <tbody id="playbook-breach-tbody"></tbody>
       </table>
     </div>
+
+    <!-- Chat: Pro (playbook) -->
+    <div class="chat-panel" id="playbook-chat-panel" style="display:none;">
+      <div class="chat-header">
+        <span class="chat-title">Ask follow-up questions</span>
+        <span class="chat-pro-badge">Pro</span>
+      </div>
+      <div class="chat-messages" id="playbook-chat-messages">
+        <div class="chat-empty">Ask anything about this contract &mdash; specific clauses, what a term means in practice, or how a provision compares to standard.</div>
+      </div>
+      <div class="chat-input-row">
+        <input type="text" class="chat-input" id="playbook-chat-input" placeholder="e.g. What does the indemnification clause actually require?" onkeydown="if(event.key==='Enter'){sendChatMessage(true);}">
+        <button class="chat-send-btn" id="playbook-chat-send-btn" onclick="sendChatMessage(true)">Send</button>
+      </div>
+      <p class="chat-disclaimer">Not legal advice &mdash; this assistant explains what the contract says.</p>
+    </div>
+
+    <!-- Chat: locked (playbook) -->
+    <div class="chat-locked" id="playbook-chat-locked" style="display:none;">
+      <div class="chat-locked-icon">&#128274;</div>
+      <h3>Ask follow-up questions about this contract</h3>
+      <p>Pro subscribers can chat with an AI assistant about specific clauses, terms, and what they mean in practice. Available on the Pro plan.</p>
+      <a href="dashboard.html" class="upgrade-link">Upgrade to Pro &#8594;</a>
+    </div>
+
     <div class="btn-actions">
       <button class="btn-reset" onclick="reset()">&larr; Review another contract</button>
       <button class="btn-print" onclick="printReport()">&#128438; Print / Save PDF</button>
     </div>
   </div>
+
+  <!-- History panel -->
+  <div class="history-panel" id="history-panel">
+    <h2>Contract History</h2>
+    <div id="history-content">
+      <div class="history-loading">Loading your past analyses...</div>
+    </div>
+  </div>
 </main>
 
-<footer>&copy; 2026 ClauseCheck &nbsp;&middot;&nbsp; Built for small law firms &nbsp;&middot;&nbsp; v4.2 &nbsp;&middot;&nbsp; <a href="terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="mailto:legal@conduitlab.ai">Feedback</a></footer>
+<footer>&copy; 2026 ClauseCheck &nbsp;&middot;&nbsp; Built for small law firms &nbsp;&middot;&nbsp; v4.3 &nbsp;&middot;&nbsp; <a href="terms.html">Terms</a> &nbsp;&middot;&nbsp; <a href="privacy.html">Privacy</a> &nbsp;&middot;&nbsp; <a href="/cdn-cgi/l/email-protection#8de1e8eaece1cdeee2e3e9f8e4f9e1ecefa3ece4">Feedback</a></footer>
 
-<script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
+<script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
@@ -346,7 +465,12 @@ const { createClient } = supabase;
 const sb = createClient(SUPABASE_URL, SUPABASE_ANON);
 
 let currentSession = null;
-let CHAR_LIMIT = 100000;
+let currentTier    = null;
+let CHAR_LIMIT     = 100000;
+
+// State for chat — populated after a successful analysis
+let lastContractText = '';
+let chatHistory      = [];
 
 pdfjsLib.GlobalWorkerOptions.workerSrc =
   'https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.worker.min.js';
@@ -390,6 +514,7 @@ async function initAuth() {
 }
 
 function applyTierUI(tier) {
+  currentTier = tier;
   const isPro = tier === 'pro';
   document.getElementById('plan-info').innerHTML = isPro
     ? '<strong>Pro Plan</strong> &mdash; Unlimited contract length'
@@ -406,6 +531,83 @@ async function signOut() {
   if (window.posthog) posthog.capture('signed_out');
   await sb.auth.signOut();
   window.location.href = 'index.html';
+}
+
+// ── Tab switching ─────────────────────────────────────────────
+function switchTab(tab) {
+  document.getElementById('tab-review').classList.toggle('active', tab === 'review');
+  document.getElementById('tab-history').classList.toggle('active', tab === 'history');
+
+  if (tab === 'review') {
+    // Show whichever review surface was active; default to upload
+    const resultsVisible = document.getElementById('results').style.display === 'block';
+    const playbookVisible = document.getElementById('playbook-results').style.display === 'block';
+    document.getElementById('history-panel').style.display = 'none';
+    if (!resultsVisible && !playbookVisible) {
+      document.getElementById('upload-form').style.display = 'block';
+    }
+  } else {
+    document.getElementById('upload-form').style.display = 'none';
+    document.getElementById('results').style.display = 'none';
+    document.getElementById('playbook-results').style.display = 'none';
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('history-panel').style.display = 'block';
+    loadHistory();
+    if (window.posthog) posthog.capture('history_viewed');
+  }
+}
+
+// ── History ──────────────────────────────────────────────────
+async function loadHistory() {
+  const container = document.getElementById('history-content');
+  container.innerHTML = '<div class="history-loading">Loading your past analyses...</div>';
+
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    currentSession = session;
+
+    const res = await fetch(WORKER_URL + '/api/history', {
+      method: 'GET',
+      headers: { 'Authorization': `Bearer ${currentSession.access_token}` }
+    });
+    const data = await res.json();
+
+    if (!res.ok || data.error) {
+      container.innerHTML = `<div class="history-empty">Could not load history: ${escapeHtml(data.error || 'Server error')}</div>`;
+      return;
+    }
+
+    if (data.tier) applyTierUI(data.tier);
+
+    const items = Array.isArray(data.history) ? data.history : [];
+    if (items.length === 0) {
+      container.innerHTML = '<div class="history-empty">No past analyses yet. <a href="#" onclick="switchTab(\'review\'); return false;">Review your first contract &rarr;</a></div>';
+      return;
+    }
+
+    const rowsHtml = items.map(item => {
+      const date = new Date(item.created_at).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+      const score = item.risk_score || 0;
+      const riskLevel = score >= 7 ? 'High' : score >= 4 ? 'Medium' : 'Low';
+      const riskClass = riskLevel.toLowerCase();
+      const summary = item.summary ? item.summary : '—';
+      return `<div class="history-item">
+        <div class="history-top">
+          <span class="history-file">${escapeHtml(item.file_name || 'Contract')}</span>
+          <div class="history-meta">
+            <span class="risk-badge risk-${riskClass}" style="font-size:0.68rem; padding:3px 10px;">${riskLevel} Risk</span>
+            <span class="history-date">${date}</span>
+          </div>
+        </div>
+        <div class="history-summary">${escapeHtml(summary)}</div>
+      </div>`;
+    }).join('');
+
+    container.innerHTML = `<div class="history-list">${rowsHtml}</div>`;
+  } catch (err) {
+    container.innerHTML = `<div class="history-empty">Could not load history: ${escapeHtml(err.message)}</div>`;
+  }
 }
 
 // ── File handling ─────────────────────────────────────────────
@@ -480,6 +682,18 @@ async function handleFile(file) {
   analyzeBtn.disabled = false;
 }
 
+// ── Limit-reached handler ─────────────────────────────────────
+function handleLimitReached(result) {
+  document.getElementById('loading').style.display = 'none';
+  document.getElementById('upload-form').style.display = 'block';
+  document.getElementById('error-msg').style.display = 'none';
+  const banner = document.getElementById('limit-banner');
+  const link   = document.getElementById('limit-upgrade-link');
+  if (result.upgradeUrl) link.setAttribute('href', result.upgradeUrl);
+  banner.style.display = 'block';
+  if (window.posthog) posthog.capture('monthly_limit_reached');
+}
+
 // ── Standard analysis ─────────────────────────────────────────
 async function analyzeContract() {
   const isScanned = fileContent.trim().length < MIN_TEXT_LENGTH && rawPdfBase64;
@@ -490,6 +704,7 @@ async function analyzeContract() {
   currentSession = session;
 
   document.getElementById('upload-form').style.display = 'none';
+  document.getElementById('limit-banner').style.display = 'none';
   hideOcrStatus();
   document.getElementById('loading-heading').textContent = isScanned ? 'Converting scanned document...' : 'Reviewing your contract...';
   document.getElementById('loading-subtext').textContent = isScanned ? 'Converting to readable text — this may take 10–20 additional seconds' : 'Flagging clauses, assessing risk, extracting key terms';
@@ -508,6 +723,11 @@ async function analyzeContract() {
     });
     const result = await response.json();
 
+    if (response.status === 429 || (result && result.error === 'Monthly limit reached')) {
+      handleLimitReached(result);
+      return;
+    }
+
     if (!response.ok || result.error) {
       if (result.trialExpired) throw new Error('Your trial has expired. Please upgrade to continue.');
       throw new Error(result.error || `Server error (${response.status})`);
@@ -524,14 +744,24 @@ async function analyzeContract() {
         body: JSON.stringify({ contractText: ocrText })
       });
       const result2 = await response2.json();
+
+      if (response2.status === 429 || (result2 && result2.error === 'Monthly limit reached')) {
+        handleLimitReached(result2);
+        return;
+      }
+
       if (!response2.ok || result2.error) throw new Error(result2.error || `Server error (${response2.status})`);
       if (result2.tier) applyTierUI(result2.tier);
+      lastContractText = ocrText;
+      chatHistory = [];
       renderResults(result2);
       if (window.posthog) posthog.capture('analysis_completed', { risk: result2.overall_risk, tier: result2.tier, ocr: true });
       return;
     }
 
     if (result.tier) applyTierUI(result.tier);
+    lastContractText = fileContent;
+    chatHistory = [];
     renderResults(result);
     if (window.posthog) posthog.capture('analysis_completed', { risk: result.overall_risk, tier: result.tier, ocr: isScanned });
 
@@ -554,6 +784,7 @@ async function analyzePlaybook() {
   currentSession = session;
 
   document.getElementById('upload-form').style.display = 'none';
+  document.getElementById('limit-banner').style.display = 'none';
   hideOcrStatus();
   document.getElementById('loading-heading').textContent = isScanned ? 'Converting scanned document...' : 'Running playbook review...';
   document.getElementById('loading-subtext').textContent = isScanned ? 'Converting to readable text — this may take 10–20 additional seconds' : 'Analyzing provisions against the playbook';
@@ -572,6 +803,11 @@ async function analyzePlaybook() {
     });
     const result = await response.json();
 
+    if (response.status === 429 || (result && result.error === 'Monthly limit reached')) {
+      handleLimitReached(result);
+      return;
+    }
+
     if (!response.ok || result.error) {
       if (result.trialExpired) throw new Error('Your trial has expired. Please upgrade to continue.');
       throw new Error(result.error || `Server error (${response.status})`);
@@ -588,12 +824,24 @@ async function analyzePlaybook() {
         body: JSON.stringify({ contractText: ocrText, contractType })
       });
       const result2 = await response2.json();
+
+      if (response2.status === 429 || (result2 && result2.error === 'Monthly limit reached')) {
+        handleLimitReached(result2);
+        return;
+      }
+
       if (!response2.ok || result2.error) throw new Error(result2.error || `Server error (${response2.status})`);
+      if (result2.tier) applyTierUI(result2.tier);
+      lastContractText = ocrText;
+      chatHistory = [];
       renderPlaybookResults(result2);
       if (window.posthog) posthog.capture('playbook_analysis_completed', { contract_type: contractType, risk: result2.overall_risk, ocr: true });
       return;
     }
 
+    if (result.tier) applyTierUI(result.tier);
+    lastContractText = fileContent;
+    chatHistory = [];
     renderPlaybookResults(result);
     if (window.posthog) posthog.capture('playbook_analysis_completed', { contract_type: contractType, risk: result.overall_risk, ocr: isScanned });
 
@@ -634,6 +882,7 @@ function renderResults(data) {
     }).join('');
     document.getElementById('breach-card').style.display = 'block';
   }
+  setupChatVisibility(false);
 }
 
 function renderPlaybookResults(data) {
@@ -669,6 +918,98 @@ function renderPlaybookResults(data) {
     }).join('');
     document.getElementById('playbook-breach-card').style.display = 'block';
   }
+  setupChatVisibility(true);
+}
+
+// ── Chat ──────────────────────────────────────────────────────
+function setupChatVisibility(isPlaybook) {
+  const isPro = currentTier === 'pro';
+  const panelId  = isPlaybook ? 'playbook-chat-panel'  : 'chat-panel';
+  const lockedId = isPlaybook ? 'playbook-chat-locked' : 'chat-locked';
+  document.getElementById(panelId).style.display  = isPro  ? 'block' : 'none';
+  document.getElementById(lockedId).style.display = !isPro ? 'block' : 'none';
+  // Reset visible chat thread to its empty state
+  const messagesId = isPlaybook ? 'playbook-chat-messages' : 'chat-messages';
+  document.getElementById(messagesId).innerHTML = '<div class="chat-empty">Ask anything about this contract &mdash; specific clauses, what a term means in practice, or how a provision compares to standard.</div>';
+  const inputId = isPlaybook ? 'playbook-chat-input' : 'chat-input';
+  document.getElementById(inputId).value = '';
+}
+
+function appendChatMessage(isPlaybook, role, content, opts) {
+  const messagesId = isPlaybook ? 'playbook-chat-messages' : 'chat-messages';
+  const container = document.getElementById(messagesId);
+  // Clear empty-state placeholder if present
+  const empty = container.querySelector('.chat-empty');
+  if (empty) empty.remove();
+  const div = document.createElement('div');
+  div.className = 'chat-message ' + role + (opts && opts.thinking ? ' thinking' : '');
+  if (opts && opts.id) div.id = opts.id;
+  div.textContent = content;
+  container.appendChild(div);
+  container.scrollTop = container.scrollHeight;
+  return div;
+}
+
+async function sendChatMessage(isPlaybook) {
+  isPlaybook = !!isPlaybook;
+  if (currentTier !== 'pro') return;
+
+  const inputId  = isPlaybook ? 'playbook-chat-input' : 'chat-input';
+  const sendId   = isPlaybook ? 'playbook-chat-send-btn' : 'chat-send-btn';
+  const inputEl  = document.getElementById(inputId);
+  const sendEl   = document.getElementById(sendId);
+
+  const message = (inputEl.value || '').trim();
+  if (!message) return;
+  if (!lastContractText) {
+    appendChatMessage(isPlaybook, 'assistant', 'Contract context is missing — please re-run the analysis.');
+    return;
+  }
+
+  inputEl.value = '';
+  inputEl.disabled = true;
+  sendEl.disabled = true;
+
+  appendChatMessage(isPlaybook, 'user', message);
+  const thinkingId = 'thinking-' + Date.now();
+  appendChatMessage(isPlaybook, 'assistant', 'Thinking...', { thinking: true, id: thinkingId });
+
+  try {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) { window.location.href = 'index.html'; return; }
+    currentSession = session;
+
+    const res = await fetch(WORKER_URL + '/api/chat', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentSession.access_token}` },
+      body: JSON.stringify({
+        message,
+        contractText: lastContractText,
+        history: chatHistory,
+      })
+    });
+    const data = await res.json();
+
+    const thinkingEl = document.getElementById(thinkingId);
+    if (thinkingEl) thinkingEl.remove();
+
+    if (!res.ok || data.error) {
+      appendChatMessage(isPlaybook, 'assistant', 'Sorry — ' + (data.error || `request failed (${res.status})`));
+      return;
+    }
+
+    chatHistory = Array.isArray(data.history) ? data.history : chatHistory;
+    appendChatMessage(isPlaybook, 'assistant', data.reply || '(no reply)');
+    if (window.posthog) posthog.capture('chat_message_sent', { playbook: isPlaybook });
+  } catch (err) {
+    const thinkingEl = document.getElementById(thinkingId);
+    if (thinkingEl) thinkingEl.remove();
+    appendChatMessage(isPlaybook, 'assistant', 'Sorry — ' + err.message);
+  } finally {
+    inputEl.disabled = false;
+    sendEl.disabled = false;
+    inputEl.focus();
+  }
 }
 
 // ── Utilities ─────────────────────────────────────────────────
@@ -690,14 +1031,25 @@ function reset() {
   document.getElementById('playbook-breach-card').style.display = 'none';
   document.getElementById('upload-form').style.display = 'block';
   document.getElementById('error-msg').style.display = 'none';
+  document.getElementById('limit-banner').style.display = 'none';
   document.getElementById('file-name').style.display = 'none';
+  document.getElementById('chat-panel').style.display = 'none';
+  document.getElementById('chat-locked').style.display = 'none';
+  document.getElementById('playbook-chat-panel').style.display = 'none';
+  document.getElementById('playbook-chat-locked').style.display = 'none';
   fileWarningEl.style.display = 'none';
   processingNote.style.display = 'none';
   hideOcrStatus();
   fileContent  = '';
   rawPdfBase64 = null;
+  lastContractText = '';
+  chatHistory = [];
   fileInput.value = '';
   analyzeBtn.disabled = false;
+  // Stay on Review tab
+  document.getElementById('history-panel').style.display = 'none';
+  document.getElementById('tab-review').classList.add('active');
+  document.getElementById('tab-history').classList.remove('active');
 }
 
 let currentMode = 'standard';
@@ -730,5 +1082,6 @@ async function extractTextFromBase64PDF(base64) {
 
 initAuth();
 </script>
+<script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"87dbb25fee6848e9b4b355743f45997e","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
 </html>
