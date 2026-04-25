@@ -511,6 +511,26 @@ async function initAuth() {
   document.getElementById('auth-gate').style.display = 'none';
   document.getElementById('nav-user').textContent = session.user.email;
   if (window.posthog) posthog.identify(session.user.id, { email: session.user.email });
+  await loadTier(session);
+}
+
+// Load the user's tier from their profile so the UI reflects Pro/Standard/trial
+// from page load — not just after the first analysis or history fetch.
+async function loadTier(session) {
+  try {
+    const res = await fetch(`${SUPABASE_URL}/rest/v1/profiles?id=eq.${session.user.id}&select=tier`, {
+      headers: {
+        'apikey': SUPABASE_ANON,
+        'Authorization': `Bearer ${session.access_token}`,
+      }
+    });
+    if (!res.ok) return;
+    const rows = await res.json();
+    if (rows && rows.length > 0 && rows[0].tier) applyTierUI(rows[0].tier);
+  } catch (err) {
+    // Non-fatal: tier-aware UI will populate on the first analysis response instead
+    console.warn('Could not load tier on init:', err.message);
+  }
 }
 
 function applyTierUI(tier) {
