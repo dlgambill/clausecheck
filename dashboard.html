@@ -394,11 +394,11 @@
       document.getElementById('plan-actions').innerHTML = `
         <button class="btn-primary" onclick="upgradePlan()">Upgrade to Standard — $20/mo</button>`;
     } else if (tier === 'standard') {
-      document.getElementById('plan-detail').textContent = 'Up to 10 contracts/month · Up to 50 pages each · Claude Haiku';
+      document.getElementById('plan-detail').textContent = 'Up to 10 contracts/month · Up to 50 pages each · Fast contract analysis';
       document.getElementById('plan-actions').innerHTML = `
         <button class="btn-secondary" onclick="openBillingPortal()">Manage billing</button>`;
     } else if (tier === 'pro') {
-      document.getElementById('plan-detail').textContent = 'Unlimited contracts · Unlimited length · Claude Sonnet · Contract chat';
+      document.getElementById('plan-detail').textContent = 'Unlimited contracts · Unlimited length · Deep contract analysis · Contract chat';
       document.getElementById('plan-actions').innerHTML = `
         <button class="btn-secondary" onclick="openBillingPortal()">Manage billing</button>`;
     }
