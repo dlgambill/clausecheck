@@ -991,6 +991,11 @@ async function analyzeContract() {
   const isScanned = fileContent.trim().length < MIN_TEXT_LENGTH && rawPdfBase64;
   if (!fileContent && !rawPdfBase64) { showError('Please upload a contract file first.'); return; }
 
+  // Streaming dispatch — only if flag is on AND not scanned (OCR path stays non-streaming)
+  if (STREAMING_ENABLED && !isScanned) {
+    return analyzeContractStreaming();
+  }
+
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = 'index.html'; return; }
   currentSession = session;
@@ -1070,6 +1075,11 @@ async function analyzePlaybook() {
   if (!contractType) { showError('Please select a contract type.'); return; }
   const isScanned = fileContent.trim().length < MIN_TEXT_LENGTH && rawPdfBase64;
   if (!fileContent && !rawPdfBase64) { showError('Please upload a contract file first.'); return; }
+
+  // Streaming dispatch — only if flag is on AND not scanned (OCR path stays non-streaming)
+  if (STREAMING_ENABLED && !isScanned) {
+    return analyzePlaybookStreaming();
+  }
 
   const { data: { session } } = await sb.auth.getSession();
   if (!session) { window.location.href = 'index.html'; return; }
@@ -1785,6 +1795,229 @@ async function extractTextFromBase64PDF(base64) {
 }
 
 initAuth();
+
+// ════════════════════════════════════════════════════════════════════════
+// STREAMING ANALYSIS — added April 30, 2026
+// Streaming endpoint (api.clausecheck.conduitlab.ai/?stream=true) was
+// deployed and verified end-to-end before this code was added. We deploy
+// this with the flag off, sanity-check that nothing broke, then flip it.
+// ════════════════════════════════════════════════════════════════════════
+
+const STREAMING_ENABLED = false;
+
+
+// ── analyzeContractStreaming() ─────────────────────────────────────────────
+// Streaming variant of analyzeContract(). Same UI flow but reads ndjson
+// frames from the worker instead of awaiting a buffered JSON response.
+// Eliminates the 100s Cloudflare timeout on long contracts.
+
+async function analyzeContractStreaming() {
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'index.html'; return; }
+  currentSession = session;
+
+  document.getElementById('upload-form').style.display = 'none';
+  document.getElementById('limit-banner').style.display = 'none';
+  hideOcrStatus();
+  document.getElementById('loading-heading').textContent = 'Reviewing your contract...';
+  document.getElementById('loading-subtext').textContent = 'Flagging clauses, assessing risk, extracting key terms';
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('error-msg').style.display = 'none';
+  if (window.posthog) posthog.capture('analysis_started', { ocr: false, streaming: true });
+
+  try {
+    const response = await fetch(WORKER_URL + '/?stream=true', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currentSession.access_token}`
+      },
+      body: JSON.stringify({ contractText: fileContent })
+    });
+
+    // Pre-stream errors come back as JSON (auth, usage limit, validation)
+    if (!response.ok) {
+      let errBody;
+      try { errBody = await response.json(); } catch { errBody = { error: `Server error (${response.status})` }; }
+
+      if (response.status === 429 || (errBody && errBody.error === 'Monthly limit reached')) {
+        handleLimitReached(errBody);
+        return;
+      }
+
+      if (errBody.trialExpired) throw new Error('Your trial has expired. Please upgrade to continue.');
+      throw new Error(errBody.error || `Server error (${response.status})`);
+    }
+
+    // Stream is open — read ndjson frames
+    const finalFrame = await readNdjsonStream(response);
+    if (!finalFrame || finalFrame.type === 'error') {
+      throw new Error(finalFrame?.message || 'Analysis stream ended unexpectedly.');
+    }
+
+    if (finalFrame.stop_reason === 'max_tokens') {
+      console.warn('Analysis was truncated due to length.');
+    }
+
+    // Parse the accumulated full_text — strip ```json fences if present
+    const cleaned = (finalFrame.full_text || '')
+      .replace(/^```json\n?/, '')
+      .replace(/\n?```$/, '')
+      .trim();
+
+    let analysis;
+    try {
+      analysis = JSON.parse(cleaned);
+    } catch (err) {
+      throw new Error('Analysis returned malformed data. Please try again.');
+    }
+
+    if (finalFrame.tier) applyTierUI(finalFrame.tier);
+    lastContractText = fileContent;
+    chatHistory = [];
+    renderResults(analysis);
+
+    if (window.posthog) {
+      posthog.capture('analysis_completed', {
+        risk: analysis.overall_risk,
+        tier: finalFrame.tier,
+        ocr: false,
+        streaming: true,
+      });
+    }
+
+  } catch (err) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('upload-form').style.display = 'block';
+    showError('Something went wrong: ' + err.message);
+  }
+}
+
+
+// ── analyzePlaybookStreaming() ─────────────────────────────────────────────
+// Streaming variant of analyzePlaybook(). Same shape as analyzeContractStreaming
+// but hits /api/analyze-playbook?stream=true and uses renderPlaybookResults.
+
+async function analyzePlaybookStreaming() {
+  const contractType = document.getElementById('contract-type').value;
+
+  const { data: { session } } = await sb.auth.getSession();
+  if (!session) { window.location.href = 'index.html'; return; }
+  currentSession = session;
+
+  document.getElementById('upload-form').style.display = 'none';
+  document.getElementById('limit-banner').style.display = 'none';
+  hideOcrStatus();
+  document.getElementById('loading-heading').textContent = 'Running playbook review...';
+  document.getElementById('loading-subtext').textContent = 'Analyzing provisions against the playbook';
+  document.getElementById('loading').style.display = 'block';
+  document.getElementById('error-msg').style.display = 'none';
+  if (window.posthog) posthog.capture('playbook_analysis_started', { contract_type: contractType, ocr: false, streaming: true });
+
+  try {
+    const response = await fetch(WORKER_URL + '/api/analyze-playbook?stream=true', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${currentSession.access_token}`
+      },
+      body: JSON.stringify({ contractText: fileContent, contractType })
+    });
+
+    if (!response.ok) {
+      let errBody;
+      try { errBody = await response.json(); } catch { errBody = { error: `Server error (${response.status})` }; }
+
+      if (response.status === 429 || (errBody && errBody.error === 'Monthly limit reached')) {
+        handleLimitReached(errBody);
+        return;
+      }
+
+      if (errBody.trialExpired) throw new Error('Your trial has expired. Please upgrade to continue.');
+      throw new Error(errBody.error || `Server error (${response.status})`);
+    }
+
+    const finalFrame = await readNdjsonStream(response);
+    if (!finalFrame || finalFrame.type === 'error') {
+      throw new Error(finalFrame?.message || 'Analysis stream ended unexpectedly.');
+    }
+
+    if (finalFrame.stop_reason === 'max_tokens') {
+      console.warn('Analysis was truncated due to length.');
+    }
+
+    const cleaned = (finalFrame.full_text || '')
+      .replace(/^```json\n?/, '')
+      .replace(/\n?```$/, '')
+      .trim();
+
+    let analysis;
+    try {
+      analysis = JSON.parse(cleaned);
+    } catch (err) {
+      throw new Error('Analysis returned malformed data. Please try again.');
+    }
+
+    if (finalFrame.tier) applyTierUI(finalFrame.tier);
+    lastContractText = fileContent;
+    chatHistory = [];
+    renderPlaybookResults(analysis);
+
+    if (window.posthog) {
+      posthog.capture('playbook_analysis_completed', {
+        contract_type: contractType,
+        risk: analysis.overall_risk,
+        ocr: false,
+        streaming: true,
+      });
+    }
+
+  } catch (err) {
+    document.getElementById('loading').style.display = 'none';
+    document.getElementById('upload-form').style.display = 'block';
+    showError('Something went wrong: ' + err.message);
+  }
+}
+
+
+// ── readNdjsonStream() ─────────────────────────────────────────────────────
+// Reads newline-delimited JSON frames from a streaming Response.
+// Returns the terminal frame (the "done" or "error"). Caller uses
+// .full_text from done to parse the final analysis JSON.
+
+async function readNdjsonStream(response) {
+  const reader = response.body.getReader();
+  const decoder = new TextDecoder();
+  let buffer = '';
+  let terminalFrame = null;
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      buffer += decoder.decode(value, { stream: true });
+
+      let nlIdx;
+      while ((nlIdx = buffer.indexOf('\n')) !== -1) {
+        const line = buffer.slice(0, nlIdx);
+        buffer = buffer.slice(nlIdx + 1);
+        if (!line) continue;
+
+        let frame;
+        try { frame = JSON.parse(line); } catch { continue; }
+
+        if (frame.type === 'done' || frame.type === 'error') {
+          terminalFrame = frame;
+        }
+      }
+    }
+  } catch (err) {
+    return { type: 'error', message: 'Connection interrupted. Please try again.' };
+  }
+
+  return terminalFrame || { type: 'error', message: 'No response received.' };
+}
 </script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"87dbb25fee6848e9b4b355743f45997e","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
 </body>
