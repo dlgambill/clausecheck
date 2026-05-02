@@ -715,6 +715,7 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
 <script data-cfasync="false" src="/cdn-cgi/scripts/5c5dd728/cloudflare-static/email-decode.min.js" defer></script><script src="https://cdnjs.cloudflare.com/ajax/libs/mammoth/1.6.0/mammoth.browser.min.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdf.js/3.11.174/pdf.min.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdn.jsdelivr.net/npm/jsonrepair@3.13.1/lib/umd/jsonrepair.min.js"></script>
 <script>
 const WORKER_URL    = 'https://api.clausecheck.conduitlab.ai';
 const SUPABASE_URL  = 'https://gmzawvbidpjrqixkdiyh.supabase.co';
@@ -1865,10 +1866,8 @@ async function analyzeContractStreaming() {
       .replace(/\n?```$/, '')
       .trim();
 
-    let analysis;
-    try {
-      analysis = JSON.parse(cleaned);
-    } catch (err) {
+    let analysis = parseModelJson(cleaned, 'analyzeContractStreaming');
+    if (!analysis) {
       throw new Error('Analysis returned malformed data. Please try again.');
     }
 
@@ -1951,10 +1950,8 @@ async function analyzePlaybookStreaming() {
       .replace(/\n?```$/, '')
       .trim();
 
-    let analysis;
-    try {
-      analysis = JSON.parse(cleaned);
-    } catch (err) {
+    let analysis = parseModelJson(cleaned, 'analyzePlaybookStreaming');
+    if (!analysis) {
       throw new Error('Analysis returned malformed data. Please try again.');
     }
 
@@ -2017,6 +2014,40 @@ async function readNdjsonStream(response) {
   }
 
   return terminalFrame || { type: 'error', message: 'No response received.' };
+}
+
+
+// ── parseModelJson() ───────────────────────────────────────────────────────
+// Tries strict JSON.parse first. If that fails, runs through jsonrepair
+// (loaded via the JSONRepair UMD CDN script in the head) which fixes
+// unescaped quotes, missing commas, and similar malformations the model
+// occasionally emits. Returns the parsed object, or null on total failure.
+//
+// The worker has the same fallback server-side (so the DB write succeeds);
+// this client-side copy ensures users see results even when the model
+// produces malformed JSON.
+
+function parseModelJson(rawText, context) {
+  try {
+    return JSON.parse(rawText);
+  } catch (firstErr) {
+    if (typeof JSONRepair === 'undefined' || !JSONRepair.jsonrepair) {
+      console.error('parseModelJson: jsonrepair not loaded', firstErr.message);
+      return null;
+    }
+    try {
+      const repaired = JSONRepair.jsonrepair(rawText);
+      const result = JSON.parse(repaired);
+      console.warn(`parseModelJson: repaired malformed JSON in ${context}`, firstErr.message);
+      return result;
+    } catch (repairErr) {
+      console.error(`parseModelJson: unrepairable JSON in ${context}`, {
+        firstError: firstErr.message,
+        repairError: repairErr.message,
+      });
+      return null;
+    }
+  }
 }
 </script>
 <script defer src="https://static.cloudflareinsights.com/beacon.min.js/v8c78df7c7c0f484497ecbca7046644da1771523124516" integrity="sha512-8DS7rgIrAmghBFwoOTujcf6D9rXvH8xm8JQ1Ja01h9QX8EzXldiszufYa4IFfKdLUKTTrnSFXLDkUEOTrZQ8Qg==" data-cf-beacon='{"version":"2024.11.0","token":"87dbb25fee6848e9b4b355743f45997e","r":1,"server_timing":{"name":{"cfCacheStatus":true,"cfEdge":true,"cfExtPri":true,"cfL4":true,"cfOrigin":true,"cfSpeedBrain":true},"location_startswith":null}}' crossorigin="anonymous"></script>
