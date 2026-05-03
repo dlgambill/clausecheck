@@ -380,6 +380,13 @@ posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', {
       <button class="mode-btn active" id="mode-standard" onclick="switchMode('standard')">Standard Review</button>
       <button class="mode-btn" id="mode-playbook" onclick="switchMode('playbook')">Playbook Review</button>
     </div>
+    <div id="depth-toggle-wrapper" style="display:none;">
+      <div class="mode-toggle" style="margin-bottom: 16px;">
+        <button class="mode-btn active" id="depth-full" onclick="switchDepth('full')">Full Review</button>
+        <button class="mode-btn" id="depth-quick" onclick="switchDepth('quick')">Quick Review</button>
+      </div>
+      <p style="font-size: 0.78rem; color: #666; margin: -8px 0 16px; line-height: 1.5;"><span id="depth-description">Comprehensive analysis with redlines, jurisdiction notes, and verbatim quotes (~60-90 sec).</span></p>
+    </div>
     <div id="playbook-selector" style="display:none;">
       <select class="contract-type-select" id="contract-type">
         <option value="">&#8212; Select contract type &#8212;</option>
@@ -809,6 +816,9 @@ function applyTierUI(tier) {
     : 'Standard plan supports contracts up to 50 pages';
   if (isPro) document.getElementById('upsell-banner').style.display = 'none';
   CHAR_LIMIT = isPro ? 500000 : 100000;
+  // Show Quick/Full depth toggle to Pro users only.
+  const depthToggle = document.getElementById('depth-toggle-wrapper');
+  if (depthToggle) depthToggle.style.display = isPro ? 'block' : 'none';
 }
 
 async function signOut() {
@@ -1008,10 +1018,10 @@ async function analyzeContract() {
   document.getElementById('loading-subtext').textContent = isScanned ? 'Converting to readable text — this may take 10–20 additional seconds' : 'Flagging clauses, assessing risk, extracting key terms';
   document.getElementById('loading').style.display = 'block';
   document.getElementById('error-msg').style.display = 'none';
-  if (window.posthog) posthog.capture('analysis_started', { ocr: isScanned });
+  if (window.posthog) posthog.capture('analysis_started', { ocr: isScanned, depth: currentDepth });
 
   try {
-    const body = { contractText: fileContent };
+    const body = { contractText: fileContent, mode: currentDepth };
     if (isScanned) body.pdfBase64 = rawPdfBase64;
 
     const response = await fetch(WORKER_URL, {
@@ -1039,7 +1049,7 @@ async function analyzeContract() {
       const response2 = await fetch(WORKER_URL, {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentSession.access_token}` },
-        body: JSON.stringify({ contractText: ocrText })
+        body: JSON.stringify({ contractText: ocrText, mode: currentDepth })
       });
       const result2 = await response2.json();
 
@@ -1093,10 +1103,10 @@ async function analyzePlaybook() {
   document.getElementById('loading-subtext').textContent = isScanned ? 'Converting to readable text — this may take 10–20 additional seconds' : 'Analyzing provisions against the playbook';
   document.getElementById('loading').style.display = 'block';
   document.getElementById('error-msg').style.display = 'none';
-  if (window.posthog) posthog.capture('playbook_analysis_started', { contract_type: contractType, ocr: isScanned });
+  if (window.posthog) posthog.capture('playbook_analysis_started', { contract_type: contractType, ocr: isScanned, depth: currentDepth });
 
   try {
-    const body = { contractText: fileContent, contractType };
+    const body = { contractText: fileContent, contractType, mode: currentDepth };
     if (isScanned) body.pdfBase64 = rawPdfBase64;
 
     const response = await fetch(WORKER_URL + '/api/analyze-playbook', {
@@ -1124,7 +1134,7 @@ async function analyzePlaybook() {
       const response2 = await fetch(WORKER_URL + '/api/analyze-playbook', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json', 'Authorization': `Bearer ${currentSession.access_token}` },
-        body: JSON.stringify({ contractText: ocrText, contractType })
+        body: JSON.stringify({ contractText: ocrText, contractType, mode: currentDepth })
       });
       const result2 = await response2.json();
 
@@ -1775,6 +1785,23 @@ function switchMode(mode) {
   document.getElementById('playbook-selector').style.display = mode === 'playbook' ? 'block' : 'none';
 }
 
+// Quick / Full review depth toggle (Pro only). Sent to the worker as the
+// "mode" field on /api/analyze and /api/analyze-playbook. Default is 'full'
+// so existing Pro users see no behavior change unless they actively flip.
+let currentDepth = 'full';
+function switchDepth(depth) {
+  currentDepth = depth;
+  document.getElementById('depth-full').classList.toggle('active', depth === 'full');
+  document.getElementById('depth-quick').classList.toggle('active', depth === 'quick');
+  const desc = document.getElementById('depth-description');
+  if (desc) {
+    desc.textContent = depth === 'quick'
+      ? 'Faster, focused analysis — top 2-3 risks, key terms, breach overview (~30-45 sec).'
+      : 'Comprehensive analysis with redlines, jurisdiction notes, and verbatim quotes (~60-90 sec).';
+  }
+  if (window.posthog) posthog.capture('review_depth_changed', { depth });
+}
+
 function printReport() {
   document.getElementById('print-date').textContent = new Date().toLocaleDateString('en-US', { year: 'numeric', month: 'long', day: 'numeric' });
   if (window.posthog) posthog.capture('report_printed');
@@ -1824,7 +1851,7 @@ async function analyzeContractStreaming() {
   document.getElementById('loading-subtext').textContent = 'Flagging clauses, assessing risk, extracting key terms';
   document.getElementById('loading').style.display = 'block';
   document.getElementById('error-msg').style.display = 'none';
-  if (window.posthog) posthog.capture('analysis_started', { ocr: false, streaming: true });
+  if (window.posthog) posthog.capture('analysis_started', { ocr: false, streaming: true, depth: currentDepth });
 
   try {
     const response = await fetch(WORKER_URL + '/?stream=true', {
@@ -1833,7 +1860,7 @@ async function analyzeContractStreaming() {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${currentSession.access_token}`
       },
-      body: JSON.stringify({ contractText: fileContent })
+      body: JSON.stringify({ contractText: fileContent, mode: currentDepth })
     });
 
     // Pre-stream errors come back as JSON (auth, usage limit, validation)
@@ -1911,7 +1938,7 @@ async function analyzePlaybookStreaming() {
   document.getElementById('loading-subtext').textContent = 'Analyzing provisions against the playbook';
   document.getElementById('loading').style.display = 'block';
   document.getElementById('error-msg').style.display = 'none';
-  if (window.posthog) posthog.capture('playbook_analysis_started', { contract_type: contractType, ocr: false, streaming: true });
+  if (window.posthog) posthog.capture('playbook_analysis_started', { contract_type: contractType, ocr: false, streaming: true, depth: currentDepth });
 
   try {
     const response = await fetch(WORKER_URL + '/api/analyze-playbook?stream=true', {
@@ -1920,7 +1947,7 @@ async function analyzePlaybookStreaming() {
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${currentSession.access_token}`
       },
-      body: JSON.stringify({ contractText: fileContent, contractType })
+      body: JSON.stringify({ contractText: fileContent, contractType, mode: currentDepth })
     });
 
     if (!response.ok) {
