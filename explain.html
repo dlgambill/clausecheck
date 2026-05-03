@@ -1,0 +1,406 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Free Clause Explainer — ClauseCheck</title>
+  <meta name="description" content="Paste any contract clause, get a plain-English explanation, risk assessment, and negotiation tips in seconds. Free from ClauseCheck.">
+  <meta property="og:title" content="Free Clause Explainer — ClauseCheck">
+  <meta property="og:description" content="Paste any contract clause, get a plain-English explanation, risk assessment, and negotiation tips in seconds. Free from ClauseCheck.">
+  <meta property="og:url" content="https://clausecheck.conduitlab.ai/explain.html">
+  <meta property="og:type" content="website">
+  <meta property="og:site_name" content="ClauseCheck">
+  <meta name="twitter:card" content="summary">
+  <meta name="twitter:title" content="Free Clause Explainer — ClauseCheck">
+  <meta name="twitter:description" content="Paste any contract clause, get a plain-English explanation, risk assessment, and negotiation tips in seconds.">
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="icon" type="image/png" sizes="32x32" href="favicon-32.png">
+  <link rel="shortcut icon" href="favicon.ico">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
+  <style>
+    :root {
+      --orange: #f97316;
+      --orange-dim: rgba(249,115,22,0.10);
+      --orange-border: rgba(249,115,22,0.22);
+      --bg: #0a0a0a;
+      --surface: #111111;
+      --surface2: #161616;
+      --border: #1e1e1e;
+      --border2: #2a2a2a;
+      --text: #f0f0f0;
+      --muted: #888;
+      --dim: #888;
+      --green: #4ade80;
+      --green-dim: rgba(74,222,128,0.10);
+      --green-border: rgba(74,222,128,0.25);
+      --red: #f87171;
+      --red-dim: rgba(248,113,113,0.10);
+      --red-border: rgba(248,113,113,0.25);
+      --yellow: #fbbf24;
+      --yellow-dim: rgba(251,191,36,0.10);
+      --yellow-border: rgba(251,191,36,0.25);
+    }
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+    html { scroll-behavior: smooth; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+
+    /* ── Header ───────────────────────────────────────── */
+    nav { padding: 18px 48px; display: flex; align-items: center; border-bottom: 1px solid var(--border2); }
+    .logo { font-family: 'DM Serif Display', serif; font-size: 1.2rem; color: #fff; text-decoration: none; letter-spacing: -0.01em; }
+    .logo span { color: var(--orange); }
+
+    /* ── Main layout ──────────────────────────────────── */
+    main { flex: 1; display: flex; flex-direction: column; align-items: center; padding: 70px 24px 40px; position: relative; overflow: hidden; }
+    main::before { content: ''; position: absolute; top: -180px; left: 50%; transform: translateX(-50%); width: 900px; height: 600px; background: radial-gradient(ellipse, rgba(249,115,22,0.06) 0%, transparent 68%); pointer-events: none; z-index: 0; }
+    .container { width: 100%; max-width: 720px; position: relative; z-index: 1; }
+
+    /* ── Hero ─────────────────────────────────────────── */
+    .hero-badge { display: inline-flex; align-items: center; gap: 8px; background: var(--orange-dim); border: 1px solid var(--orange-border); color: var(--orange); font-size: 0.72rem; font-weight: 600; letter-spacing: 0.09em; text-transform: uppercase; padding: 5px 14px; border-radius: 20px; margin-bottom: 24px; animation: fadeUp 0.5s ease both; }
+    h1 { font-family: 'DM Serif Display', serif; font-size: clamp(2.2rem, 5vw, 3.4rem); line-height: 1.08; letter-spacing: -0.025em; color: #fff; margin-bottom: 16px; animation: fadeUp 0.5s ease 0.1s both; }
+    h1 em { font-style: italic; color: var(--orange); }
+    .hero-sub { font-size: 1rem; color: var(--muted); margin-bottom: 40px; font-weight: 300; max-width: 560px; animation: fadeUp 0.5s ease 0.2s both; }
+
+    /* ── Form ─────────────────────────────────────────── */
+    .form-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; padding: 32px; animation: fadeUp 0.5s ease 0.3s both; }
+    .field-group { margin-bottom: 22px; }
+    .field-group:last-of-type { margin-bottom: 26px; }
+    label { display: block; font-size: 0.78rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.08em; color: var(--muted); margin-bottom: 10px; }
+    input[type="email"], textarea {
+      width: 100%; background: var(--bg); border: 1px solid var(--border2); border-radius: 8px;
+      padding: 14px 16px; color: var(--text); font-family: 'DM Sans', sans-serif; font-size: 0.95rem;
+      transition: border-color 0.2s, background 0.2s; resize: vertical;
+    }
+    input[type="email"]:focus, textarea:focus { outline: none; border-color: var(--orange); background: var(--surface2); }
+    textarea { min-height: 220px; line-height: 1.5; }
+    .char-count { font-size: 0.74rem; color: var(--dim); margin-top: 6px; text-align: right; }
+    .char-count.over { color: var(--red); }
+    .submit-btn { background: var(--orange); color: #fff; border: none; border-radius: 8px; padding: 14px 30px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s, transform 0.2s; width: 100%; }
+    .submit-btn:hover:not(:disabled) { opacity: 0.9; transform: translateY(-1px); }
+    .submit-btn:disabled { opacity: 0.5; cursor: not-allowed; }
+    .privacy-note { margin-top: 16px; font-size: 0.76rem; color: var(--dim); text-align: center; }
+    .privacy-note a { color: var(--muted); text-decoration: underline; text-decoration-color: var(--border2); transition: color 0.2s, text-decoration-color 0.2s; }
+    .privacy-note a:hover { color: var(--orange); text-decoration-color: var(--orange); }
+
+    /* ── Loading ──────────────────────────────────────── */
+    .loading { background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; padding: 60px 32px; text-align: center; animation: fadeUp 0.4s ease both; }
+    .spinner { width: 38px; height: 38px; border: 2px solid var(--border2); border-top-color: var(--orange); border-radius: 50%; margin: 0 auto 22px; animation: spin 0.9s linear infinite; }
+    .loading-text { font-size: 0.95rem; color: var(--muted); }
+
+    /* ── Result ───────────────────────────────────────── */
+    .result { animation: fadeUp 0.5s ease both; }
+    .result-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 14px; padding: 32px; margin-bottom: 16px; }
+    .result-section { margin-bottom: 28px; }
+    .result-section:last-child { margin-bottom: 0; }
+    .result-label { font-size: 0.7rem; font-weight: 600; text-transform: uppercase; letter-spacing: 0.1em; color: var(--orange); margin-bottom: 12px; }
+    .result-text { font-size: 1rem; color: var(--text); line-height: 1.65; }
+    .risk-badge { display: inline-flex; align-items: center; gap: 8px; padding: 6px 14px; border-radius: 20px; font-size: 0.78rem; font-weight: 600; letter-spacing: 0.04em; text-transform: capitalize; margin-bottom: 14px; }
+    .risk-badge.favorable { background: var(--green-dim); border: 1px solid var(--green-border); color: var(--green); }
+    .risk-badge.neutral   { background: var(--yellow-dim); border: 1px solid var(--yellow-border); color: var(--yellow); }
+    .risk-badge.risky     { background: var(--red-dim); border: 1px solid var(--red-border); color: var(--red); }
+    .risk-badge::before { content: ''; width: 7px; height: 7px; border-radius: 50%; background: currentColor; }
+    .negotiate-list { list-style: none; }
+    .negotiate-list li { font-size: 0.95rem; color: var(--text); padding: 10px 0; padding-left: 26px; position: relative; line-height: 1.55; border-bottom: 1px solid var(--border); }
+    .negotiate-list li:last-child { border-bottom: none; }
+    .negotiate-list li::before { content: '→'; position: absolute; left: 0; top: 10px; color: var(--orange); font-weight: 700; }
+    .reset-link { display: inline-block; margin-top: 8px; font-size: 0.85rem; color: var(--muted); text-decoration: none; transition: color 0.2s; cursor: pointer; }
+    .reset-link:hover { color: var(--orange); }
+
+    /* ── Error ────────────────────────────────────────── */
+    .error-banner { background: var(--red-dim); border: 1px solid var(--red-border); color: var(--red); padding: 14px 18px; border-radius: 8px; font-size: 0.9rem; margin-bottom: 20px; animation: fadeUp 0.3s ease both; }
+
+    /* ── CTA ──────────────────────────────────────────── */
+    .upgrade-cta { background: linear-gradient(135deg, var(--surface2) 0%, var(--surface) 100%); border: 1px solid var(--orange-border); border-radius: 14px; padding: 36px 32px; text-align: center; position: relative; overflow: hidden; }
+    .upgrade-cta::before { content: ''; position: absolute; top: -100px; left: 50%; transform: translateX(-50%); width: 500px; height: 300px; background: radial-gradient(ellipse, rgba(249,115,22,0.08) 0%, transparent 70%); pointer-events: none; }
+    .upgrade-cta-inner { position: relative; z-index: 1; }
+    .upgrade-cta h2 { font-family: 'DM Serif Display', serif; font-size: clamp(1.4rem, 3vw, 1.9rem); color: #fff; line-height: 1.15; letter-spacing: -0.02em; margin-bottom: 12px; }
+    .upgrade-cta h2 em { font-style: italic; color: var(--orange); }
+    .upgrade-cta p { font-size: 0.95rem; color: var(--muted); max-width: 460px; margin: 0 auto 24px; font-weight: 300; }
+    .upgrade-cta .btn-primary { display: inline-block; background: var(--orange); color: #fff; border: none; border-radius: 8px; padding: 13px 30px; font-family: 'DM Sans', sans-serif; font-size: 0.95rem; font-weight: 600; cursor: pointer; text-decoration: none; transition: opacity 0.2s, transform 0.2s; }
+    .upgrade-cta .btn-primary:hover { opacity: 0.9; transform: translateY(-1px); }
+    .upgrade-cta-note { margin-top: 14px; font-size: 0.76rem; color: var(--dim); }
+
+    /* ── Footer ───────────────────────────────────────── */
+    footer { border-top: 1px solid var(--border2); padding: 28px 48px; text-align: center; font-size: 0.76rem; color: var(--dim); margin-top: auto; }
+    footer a { color: #fff; text-decoration: none; transition: color 0.2s; }
+    footer a:hover { color: var(--orange); }
+
+    /* ── Animations ───────────────────────────────────── */
+    @keyframes fadeUp { from { opacity: 0; transform: translateY(18px); } to { opacity: 1; transform: translateY(0); } }
+    @keyframes spin { to { transform: rotate(360deg); } }
+
+    /* ── Mobile ───────────────────────────────────────── */
+    @media (max-width: 640px) {
+      nav { padding: 14px 20px; }
+      main { padding: 50px 18px 30px; }
+      .form-card, .upgrade-cta, .result-card { padding: 24px 20px; }
+      footer { padding: 22px 20px; }
+    }
+
+    /* ── Hidden state ─────────────────────────────────── */
+    [hidden] { display: none !important; }
+  </style>
+  <!-- PostHog Analytics -->
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_segLZzw6QL8BsPrQ7egherGKe9qf9BjEVMBvUzpMUMz9', { api_host: 'https://us.i.posthog.com', person_profiles: 'identified_only' });
+  </script>
+</head>
+<body>
+
+<nav>
+  <a href="index.html" class="logo">Clause<span>Check</span></a>
+</nav>
+
+<main>
+  <div class="container">
+
+    <!-- ── Hero ────────────────────────────────────────── -->
+    <div id="heroSection">
+      <div class="hero-badge">Free clause explainer</div>
+      <h1>Paste any clause.<br>Get a <em>plain-English</em> explanation.</h1>
+      <p class="hero-sub">Drop in a paragraph from any contract — non-compete, indemnification, termination, anything. We'll explain what it actually means, flag the risk, and tell you what to negotiate. Free, instant, no signup.</p>
+    </div>
+
+    <!-- ── Form (initial state) ────────────────────────── -->
+    <div id="formSection">
+      <div id="errorBanner" class="error-banner" hidden></div>
+      <div class="form-card">
+        <div class="field-group">
+          <label for="email">Your email</label>
+          <input type="email" id="email" placeholder="you@example.com" autocomplete="email" required>
+        </div>
+        <div class="field-group">
+          <label for="clauseText">Paste a contract clause</label>
+          <textarea id="clauseText" placeholder="e.g., 'The Service Provider shall indemnify, defend, and hold harmless the Client from and against any and all claims, damages, losses, liabilities, costs, and expenses arising out of...'" maxlength="5000" required></textarea>
+          <div id="charCount" class="char-count">0 / 5,000</div>
+        </div>
+        <button id="submitBtn" class="submit-btn">Explain this clause →</button>
+        <p class="privacy-note">Your clause text is never stored. We'll send occasional product updates to your email — <a href="privacy.html">privacy policy</a>.</p>
+      </div>
+    </div>
+
+    <!-- ── Loading state ───────────────────────────────── -->
+    <div id="loadingSection" hidden>
+      <div class="loading">
+        <div class="spinner"></div>
+        <div class="loading-text">Reading your clause…</div>
+      </div>
+    </div>
+
+    <!-- ── Result state ────────────────────────────────── -->
+    <div id="resultSection" class="result" hidden>
+      <div class="result-card">
+        <div class="result-section">
+          <div id="riskBadge" class="risk-badge"></div>
+          <div class="result-label">Plain-English Explanation</div>
+          <div id="plainEnglish" class="result-text"></div>
+        </div>
+        <div class="result-section">
+          <div class="result-label">Risk Assessment</div>
+          <div id="riskExplanation" class="result-text"></div>
+        </div>
+        <div class="result-section">
+          <div class="result-label">What to Negotiate</div>
+          <ul id="negotiateList" class="negotiate-list"></ul>
+        </div>
+        <a id="resetLink" class="reset-link">← Explain another clause</a>
+      </div>
+
+      <div class="upgrade-cta">
+        <div class="upgrade-cta-inner">
+          <h2>This was just <em>one clause.</em></h2>
+          <p>Imagine getting this for every clause in your contract — risk-flagged, ranked, and ready for your client. ClauseCheck reviews entire contracts in under a minute.</p>
+          <a href="login.html" class="btn-primary" id="ctaUpgrade">Try ClauseCheck Free →</a>
+          <p class="upgrade-cta-note">5-day free trial · No credit card required</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+</main>
+
+<footer>
+  &copy; 2026 ClauseCheck &nbsp;·&nbsp; Built for small law firms &nbsp;·&nbsp; <a href="index.html">Home</a> &nbsp;·&nbsp; <a href="terms.html">Terms</a> &nbsp;·&nbsp; <a href="privacy.html">Privacy</a> &nbsp;·&nbsp; <a href="mailto:legal@conduitlab.ai?subject=ClauseCheck%20Feedback">Feedback</a>
+</footer>
+
+<script>
+  const API_URL = 'https://api.clausecheck.conduitlab.ai/api/explain';
+  const MAX_CHARS = 5000;
+
+  // ── Element references ───────────────────────────────────────────────
+  const heroSection    = document.getElementById('heroSection');
+  const formSection    = document.getElementById('formSection');
+  const loadingSection = document.getElementById('loadingSection');
+  const resultSection  = document.getElementById('resultSection');
+  const errorBanner    = document.getElementById('errorBanner');
+
+  const emailInput     = document.getElementById('email');
+  const clauseInput    = document.getElementById('clauseText');
+  const charCount      = document.getElementById('charCount');
+  const submitBtn      = document.getElementById('submitBtn');
+  const resetLink      = document.getElementById('resetLink');
+  const ctaUpgrade     = document.getElementById('ctaUpgrade');
+
+  const riskBadge      = document.getElementById('riskBadge');
+  const plainEnglish   = document.getElementById('plainEnglish');
+  const riskExplain    = document.getElementById('riskExplanation');
+  const negotiateList  = document.getElementById('negotiateList');
+
+  // ── PostHog: page view ───────────────────────────────────────────────
+  if (window.posthog) posthog.capture('explain_page_viewed');
+
+  // ── Char counter ─────────────────────────────────────────────────────
+  function updateCharCount() {
+    const len = clauseInput.value.length;
+    charCount.textContent = `${len.toLocaleString()} / ${MAX_CHARS.toLocaleString()}`;
+    charCount.classList.toggle('over', len > MAX_CHARS);
+  }
+  clauseInput.addEventListener('input', updateCharCount);
+
+  // ── Error display ────────────────────────────────────────────────────
+  function showError(msg) {
+    errorBanner.textContent = msg;
+    errorBanner.hidden = false;
+    errorBanner.scrollIntoView({ behavior: 'smooth', block: 'center' });
+  }
+  function clearError() {
+    errorBanner.hidden = true;
+    errorBanner.textContent = '';
+  }
+
+  // ── Submit ───────────────────────────────────────────────────────────
+  async function submit() {
+    clearError();
+
+    const email      = emailInput.value.trim();
+    const clauseText = clauseInput.value.trim();
+
+    // Client-side validation
+    if (!email || !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+      showError('Please enter a valid email address.');
+      emailInput.focus();
+      return;
+    }
+    if (clauseText.length < 30) {
+      showError('Please paste a longer clause (at least a sentence or two).');
+      clauseInput.focus();
+      return;
+    }
+    if (clauseText.length > MAX_CHARS) {
+      showError(`Clause is too long. Maximum is ${MAX_CHARS.toLocaleString()} characters.`);
+      clauseInput.focus();
+      return;
+    }
+
+    // PostHog: email submitted (lead captured client-side, server confirms)
+    if (window.posthog) {
+      posthog.capture('explain_email_submitted', { email_domain: email.split('@')[1] });
+      posthog.capture('explain_clause_submitted', { clause_length: clauseText.length });
+    }
+
+    // Get PostHog session ID for funnel attribution
+    let phSession = '';
+    try {
+      phSession = (window.posthog && posthog.get_session_id) ? posthog.get_session_id() : '';
+    } catch { /* ignore */ }
+
+    // Switch to loading state
+    formSection.hidden    = true;
+    loadingSection.hidden = false;
+
+    try {
+      const res = await fetch(API_URL, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({
+          email,
+          clauseText,
+          posthogSession: phSession,
+        }),
+      });
+
+      const data = await res.json().catch(() => ({}));
+
+      if (!res.ok) {
+        // Show error, return to form state
+        loadingSection.hidden = true;
+        formSection.hidden    = false;
+        showError(data.error || 'Something went wrong. Please try again.');
+        if (window.posthog) posthog.capture('explain_error', { status: res.status, error: data.error });
+        return;
+      }
+
+      // Render result
+      renderResult(data);
+      loadingSection.hidden = true;
+      resultSection.hidden  = false;
+
+      if (window.posthog) {
+        posthog.capture('explain_result_shown', { risk_level: data.risk_level });
+      }
+    } catch (err) {
+      loadingSection.hidden = true;
+      formSection.hidden    = false;
+      showError('Could not reach the server. Please check your connection and try again.');
+      if (window.posthog) posthog.capture('explain_error', { error: 'network' });
+    }
+  }
+
+  // ── Render result ────────────────────────────────────────────────────
+  function renderResult(data) {
+    // Risk badge
+    const risk = (data.risk_level || 'neutral').toLowerCase();
+    riskBadge.className = 'risk-badge ' + (['favorable', 'neutral', 'risky'].includes(risk) ? risk : 'neutral');
+    riskBadge.textContent = risk;
+
+    // Plain English
+    plainEnglish.textContent = data.plain_english || '';
+
+    // Risk explanation
+    riskExplain.textContent = data.risk_explanation || '';
+
+    // Negotiation suggestions
+    negotiateList.innerHTML = '';
+    const items = Array.isArray(data.what_to_negotiate) ? data.what_to_negotiate : [];
+    if (items.length === 0) {
+      const li = document.createElement('li');
+      li.textContent = 'No specific changes recommended for this clause.';
+      negotiateList.appendChild(li);
+    } else {
+      items.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = item;
+        negotiateList.appendChild(li);
+      });
+    }
+  }
+
+  // ── Reset to form ────────────────────────────────────────────────────
+  function reset() {
+    resultSection.hidden = true;
+    formSection.hidden   = false;
+    clauseInput.value    = '';
+    updateCharCount();
+    clauseInput.focus();
+    window.scrollTo({ top: 0, behavior: 'smooth' });
+  }
+
+  // ── Wire up events ───────────────────────────────────────────────────
+  submitBtn.addEventListener('click', submit);
+  resetLink.addEventListener('click', reset);
+  ctaUpgrade.addEventListener('click', () => {
+    if (window.posthog) posthog.capture('explain_cta_clicked', { destination: 'login' });
+  });
+
+  // Allow Enter-to-submit from email field, but not from textarea (newlines).
+  emailInput.addEventListener('keydown', (e) => {
+    if (e.key === 'Enter') { e.preventDefault(); submit(); }
+  });
+
+  // Initial char count
+  updateCharCount();
+</script>
+</body>
+</html>
