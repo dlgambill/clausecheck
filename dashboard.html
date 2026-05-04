@@ -168,9 +168,9 @@
     </div>
     <div class="upgrade-banner-row">
       <div class="upgrade-banner-features">
-        <strong>Unlimited reviews</strong> · Contract chat · Deep analysis · Firm branding · $49/mo · Cancel anytime
+        <strong>Unlimited reviews</strong> &middot; Contract chat &middot; Deep analysis &middot; Firm branding &middot; $49/mo &middot; Cancel anytime
       </div>
-      <button class="upgrade-banner-cta" onclick="upgradeToPro('banner')">Upgrade to Pro →</button>
+      <button class="upgrade-banner-cta" onclick="upgradeToPro('banner')">Upgrade to Pro &rarr;</button>
     </div>
   </div>
 
@@ -868,14 +868,14 @@
     el.style.display = 'block';
   }
 
-  // Stripe price IDs — single source of truth
+  // Stripe price IDs - single source of truth
   const STRIPE_PRICE_IDS = {
     standard: 'price_1TK9oQ6hMZoGqmhSnu5PxBma',
     pro:      'price_1TK9mp6hMZoGqmhSGfcpTY5u',
   };
 
   // Dedicated Pro-upgrade flow. Called from any "Upgrade to Pro" button.
-  // Always routes to Pro checkout regardless of current tier — no ambiguity.
+  // Always routes to Pro checkout regardless of current tier - no ambiguity.
   // The `source` param is for PostHog funnel analysis (banner / plan-card /
   // firm-branding / usage-meter / usage-cap) so we can see which CTA converts.
   async function upgradeToPro(source) {
@@ -909,7 +909,7 @@
     }
   }
 
-  // Legacy upgrade flow — used by the trial banner (trial → Standard).
+  // Legacy upgrade flow - used by the trial banner (trial -> Standard).
   // Retained for trial users; Standard users should use upgradeToPro() above.
   async function upgradePlan() {
     const { data: { session } } = await sb.auth.getSession();
