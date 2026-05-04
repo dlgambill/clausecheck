@@ -54,6 +54,17 @@
     .trial-banner p { font-size: 0.88rem; color: #fb923c; }
     .trial-banner p strong { color: #f97316; }
 
+    /* UPGRADE BANNER (shown to Standard users) */
+    .upgrade-banner { background: linear-gradient(135deg, rgba(249,115,22,0.10), rgba(249,115,22,0.04)); border: 1px solid rgba(249,115,22,0.3); border-radius: 12px; padding: 20px 24px; margin-bottom: 16px; }
+    .upgrade-banner-headline { font-family: 'DM Serif Display', serif; font-size: 1.15rem; color: #fff; margin-bottom: 6px; letter-spacing: -0.01em; }
+    .upgrade-banner-headline .accent { color: #f97316; }
+    .upgrade-banner-row { display: flex; align-items: center; justify-content: space-between; gap: 16px; flex-wrap: wrap; }
+    .upgrade-banner-features { font-size: 0.85rem; color: #bbb; flex: 1; min-width: 200px; }
+    .upgrade-banner-features strong { color: #fb923c; font-weight: 600; }
+    .upgrade-banner-cta { background: #f97316; color: #fff; border: none; border-radius: 8px; padding: 12px 22px; font-family: 'DM Sans', system-ui, sans-serif; font-size: 0.92rem; font-weight: 600; cursor: pointer; transition: opacity 0.2s, transform 0.1s; white-space: nowrap; }
+    .upgrade-banner-cta:hover { opacity: 0.9; transform: translateY(-1px); }
+    .upgrade-banner-cta:active { transform: translateY(0); }
+
     /* USAGE METER */
     .usage-card { background: #141414; border: 1px solid #2a2a2a; border-radius: 12px; padding: 20px 24px; margin-bottom: 16px; }
     .usage-row { display: flex; align-items: center; justify-content: space-between; margin-bottom: 10px; }
@@ -150,6 +161,19 @@
     <button class="btn-primary" onclick="upgradePlan()">Upgrade now</button>
   </div>
 
+  <!-- Upgrade Banner (shown only to Standard users) -->
+  <div class="upgrade-banner" id="upgrade-banner" style="display:none;">
+    <div class="upgrade-banner-headline">
+      Unlock the full power of <span class="accent">ClauseCheck Pro</span>
+    </div>
+    <div class="upgrade-banner-row">
+      <div class="upgrade-banner-features">
+        <strong>Unlimited reviews</strong> · Contract chat · Deep analysis · Firm branding · $49/mo · Cancel anytime
+      </div>
+      <button class="upgrade-banner-cta" onclick="upgradeToPro('banner')">Upgrade to Pro →</button>
+    </div>
+  </div>
+
   <!-- Plan Card -->
   <div class="plan-card" id="plan-card">
     <div class="plan-left">
@@ -229,7 +253,7 @@
         Send branded contract reviews to your clients with your firm's logo, signature, and contact information.
         Replies route directly to your email — your clients see professional, white-labeled correspondence.
       </p>
-      <button class="btn-primary" onclick="upgradePlan()">Upgrade to Pro</button>
+      <button class="btn-primary" onclick="upgradeToPro('firm-branding')">Upgrade to Pro</button>
     </div>
 
     <!-- Pro state -->
@@ -395,7 +419,9 @@
         <button class="btn-primary" onclick="upgradePlan()">Upgrade to Standard — $20/mo</button>`;
     } else if (tier === 'standard') {
       document.getElementById('plan-detail').textContent = 'Up to 10 contracts/month · Up to 50 pages each · Fast contract analysis';
+      document.getElementById('upgrade-banner').style.display = 'block';
       document.getElementById('plan-actions').innerHTML = `
+        <button class="btn-primary" onclick="upgradeToPro('plan-card')">Upgrade to Pro</button>
         <button class="btn-secondary" onclick="openBillingPortal()">Manage billing</button>`;
     } else if (tier === 'pro') {
       document.getElementById('plan-detail').textContent = 'Unlimited contracts · Unlimited length · Deep contract analysis · Contract chat';
@@ -453,10 +479,10 @@
     fillEl.className = 'usage-bar-fill' + (pct >= 100 ? ' full' : pct >= 80 ? ' warn' : '');
 
     if (usageState.count >= limit) {
-      noteEl.innerHTML = 'You\'ve used all your reviews for this month. <a href="#" onclick="upgradePlan(); return false;">Upgrade to Pro</a> for unlimited reviews.';
+      noteEl.innerHTML = 'You\'ve used all your reviews for this month. <a href="#" onclick="upgradeToPro(\'usage-cap\'); return false;">Upgrade to Pro</a> for unlimited reviews.';
     } else {
       const remaining = limit - usageState.count;
-      noteEl.innerHTML = `${remaining} review${remaining === 1 ? '' : 's'} remaining this month. Resets on the 1st. <a href="#" onclick="upgradePlan(); return false;">Upgrade to Pro</a> for unlimited.`;
+      noteEl.innerHTML = `${remaining} review${remaining === 1 ? '' : 's'} remaining this month. Resets on the 1st. <a href="#" onclick="upgradeToPro('usage-meter'); return false;">Upgrade to Pro</a> for unlimited.`;
     }
   }
 
@@ -842,15 +868,64 @@
     el.style.display = 'block';
   }
 
+  // Stripe price IDs — single source of truth
+  const STRIPE_PRICE_IDS = {
+    standard: 'price_1TK9oQ6hMZoGqmhSnu5PxBma',
+    pro:      'price_1TK9mp6hMZoGqmhSGfcpTY5u',
+  };
+
+  // Dedicated Pro-upgrade flow. Called from any "Upgrade to Pro" button.
+  // Always routes to Pro checkout regardless of current tier — no ambiguity.
+  // The `source` param is for PostHog funnel analysis (banner / plan-card /
+  // firm-branding / usage-meter / usage-cap) so we can see which CTA converts.
+  async function upgradeToPro(source) {
+    const { data: { session } } = await sb.auth.getSession();
+    if (!session) return;
+
+    if (window.posthog) {
+      posthog.capture('upgrade_initiated', {
+        from: 'dashboard',
+        target: 'pro',
+        source: source || 'unknown',
+        current_tier: (currentProfile && currentProfile.tier) || 'unknown',
+      });
+    }
+
+    const res = await fetch(`${WORKER_URL}/api/create-checkout`, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'Authorization': `Bearer ${session.access_token}`
+      },
+      body: JSON.stringify({ priceId: STRIPE_PRICE_IDS.pro })
+    });
+
+    const data = await res.json();
+    if (data.url) {
+      window.location.href = data.url;
+    } else {
+      console.error('upgradeToPro: no checkout URL returned', data);
+      alert('Something went wrong starting checkout. Please try again or contact support.');
+    }
+  }
+
+  // Legacy upgrade flow — used by the trial banner (trial → Standard).
+  // Retained for trial users; Standard users should use upgradeToPro() above.
   async function upgradePlan() {
     const { data: { session } } = await sb.auth.getSession();
     if (!session) return;
 
-    // Default upgrade target: Pro for current Standard users, Standard for trial users
     const tier = currentProfile && currentProfile.tier;
-    const STANDARD_PRICE_ID = 'price_1TK9oQ6hMZoGqmhSnu5PxBma';
-    const PRO_PRICE_ID      = 'price_1TK9mp6hMZoGqmhSGfcpTY5u';
-    const priceId = tier === 'standard' ? PRO_PRICE_ID : STANDARD_PRICE_ID;
+    const priceId = tier === 'standard' ? STRIPE_PRICE_IDS.pro : STRIPE_PRICE_IDS.standard;
+
+    if (window.posthog) {
+      posthog.capture('upgrade_initiated', {
+        from: 'dashboard',
+        target: priceId === STRIPE_PRICE_IDS.pro ? 'pro' : 'standard',
+        source: 'upgrade-plan-legacy',
+        current_tier: tier || 'unknown',
+      });
+    }
 
     const res = await fetch(`${WORKER_URL}/api/create-checkout`, {
       method: 'POST',
@@ -863,7 +938,6 @@
 
     const data = await res.json();
     if (data.url) {
-      if (window.posthog) posthog.capture('upgrade_initiated', { from: 'dashboard', target: priceId === PRO_PRICE_ID ? 'pro' : 'standard' });
       window.location.href = data.url;
     }
   }
