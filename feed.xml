@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<rss version="2.0" xmlns:atom="http://www.w3.org/2005/Atom">
+  <channel>
+    <title>ClauseCheck Blog</title>
+    <link>https://clausecheck.conduitlab.ai/blog</link>
+    <description>Practical guidance on contract review, risk-spotting, and AI tooling for solo and small-firm attorneys.</description>
+    <language>en-us</language>
+    <lastBuildDate>Tue, 12 May 2026 03:05:23 GMT</lastBuildDate>
+    <atom:link href="https://clausecheck.conduitlab.ai/feed.xml" rel="self" type="application/rss+xml"/>
+    <item>
+      <title>How Small Firms Bill Flat Fees Without Eating Contract Review Time</title>
+      <link>https://clausecheck.conduitlab.ai/blog/flat-fee-contract-review-billing-models</link>
+      <guid isPermaLink="true">https://clausecheck.conduitlab.ai/blog/flat-fee-contract-review-billing-models</guid>
+      <pubDate>Tue, 12 May 2026 03:05:23 GMT</pubDate>
+      <description>Stop eating contract review time. Three billing models recover margins under flat-fee structures without client friction or cutting corners on risk.</description>
+    </item>
+  </channel>
+</rss>
