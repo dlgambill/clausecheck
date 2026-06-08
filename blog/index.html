@@ -84,6 +84,19 @@ footer.site {
 }
 footer.site a { color: #6b7280; }
 </style>
+ 
+  <script>
+(function () {
+  try {
+    var v = new URLSearchParams(location.search).get('utm_content');
+    if (v && /^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(v)) {
+      document.cookie = 'conduit_attribution=' + encodeURIComponent(v) +
+        '; path=/; max-age=2592000; SameSite=Lax; Secure';
+    }
+  } catch (e) {}
+})();
+</script>
+
 </head>
 <body>
 <header class="site">
