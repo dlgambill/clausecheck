@@ -874,6 +874,13 @@
     pro:      'price_1TK9oQ6hMZoGqmhSnu5PxBma',
 };
 
+  // Reads the conduit_attribution cookie (set by marketing/blog pages from
+  // ?utm_content) so checkout carries the originating content-piece token to Stripe.
+  function getAttributionToken() {
+    const m = document.cookie.match(/(?:^|;\s*)conduit_attribution=([^;]+)/);
+    return m ? decodeURIComponent(m[1]) : null;
+  }
+
   // Dedicated Pro-upgrade flow. Called from any "Upgrade to Pro" button.
   // Always routes to Pro checkout regardless of current tier - no ambiguity.
   // The `source` param is for PostHog funnel analysis (banner / plan-card /
@@ -897,7 +904,7 @@
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${session.access_token}`
       },
-      body: JSON.stringify({ priceId: STRIPE_PRICE_IDS.pro })
+      body: JSON.stringify({ priceId: STRIPE_PRICE_IDS.pro, attribution: getAttributionToken() })
     });
 
     const data = await res.json();
@@ -933,7 +940,7 @@
         'Content-Type': 'application/json',
         'Authorization': `Bearer ${session.access_token}`
       },
-      body: JSON.stringify({ priceId })
+      body: JSON.stringify({ priceId, attribution: getAttributionToken() })
     });
 
     const data = await res.json();
