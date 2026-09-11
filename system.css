@@ -126,6 +126,24 @@
   min-height: 100svh;
 }
 
+/* Stop the headline dropping a single orphaned word onto its own line.
+   At phone width "Contract review that works as fast as you do" broke as
+   ... / ... / "do", leaving one italic word stranded, which reads as a
+   mistake rather than a line break. balance distributes the words across
+   the lines instead of filling each one greedily. Applied to the clause
+   pages in the first pass and missed here, which is why it showed up on
+   the page everyone actually lands on. */
+.hero h1,
+h1.hero-heading {
+  text-wrap: balance;
+}
+
+/* The subhead too - it is three lines on a phone and the same greedy fill
+   leaves the last one short. */
+.hero > p {
+  text-wrap: pretty;
+}
+
 @media (max-width: 640px) {
   .hero,
   [data-fullbleed] {
