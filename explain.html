@@ -20,31 +20,12 @@
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500;9..40,600;9..40,700&display=swap" rel="stylesheet">
   <style>
-    :root {
-      --orange: #f97316;
-      --orange-dim: rgba(249,115,22,0.10);
-      --orange-border: rgba(249,115,22,0.22);
-      --bg: #0a0a0a;
-      --surface: #111111;
-      --surface2: #161616;
-      --border: #1e1e1e;
-      --border2: #2a2a2a;
-      --text: #f0f0f0;
-      --muted: #888;
-      --dim: #888;
-      --green: #4ade80;
-      --green-dim: rgba(74,222,128,0.10);
-      --green-border: rgba(74,222,128,0.25);
-      --red: #f87171;
-      --red-dim: rgba(248,113,113,0.10);
-      --red-border: rgba(248,113,113,0.25);
-      --yellow: #fbbf24;
-      --yellow-dim: rgba(251,191,36,0.10);
-      --yellow-border: rgba(251,191,36,0.25);
-    }
+    /* Tokens now live in system.css - see the <link> after this block. This
+       page is where the semantic green/red/yellow came from; they are in the
+       shared file now so every page can reach them. */
     *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
     html { scroll-behavior: smooth; }
-    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100vh; display: flex; flex-direction: column; }
+    body { font-family: 'DM Sans', system-ui, sans-serif; background: var(--bg); color: var(--text); line-height: 1.6; min-height: 100svh; display: flex; flex-direction: column; }
 
     /* ── Header ───────────────────────────────────────── */
     nav { padding: 18px 48px; display: flex; align-items: center; border-bottom: 1px solid var(--border2); }
@@ -142,6 +123,9 @@
     /* ── Hidden state ─────────────────────────────────── */
     [hidden] { display: none !important; }
   </style>
+  <!-- Design system: tokens, scales and shared mobile rules. Loaded AFTER the
+       block above so it wins on conflicts; deleting this line reverts it. -->
+  <link rel="stylesheet" href="system.css">
   <!-- PostHog Analytics -->
   <script>
     !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]);t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="capture identify alias people.set people.set_once set_config register register_once unregister opt_out_capturing has_opted_out_capturing opt_in_capturing reset isFeatureEnabled onFeatureFlags getFeatureFlag getFeatureFlagPayload reloadFeatureFlags group updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures getActiveMatchingSurveys getSurveys getNextSurveyStep onSessionId".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
