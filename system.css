@@ -1,0 +1,386 @@
+/* ClauseCheck design system
+   ==========================
+   One source of truth for tokens, scales and base behaviour.
+
+   WHY THIS FILE EXISTS
+   Nine pages each carried their own inline <style> with the same values typed
+   out again. index.html and explain.html declared :root tokens; app.html,
+   dashboard.html and login.html declared none and hardcoded #0a0a0a, #f0f0f0,
+   #f97316, #888 directly. Same palette, five copies, so it drifted - nav links
+   are #fff on app.html and #888 on dashboard.html, the same component in two
+   colors. Changing the orange meant nine edits, which is why nobody changed it.
+
+   WHAT THIS IS NOT
+   Not a restyle. The palette, the DM Serif Display / DM Sans pairing and the
+   hero type are deliberate and good; they are preserved exactly. What changes
+   is that they now live in one place, plus the scales that never existed
+   (spacing, radius, easing) and two defects that did.
+
+   LOAD ORDER: after the page's own <style> block, so it wins on conflicts and
+   removing the one <link> reverts everything.
+*/
+
+:root {
+  /* ── Color ─────────────────────────────────────────────────────────────
+     Unchanged from index.html except --muted and --dim, which were BOTH
+     #888. Two token names pointing at one value means there is no secondary
+     vs tertiary step, so every piece of supporting text reads at the same
+     level. Now they are a real two-step ramp, and both still clear WCAG AA
+     on #0a0a0a: #a3a3a3 is 7.9:1, #808080 is 5.0:1. */
+  --orange: #f97316;
+  --orange-dim: rgba(249, 115, 22, 0.10);
+  --orange-border: rgba(249, 115, 22, 0.22);
+
+  --bg: #0a0a0a;
+  --surface: #111111;
+  --surface2: #161616;
+  --border: #1e1e1e;
+  --border2: #2a2a2a;
+
+  --text: #f0f0f0;   /* primary */
+  --muted: #a3a3a3;  /* secondary - was #888 */
+  --dim: #808080;    /* tertiary  - was #888, identical to --muted */
+
+  /* Semantic, lifted from explain.html so every page can reach them. */
+  --green: #4ade80;
+  --green-dim: rgba(74, 222, 128, 0.10);
+  --green-border: rgba(74, 222, 128, 0.25);
+  --red: #f87171;
+  --red-dim: rgba(248, 113, 113, 0.10);
+  --red-border: rgba(248, 113, 113, 0.25);
+  --yellow: #fbbf24;
+  --yellow-dim: rgba(251, 191, 36, 0.10);
+  --yellow-border: rgba(251, 191, 36, 0.25);
+
+  /* ── Type ──────────────────────────────────────────────────────────────
+     The pairing already in use. Named so a page cannot quietly diverge. */
+  --font-display: 'DM Serif Display', Georgia, serif;
+  --font-body: 'DM Sans', system-ui, -apple-system, sans-serif;
+
+  --step-hero: clamp(2.8rem, 7vw, 5.2rem);   /* as-is from index.html */
+  --step-h1: clamp(2.2rem, 5vw, 3.4rem);     /* as-is from explain.html */
+  --step-h2: clamp(1.6rem, 3.2vw, 2.2rem);
+  --step-h3: clamp(1.15rem, 2vw, 1.45rem);
+  --step-lead: clamp(0.95rem, 2vw, 1.15rem);
+  --step-body: 0.95rem;
+  --step-sm: 0.84rem;
+  --step-xs: 0.76rem;
+  --step-label: 0.72rem;
+
+  --track-tight: -0.025em;   /* display sizes */
+  --track-label: 0.09em;     /* uppercase labels */
+
+  /* ── Spacing ───────────────────────────────────────────────────────────
+     A 4px-derived ramp. Sections were ad-hoc (48px here, 90px there). */
+  --space-xs: 8px;
+  --space-sm: 12px;
+  --space-md: 20px;
+  --space-lg: 32px;
+  --space-xl: 56px;
+  --space-2xl: 88px;
+  --space-section: clamp(72px, 12vw, 128px);
+  --gutter: clamp(20px, 5vw, 48px);
+
+  /* ── Radius ────────────────────────────────────────────────────────────
+     The four values already in the codebase (6 / 8 / 12 / pill), named.
+     Deliberately NOT retuned: the point of this pass is one source of
+     truth, not a different look. */
+  --radius-sm: 6px;
+  --radius-md: 8px;
+  --radius-lg: 12px;
+  --radius-pill: 999px;
+
+  /* ── Motion ────────────────────────────────────────────────────────────
+     Every transition in the codebase was a bare duration - `color 0.2s`,
+     `width 0.3s` - which means the browser default ease. These curves cost
+     nothing and are the difference between "it moved" and "it was moved". */
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
+  --ease-snap: cubic-bezier(0.22, 1, 0.36, 1);
+  --dur-fast: 160ms;
+  --dur: 240ms;
+  --dur-slow: 400ms;
+
+  /* ── Layer ─────────────────────────────────────────────────────────── */
+  --z-nav: 50;
+  --z-overlay: 100;
+}
+
+/* ── The viewport-height fix ─────────────────────────────────────────────
+   THE BUG YOU CAN SEE ON A PHONE.
+
+   .hero was `min-height: 100vh` + `justify-content: center` + 130px of top
+   padding. Content gets centred inside a full-viewport box and then pushed
+   down again, so the top third of the first screen is empty.
+
+   100vh is also the wrong unit on mobile: it is the viewport with the browser
+   chrome HIDDEN, so on load - when the URL bar is showing - 100vh is taller
+   than what anyone can actually see. 100svh is the small viewport, which is
+   what is on screen at load.
+
+   On phones the full-viewport hero earns nothing, so it is dropped entirely
+   and the section is sized by its content.                                  */
+
+.hero,
+[data-fullbleed] {
+  min-height: 100vh;            /* fallback for anything without svh */
+  min-height: 100svh;
+}
+
+@media (max-width: 640px) {
+  .hero,
+  [data-fullbleed] {
+    min-height: auto;
+    padding-top: 104px;
+    padding-bottom: 64px;
+  }
+}
+
+/* ── Breakpoints the pages never got ─────────────────────────────────────
+   index.html had ONE media query and it only hid nav links. login.html had
+   none. Everything else leaned on clamp(), which resizes type but cannot fix
+   a layout. These are the minimum rules that make the pages behave as phone
+   layouts rather than shrunken desktop ones.                                */
+
+@media (max-width: 900px) {
+  nav {
+    padding-left: var(--gutter);
+    padding-right: var(--gutter);
+  }
+}
+
+@media (max-width: 640px) {
+  nav { padding-top: 14px; padding-bottom: 14px; }
+
+  /* Stacked, full-width CTAs. Side-by-side buttons on a narrow screen give
+     two cramped targets instead of one comfortable one. */
+  .hero-cta { flex-direction: column; align-items: stretch; width: 100%; max-width: 320px; }
+  .hero-cta > * { width: 100%; text-align: center; }
+
+  /* 44px minimum touch target. */
+  .btn-primary,
+  .btn-secondary,
+  .btn-nav { min-height: 44px; display: inline-flex; align-items: center; justify-content: center; }
+
+  section { padding-left: var(--gutter); padding-right: var(--gutter); }
+}
+
+/* ── Motion ──────────────────────────────────────────────────────────────
+   fadeUp already exists inline on index.html with `ease`. This re-points the
+   same animation at a real curve without touching the markup.               */
+
+@keyframes fadeUp {
+  from { opacity: 0; transform: translateY(16px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+    scroll-behavior: auto !important;
+  }
+}
+
+/* ════════════════════════════════════════════════════════════════════════
+   CLAUSE EXPLAINER PAGES
+   Scoped to .clause-page on <body>.
+
+   force-majeure, indemnification, limitation-of-liability, non-solicitation
+   and auto-renewal each carried a byte-identical 4,710-character <style>
+   block - 23,550 characters of the same CSS, five times, in pages that have
+   never shipped. This is that block, once, with its 14 hardcoded palette
+   values pointing at tokens.
+
+   The greys were near-misses of the main site's: #e5e5e5 body text, #aaa,
+   #bbb, #ddd, #666. All now resolve to --text / --muted / --dim, which is a
+   shift of a few points each and the reason the pages will finally look like
+   the rest of the site instead of near it.
+
+   SCOPED, NOT GLOBAL: these use bare element selectors (nav, h1, h2, ul,
+   footer). Unscoped they would reach into index.html and repaint it.
+   ════════════════════════════════════════════════════════════════════════ */
+
+.clause-page {
+  font-family: var(--font-body);
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.7;
+  font-size: 17px;
+}
+.clause-page a { color: var(--orange); text-decoration: none; }
+.clause-page a:hover { text-decoration: underline; }
+
+.clause-page .container {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: var(--space-xl) var(--gutter) var(--space-2xl);
+}
+
+/* Nav */
+.clause-page nav {
+  max-width: 760px;
+  margin: 0 auto;
+  padding: var(--space-md) var(--gutter);
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+}
+.clause-page .logo {
+  font-family: var(--font-display);
+  font-size: 1.5rem;
+  color: #fff;
+  letter-spacing: -0.01em;
+}
+.clause-page .logo .accent { color: var(--orange); }
+.clause-page nav .nav-links a {
+  color: var(--muted);
+  margin-left: var(--space-md);
+  font-size: 0.9rem;
+}
+
+/* Headings */
+.clause-page h1 {
+  font-family: var(--font-display);
+  font-size: clamp(2rem, 6vw, 2.6rem);
+  line-height: 1.15;
+  color: #fff;
+  letter-spacing: -0.02em;
+  margin-bottom: var(--space-sm);
+  text-wrap: balance;
+}
+.clause-page .summary {
+  font-size: clamp(1rem, 2.4vw, 1.15rem);
+  color: var(--muted);
+  margin-bottom: var(--space-lg);
+  padding-bottom: var(--space-md);
+  border-bottom: 1px solid var(--border2);
+}
+.clause-page h2 {
+  font-family: var(--font-display);
+  font-size: clamp(1.4rem, 4vw, 1.7rem);
+  color: var(--orange);
+  margin: var(--space-lg) 0 var(--space-sm);
+  letter-spacing: -0.01em;
+}
+.clause-page h3 {
+  font-size: 1.05rem;
+  font-weight: 600;
+  color: #fff;
+  margin: var(--space-md) 0 var(--space-xs);
+}
+
+/* Body */
+.clause-page p { margin-bottom: var(--space-sm); }
+.clause-page p strong { color: #fff; }
+
+/* Pull-quote for a sample clause */
+.clause-page .example-clause {
+  background: rgba(249, 115, 22, 0.06);
+  border-left: 3px solid var(--orange);
+  padding: 18px 22px;
+  margin: var(--space-md) 0 var(--space-md);
+  font-style: italic;
+  color: var(--text);
+  border-radius: 0 var(--radius-md) var(--radius-md) 0;
+}
+.clause-page .example-clause::before,
+.clause-page .example-clause::after {
+  content: '"';
+  color: var(--orange);
+  font-size: 1.5rem;
+  vertical-align: -4px;
+}
+.clause-page .example-clause::before { margin-right: 2px; }
+.clause-page .example-clause::after { margin-left: 2px; }
+
+/* Lists */
+.clause-page ul { margin: var(--space-sm) 0 var(--space-md); padding-left: 0; list-style: none; }
+.clause-page ul li { padding-left: var(--space-md); margin-bottom: var(--space-sm); position: relative; }
+.clause-page ul li::before {
+  content: '\25CF';
+  color: var(--orange);
+  position: absolute;
+  left: 0;
+  top: 0;
+  font-size: 0.7rem;
+  line-height: 1.7;
+}
+
+/* Conversion block */
+.clause-page .cta-box {
+  background: linear-gradient(135deg, rgba(249,115,22,0.10), rgba(249,115,22,0.04));
+  border: 1px solid rgba(249, 115, 22, 0.3);
+  border-radius: var(--radius-lg);
+  padding: 28px;
+  margin: var(--space-xl) 0;
+  text-align: center;
+}
+.clause-page .cta-box h3 {
+  font-family: var(--font-display);
+  font-size: 1.4rem;
+  margin: 0 0 var(--space-xs);
+  color: #fff;
+}
+.clause-page .cta-box p { color: var(--muted); margin-bottom: 18px; }
+.clause-page .cta-button {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  min-height: 44px;          /* was inline-block with no floor - touch target */
+  background: var(--orange);
+  color: #fff;
+  padding: 14px 28px;
+  border-radius: var(--radius-md);
+  font-weight: 600;
+  font-size: 1rem;
+  text-decoration: none;
+  transition: opacity var(--dur) var(--ease-snap),
+              transform var(--dur-fast) var(--ease-snap);
+}
+.clause-page .cta-button:hover {
+  opacity: 0.9;
+  transform: translateY(-1px);
+  text-decoration: none;
+}
+
+/* Legal disclaimer */
+.clause-page .disclaimer {
+  margin-top: var(--space-xl);
+  padding: var(--space-sm) var(--space-md);
+  background: var(--surface2);
+  border-radius: var(--radius-md);
+  font-size: 0.88rem;
+  color: var(--dim);
+  font-style: italic;
+}
+.clause-page .disclaimer strong { color: var(--muted); font-style: normal; }
+
+/* Cross-links to the other explainers */
+.clause-page .other-clauses {
+  margin-top: var(--space-xl);
+  padding-top: var(--space-lg);
+  border-top: 1px solid var(--border2);
+}
+.clause-page .other-clauses h3 {
+  font-family: var(--font-display);
+  font-size: 1.3rem;
+  color: #fff;
+  margin-bottom: 14px;
+}
+.clause-page .other-clauses ul { margin: 0; }
+.clause-page .other-clauses li { padding-left: 0; }
+.clause-page .other-clauses li::before { content: ''; }
+.clause-page .other-clauses a { font-size: 0.95rem; }
+
+/* Footer */
+.clause-page footer {
+  max-width: 760px;
+  margin: var(--space-xl) auto var(--space-lg);
+  padding: var(--space-md) var(--gutter);
+  border-top: 1px solid var(--border2);
+  text-align: center;
+  color: var(--dim);
+  font-size: 0.85rem;
+}
+.clause-page footer a { color: var(--muted); }
