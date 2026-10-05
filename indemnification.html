@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Indemnification Clauses Explained — Plain English for Contract Reviewers</title>
+  <meta name="description" content="Plain-English explanation of indemnification clauses, including the difference between mutual and one-sided indemnification. Real examples, redline guidance, and what's market.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Indemnification Clauses Explained — Plain English for Contract Reviewers">
+  <meta property="og:description" content="Plain-English explanation of indemnification clauses, including the difference between mutual and one-sided indemnification. Real examples, redline guidance, and what's market.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://clausecheck.conduitlab.ai/indemnification.html">
+  <meta property="og:site_name" content="ClauseCheck">
+
+  <!-- Schema.org Article -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "What Is an Indemnification Clause?",
+    "description": "Plain-English explanation of indemnification clauses, including the difference between mutual and one-sided indemnification. Real examples, redline guidance, and what's market.",
+    "author": {
+      "@type": "Person",
+      "name": "Danny Gambill"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ClauseCheck",
+      "url": "https://clausecheck.conduitlab.ai"
+    },
+    "mainEntityOfPage": "https://clausecheck.conduitlab.ai/indemnification.html"
+  }
+  </script>
+
+  <!-- Fonts (matching main site) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="alternate icon" href="favicon.ico">
+
+  <!-- Design system. Replaces a 4,710-char inline style block that was
+       byte-identical across all five clause pages. -->
+  <link rel="stylesheet" href="system.css">
+</head>
+<body class="clause-page">
+
+  <nav>
+    <a href="/" class="logo"><span class="accent">Clause</span>Check</a>
+    <div class="nav-links">
+      <a href="/explain.html">Free Explainer</a>
+      <a href="/login.html">Log In</a>
+    </div>
+  </nav>
+
+  <article class="container">
+
+    <h1>What Is an Indemnification Clause?</h1>
+    <p class="summary">An indemnification clause requires one party to cover the other party's losses if certain bad things happen. Whether that obligation is mutual, one-sided, capped, or uncapped is one of the most consequential decisions in any contract.</p>
+
+    <h2>What it does</h2>
+    <p>Indemnification means one party agrees to compensate the other party for specific losses or claims. In a typical software contract, the vendor might indemnify the customer if the vendor's product infringes a third party's intellectual property; the customer might indemnify the vendor if the customer misuses the product in ways that cause third-party harm.</p>
+    <p>The clause has two basic flavors. <strong>Mutual indemnification</strong> means both parties indemnify each other for claims arising from their own actions. <strong>One-sided indemnification</strong> means only one party (usually the customer) takes on indemnification obligations. The vendor's reciprocal obligations are narrow or nonexistent.</p>
+    <p>The interaction between indemnification and other clauses matters enormously. An indemnification obligation can blow past the contract's limitation-of-liability cap unless the cap explicitly applies to indemnification. So a contract with a $10,000 liability cap and an uncapped indemnification clause has, effectively, no liability cap at all.</p>
+
+    <h2>Why it matters</h2>
+    <p>One-sided indemnification turns the customer into the vendor's insurance policy. If a vendor employee leaks customer data and a third party sues both companies, a one-sided indemnification clause says the customer pays the vendor's legal fees. That's not just unfair — it's actively dangerous. I've seen these clauses trigger in ways the customer never imagined when they signed. The classic scenario: a vendor's security failure leads to a regulatory investigation, the regulator deposes both parties, and the customer ends up paying tens of thousands in legal fees defending the vendor's response. The vendor walks away clean. The customer foots the bill.</p>
+
+    <h2>The language to watch for</h2>
+    <p>Here's the kind of language you'll see in real contracts:</p>
+    <div class="example-clause">Customer shall indemnify, defend, and hold harmless Provider and its affiliates from and against any and all claims, damages, losses, costs, and expenses (including reasonable attorneys' fees) arising out of or relating to Customer's use of the Service, except to the extent caused by Provider's gross negligence or willful misconduct.</div>
+
+    <div class="cta-box">
+      <h3>Got a clause you want explained?</h3>
+      <p>Paste any clause into ClauseCheck's free explainer and get a plain-English breakdown in seconds. No account required.</p>
+      <a href="/explain.html?source=seo_indemnification" class="cta-button">Explain a Clause Free →</a>
+    </div>
+
+    <h2>What to redline</h2>
+    <ul>
+      <li>Make the indemnification mutual — both parties indemnify the other for claims arising from their own actions. This is the single biggest issue.</li>
+      <li>Add a "gross negligence and willful misconduct" carve-out for the indemnifying party. The customer shouldn't indemnify the vendor for the vendor's own bad behavior.</li>
+      <li>Cap indemnification obligations at the limitation-of-liability amount. Otherwise indemnification becomes an end-run around the liability cap.</li>
+      <li>Require the vendor to indemnify the customer for third-party IP claims that the vendor's product infringes. This is one place where vendor indemnification is industry-standard.</li>
+      <li>Require the indemnified party to give prompt notice of claims, allow the indemnifying party to control the defense, and not settle without consent. These procedural protections are routine.</li>
+    </ul>
+
+    <h2>What's market</h2>
+    <p>Mutual indemnification is the norm in modern B2B contracts. IP indemnification from the vendor for their own product is standard. The carve-outs are sometimes negotiated. Pure one-way indemnification favoring the vendor is increasingly viewed as predatory drafting and shouldn't be accepted in any contract you'd consider an arms-length deal.</p>
+
+    <div class="cta-box">
+      <h3>Reviewing more than one clause?</h3>
+      <p>ClauseCheck reads entire contracts in about a minute. Flags risky clauses, suggests redlines, generates a playbook for your client. Built for solo attorneys and small firms.</p>
+      <a href="/" class="cta-button">Try ClauseCheck Free →</a>
+    </div>
+
+    <div class="disclaimer">
+      <strong>Not legal advice.</strong> This article is general information about contract drafting patterns. It is not legal advice. Your specific situation, your jurisdiction, and your specific deal terms may all change the analysis. Use this as a starting point for your own analysis, not as a substitute for legal counsel.
+    </div>
+
+    <div class="other-clauses">
+      <h3>Other clauses we cover</h3>
+      <ul>
+        <li><a href="/non-solicitation.html">What Is a Non-Solicitation Clause?</a></li>
+        <li><a href="/limitation-of-liability.html">What Is a Limitation of Liability Clause?</a></li>
+        <li><a href="/force-majeure.html">What Is a Force Majeure Clause?</a></li>
+        <li><a href="/auto-renewal.html">What Is an Auto-Renewal Clause?</a></li>
+      </ul>
+    </div>
+
+  </article>
+
+  <footer>
+    Built for small law firms &nbsp;·&nbsp; <a href="/terms.html">Terms</a> &nbsp;·&nbsp; <a href="/privacy.html">Privacy</a>
+  </footer>
+
+  <!-- PostHog (matches main site) -->
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init bs ws ge fs capture De calculateEventProperties Ai $s register register_once register_for_session unregister unregister_for_session Is getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags getPersonProperties getGroups setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags webPerformance us es Ss register_once any_event_seen onPageLeave onSessionEnd Js debug L getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_YOUR_KEY_HERE', {api_host: 'https://us.i.posthog.com'});
+    posthog.capture('seo_page_view', { slug: 'indemnification' });
+  </script>
+
+</body>
+</html>

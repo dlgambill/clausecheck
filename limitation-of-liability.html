@@ -1,0 +1,128 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Limitation of Liability Clauses Explained — Caps, Carve-outs, and What's Market</title>
+  <meta name="description" content="Plain-English explanation of limitation of liability clauses. How caps work, why super caps exist for data breaches, and what to redline. Includes real example language.">
+
+  <!-- Open Graph -->
+  <meta property="og:title" content="Limitation of Liability Clauses Explained — Caps, Carve-outs, and What's Market">
+  <meta property="og:description" content="Plain-English explanation of limitation of liability clauses. How caps work, why super caps exist for data breaches, and what to redline. Includes real example language.">
+  <meta property="og:type" content="article">
+  <meta property="og:url" content="https://clausecheck.conduitlab.ai/limitation-of-liability.html">
+  <meta property="og:site_name" content="ClauseCheck">
+
+  <!-- Schema.org Article -->
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "Article",
+    "headline": "What Is a Limitation of Liability Clause?",
+    "description": "Plain-English explanation of limitation of liability clauses. How caps work, why super caps exist for data breaches, and what to redline. Includes real example language.",
+    "author": {
+      "@type": "Person",
+      "name": "Danny Gambill"
+    },
+    "publisher": {
+      "@type": "Organization",
+      "name": "ClauseCheck",
+      "url": "https://clausecheck.conduitlab.ai"
+    },
+    "mainEntityOfPage": "https://clausecheck.conduitlab.ai/limitation-of-liability.html"
+  }
+  </script>
+
+  <!-- Fonts (matching main site) -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=DM+Sans:wght@400;500;600;700&family=DM+Serif+Display&display=swap" rel="stylesheet">
+
+  <!-- Favicon -->
+  <link rel="icon" type="image/svg+xml" href="favicon.svg">
+  <link rel="alternate icon" href="favicon.ico">
+
+  <!-- Design system. Replaces a 4,710-char inline style block that was
+       byte-identical across all five clause pages. -->
+  <link rel="stylesheet" href="system.css">
+</head>
+<body class="clause-page">
+
+  <nav>
+    <a href="/" class="logo"><span class="accent">Clause</span>Check</a>
+    <div class="nav-links">
+      <a href="/explain.html">Free Explainer</a>
+      <a href="/login.html">Log In</a>
+    </div>
+  </nav>
+
+  <article class="container">
+
+    <h1>What Is a Limitation of Liability Clause?</h1>
+    <p class="summary">A limitation of liability clause caps the maximum amount one party can owe the other if things go wrong. Done well, it's a reasonable risk allocation. Done poorly, it leaves the customer with effectively no legal recourse against catastrophic vendor failures.</p>
+
+    <h2>What it does</h2>
+    <p>Every commercial contract allocates risk. Limitation of liability is the clause that does most of the work. It typically caps total damages at some multiple of the fees paid, excludes certain categories of damages entirely (consequential, indirect, punitive), and may include exceptions for specific bad acts.</p>
+    <p>The cap amount itself varies enormously. Customer-friendly contracts cap liability at 12 months of fees, sometimes 24 months. Vendor-friendly contracts cap liability at 6 months of fees, sometimes 3. The difference matters: on a $2,000-a-month SaaS contract, a 6-month cap means $12,000 of total exposure. A 24-month cap means $48,000. Same product, same vendor, very different risk profile.</p>
+    <p>The exclusions are often more important than the cap. "No party shall be liable for indirect, incidental, consequential, special, or punitive damages" sounds like protection against runaway lawsuits. In practice, it means the vendor is never liable for the actual harm their failure causes — only for direct damages, which are usually small. Lost business, lost data, regulatory fines, breach notification costs: all consequential. All excluded.</p>
+
+    <h2>Why it matters</h2>
+    <p>Limitation of liability is where the vendor's actual risk exposure gets defined. A favorable LoL clause turns a $50,000 breach into a $5,000 breach. An unfavorable one (from the customer's perspective) turns a million-dollar harm into a $12,000 maximum recovery. For high-stakes contracts — anything involving sensitive data, regulated industries, or significant operational dependencies — the LoL clause is often the most important provision in the entire agreement, and it's usually the one customers spend the least time on.</p>
+
+    <h2>The language to watch for</h2>
+    <p>Here's the kind of language you'll see in real contracts:</p>
+    <div class="example-clause">In no event shall Provider's total cumulative liability under this Agreement exceed the fees paid by Customer to Provider in the six (6) months preceding the event giving rise to the claim. In no event shall either party be liable for any indirect, incidental, consequential, special, or punitive damages, regardless of the form of action.</div>
+
+    <div class="cta-box">
+      <h3>Got a clause you want explained?</h3>
+      <p>Paste any clause into ClauseCheck's free explainer and get a plain-English breakdown in seconds. No account required.</p>
+      <a href="/explain.html?source=seo_limitation-of-liability" class="cta-button">Explain a Clause Free →</a>
+    </div>
+
+    <h2>What to redline</h2>
+    <ul>
+      <li>Increase the cap to 12 months of fees, ideally 24. The 6-month cap is increasingly seen as out of step with industry norms.</li>
+      <li>Add a "super cap" for specific high-risk events: data breaches, IP infringement, gross negligence. These get their own higher cap, often 3-5x annual fees.</li>
+      <li>Carve out direct damages from data breaches entirely if the data set is large or sensitive. Some breach exposure should be uncapped.</li>
+      <li>Make sure the cap doesn't apply to the vendor's indemnification obligations. Indemnification should be either uncapped or separately capped at a higher amount.</li>
+      <li>Limit the consequential damages exclusion. Some kinds of consequential damages (lost data, breach costs) should be recoverable. The blanket exclusion is too broad.</li>
+    </ul>
+
+    <h2>What's market</h2>
+    <p>12 months is the modern standard for total liability. Super caps for data breaches and IP indemnification are routine in enterprise deals. For high-stakes customers handling sensitive data, uncapped liability for vendor-caused breaches is achievable, especially if the customer is willing to pay slightly more for the contract. The fight is mostly over how much extra is reasonable.</p>
+
+    <div class="cta-box">
+      <h3>Reviewing more than one clause?</h3>
+      <p>ClauseCheck reads entire contracts in about a minute. Flags risky clauses, suggests redlines, generates a playbook for your client. Built for solo attorneys and small firms.</p>
+      <a href="/" class="cta-button">Try ClauseCheck Free →</a>
+    </div>
+
+    <div class="disclaimer">
+      <strong>Not legal advice.</strong> This article is general information about contract drafting patterns. It is not legal advice. Your specific situation, your jurisdiction, and your specific deal terms may all change the analysis. Use this as a starting point for your own analysis, not as a substitute for legal counsel.
+    </div>
+
+    <div class="other-clauses">
+      <h3>Other clauses we cover</h3>
+      <ul>
+        <li><a href="/non-solicitation.html">What Is a Non-Solicitation Clause?</a></li>
+        <li><a href="/indemnification.html">What Is an Indemnification Clause?</a></li>
+        <li><a href="/force-majeure.html">What Is a Force Majeure Clause?</a></li>
+        <li><a href="/auto-renewal.html">What Is an Auto-Renewal Clause?</a></li>
+      </ul>
+    </div>
+
+  </article>
+
+  <footer>
+    Built for small law firms &nbsp;·&nbsp; <a href="/terms.html">Terms</a> &nbsp;·&nbsp; <a href="/privacy.html">Privacy</a>
+  </footer>
+
+  <!-- PostHog (matches main site) -->
+  <script>
+    !function(t,e){var o,n,p,r;e.__SV||(window.posthog=e,e._i=[],e.init=function(i,s,a){function g(t,e){var o=e.split(".");2==o.length&&(t=t[o[0]],e=o[1]),t[e]=function(){t.push([e].concat(Array.prototype.slice.call(arguments,0)))}}(p=t.createElement("script")).type="text/javascript",p.crossOrigin="anonymous",p.async=!0,p.src=s.api_host.replace(".i.posthog.com","-assets.i.posthog.com")+"/static/array.js",(r=t.getElementsByTagName("script")[0]).parentNode.insertBefore(p,r);var u=e;for(void 0!==a?u=e[a]=[]:a="posthog",u.people=u.people||[],u.toString=function(t){var e="posthog";return"posthog"!==a&&(e+="."+a),t||(e+=" (stub)"),e},u.people.toString=function(){return u.toString(1)+".people (stub)"},o="init bs ws ge fs capture De calculateEventProperties Ai $s register register_once register_for_session unregister unregister_for_session Is getFeatureFlag getFeatureFlagPayload isFeatureEnabled reloadFeatureFlags updateEarlyAccessFeatureEnrollment getEarlyAccessFeatures on onFeatureFlags onSurveysLoaded onSessionId getSurveys getActiveMatchingSurveys renderSurvey canRenderSurvey canRenderSurveyAsync identify setPersonProperties group resetGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags getPersonProperties getGroups setGroupPropertiesForFlags resetGroupPropertiesForFlags reset get_distinct_id getGroups setPersonPropertiesForFlags resetPersonPropertiesForFlags webPerformance us es Ss register_once any_event_seen onPageLeave onSessionEnd Js debug L getPageViewId captureTraceFeedback captureTraceMetric".split(" "),n=0;n<o.length;n++)g(u,o[n]);e._i.push([i,s,a])},e.__SV=1)}(document,window.posthog||[]);
+    posthog.init('phc_YOUR_KEY_HERE', {api_host: 'https://us.i.posthog.com'});
+    posthog.capture('seo_page_view', { slug: 'limitation-of-liability' });
+  </script>
+
+</body>
+</html>
