@@ -65,6 +65,7 @@
     .step p { font-size: 0.85rem; color: var(--muted); line-height: 1.65; }
     .features-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(290px, 1fr)); gap: 14px; margin-top: 56px; }
     .feature-card { background: var(--surface); border: 1px solid var(--border2); border-radius: 12px; padding: 26px; transition: border-color 0.2s, transform 0.2s; }
+    .guide-card { text-decoration: none; color: inherit; display: block; }
     .feature-card:hover { border-color: var(--orange-border); transform: translateY(-2px); }
     .feature-icon { width: 38px; height: 38px; background: var(--orange-dim); border: 1px solid var(--orange-border); border-radius: 8px; display: flex; align-items: center; justify-content: center; margin-bottom: 16px; font-size: 1rem; }
     .feature-card h3 { font-size: 0.92rem; font-weight: 600; color: #fff; margin-bottom: 7px; }
@@ -131,6 +132,7 @@
   <div class="nav-links">
     <a href="#how-it-works">How it works</a>
     <a href="#features">Features</a>
+    <a href="#guides">Guides</a>
     <a href="#pricing">Pricing</a>
     <a href="login.html" class="btn-nav">Sign In</a>
   </div>
@@ -186,6 +188,22 @@
     <div class="feature-card"><div class="feature-icon">⚡</div><h3>Works on any contract</h3><p>NDAs, vendor agreements, employment contracts, commercial leases, service agreements — if it's a contract, ClauseCheck can review it.</p></div>
     <div class="feature-card"><div class="feature-icon">📋</div><h3>Playbook Review</h3><p>Analyze contracts against a structured provision checklist — NDAs, employment agreements, vendor contracts, leases, and IC agreements. Every clause flagged as present, missing, favorable, or unfavorable.</p></div>
     <div class="feature-card"><div class="feature-icon">📁</div><h3>The Vault <span style="font-size:0.68rem;color:var(--orange);font-weight:600;margin-left:4px;">PRO</span></h3><p>Pro subscribers get secure document storage so reviewed contracts are always accessible — organized by matter or client for easy reference.</p></div>
+  </div>
+</div>
+
+<div class="section-wrap bordered" id="guides">
+  <div class="reveal">
+    <div class="section-label">Clause guides</div>
+    <h2 class="section-title">Know what you're<br>signing away.</h2>
+    <p class="section-sub">Plain-English explanations of the clauses that cause small firms the most trouble - free to read, no signup.</p>
+  </div>
+  <div class="features-grid reveal">
+    <a class="feature-card guide-card" href="/10-clauses.html"><div class="feature-icon">📑</div><h3>All 10 clauses solo attorneys most often miss</h3><p>The whole set in one place - the language to watch for, what to redline, and what the other side usually accepts.</p></a>
+    <a class="feature-card guide-card" href="/auto-renewal.html"><div class="feature-icon">🔁</div><h3>Auto-renewal</h3><p>Cancellation notice windows, evergreen terms, and consumer-protection laws like California's ARL.</p></a>
+    <a class="feature-card guide-card" href="/force-majeure.html"><div class="feature-icon">⛈️</div><h3>Force majeure</h3><p>Why post-2020 contracts often exclude pandemics, and what the modern carve-outs actually cover.</p></a>
+    <a class="feature-card guide-card" href="/indemnification.html"><div class="feature-icon">💸</div><h3>Indemnification</h3><p>Who pays for whose mistakes, and the difference between mutual and one-sided indemnification.</p></a>
+    <a class="feature-card guide-card" href="/limitation-of-liability.html"><div class="feature-icon">🛡️</div><h3>Limitation of liability</h3><p>How caps work, why super caps exist for data breaches, and what is market.</p></a>
+    <a class="feature-card guide-card" href="/non-solicitation.html"><div class="feature-icon">🚫</div><h3>Non-solicitation</h3><p>Where the line sits between protecting a client base and an unenforceable restraint.</p></a>
   </div>
 </div>
 
