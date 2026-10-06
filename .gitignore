@@ -1,0 +1,15 @@
+# Generated lead magnets. The source PDF stays on disk; nothing on the site
+# serves it, and the page at /10-clauses.html carries the corrected copy.
+downloads/
+
+# Secrets never belong in the site repo
+.env
+.env.*
+
+# Tooling
+node_modules/
+.wrangler/
+
+# OS cruft
+.DS_Store
+Thumbs.db
